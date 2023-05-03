@@ -1,0 +1,49 @@
+@use '../styles/colors';
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.editor {
+  width: 640px;
+  height: 640px;
+  border: 1px solid black;
+  top: 50%;
+  left: 50%;
+  overflow: auto;
+  // transform: translate(-50%, -50%);
+}
+
+.tiles {
+  display: grid;
+  grid-template-rows: repeat(20,32px);
+  grid-template-columns: repeat(50,32px);
+  overflow: auto;
+  position: relative;
+}
+
+.tile {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  // border: 0.5px dotted lightgray;
+
+  &:hover {
+    cursor: pointer;
+    background-color: colors.$blue300;
+  }
+}
+
+
+.elements {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-rows: repeat(10,32px);
+  grid-template-columns: repeat(10,32px);
+}
+
+.activeElement {
+  width: 64px;
+  height: 64px;
+}

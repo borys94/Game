@@ -11,11 +11,13 @@ type DrawingType = "tiles" | "bgTiles" | "interactive";
 
 const emptyTiles = new Array(20).fill([]).map((x) => new Array(50).fill(0));
 
+const empty = () => new Array(20).fill([]).map((x) => new Array(50).fill(0));
+
 function EditorComponent() {
   const [map, setMap] = useState<string>();
-  const [tiles, setTiles] = useState<number[][]>(emptyTiles);
-  const [bgTiles, setBgTiles] = useState<number[][]>(emptyTiles);
-  const [interactive, setInteractive] = useState<number[][]>(emptyTiles);
+  const [tiles, setTiles] = useState<number[][]>(empty());
+  const [bgTiles, setBgTiles] = useState<number[][]>(empty());
+  const [interactive, setInteractive] = useState<number[][]>(empty());
   const [drawingType, setDrawingType] = useState<DrawingType>("tiles");
   const [activeTile, setActiveTile] = useState<Sprite & { id: number }>();
 
@@ -74,6 +76,7 @@ function EditorComponent() {
           {bgTiles.map((row, i) =>
             row.map((tile, j) => (
               <div
+                key={i * row.length + j}
                 style={{
                   top: i * 32,
                   left: j * 32,
@@ -95,6 +98,7 @@ function EditorComponent() {
           {tiles.map((row, i) =>
             row.map((tile, j) => (
               <div
+                key={i * row.length + j}
                 style={{
                   top: i * 32,
                   left: j * 32,
@@ -116,6 +120,7 @@ function EditorComponent() {
           {interactive.map((row, i) =>
             row.map((tile, j) => (
               <div
+                key={i * row.length + j}
                 style={{
                   top: i * 32,
                   left: j * 32,
@@ -139,7 +144,7 @@ function EditorComponent() {
       <div>
         <div className={styles.elements}>
           {Object.keys(tileList).map((tile) => (
-            <div className={styles.imgContainer}>
+            <div className={styles.imgContainer} key={tile}>
               <img
                 src={tileList[+tile].asset}
                 alt={tile}

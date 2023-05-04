@@ -52,6 +52,11 @@ export default class Element {
 
 
     let {img, width, height} = this.asset
+
+    if(height > 150 || width > 150) {
+      console.log(this.asset)
+    }
+
     if (img) {
       ctx.drawImage(
         img, 

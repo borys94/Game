@@ -103,8 +103,8 @@ class Player {
     this.gameHeight = gameHeight
     this.map = map
 
-    this.x = 8//this.gameWidth / 2 - this.width / 2;
-    this.y = 176//this.gameHeight/2 - this.height
+    this.x = 30//this.gameWidth / 2 - this.width / 2;
+    this.y = 400//this.gameHeight/2 - this.height
 
     this.loadAllAssets()
   }

@@ -44,6 +44,7 @@ class Assets {
         }
       }
     }
+    console.log(this.assets)
   }
 
   getById = (id: number) => this.assets[id]

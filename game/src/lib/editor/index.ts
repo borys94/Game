@@ -13,7 +13,7 @@ class Editor {
     if (value === 'easy') {
       return easyMap
     } else if (value === 'medium') {
-      return easyMap
+      return mediumMap
     }
     return easyMap
     

@@ -58,5 +58,41 @@ tiles[++i] = {
   asset: `assets/interactive/Chest.png`
 }
 
+i++
+tiles[i] = {
+  id: i,
+  width: 64,
+  height: 39,
+  frames: 1,
+  asset: `assets/decorations/1.png`
+}
+
+i++
+tiles[i] = {
+  id: i,
+  width: 73,
+  height: 64,
+  frames: 1,
+  asset: `assets/decorations/2.png`
+}
+
+i++
+tiles[i] = {
+  id: i,
+  width: 61,
+  height: 192,
+  frames: 1,
+  asset: `assets/decorations/3.png`
+}
+
+i++
+tiles[i] = {
+  id: i,
+  width: 69,
+  height: 192,
+  frames: 1,
+  asset: `assets/decorations/4.png`
+}
+
 
 export default tiles

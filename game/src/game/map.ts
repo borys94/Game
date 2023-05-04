@@ -1,5 +1,5 @@
 import Assets from "./assets"
-import easyMap from '../maps/easy'
+import easyMap from '../maps/medium'
 import Element, { ElementBuilder } from "./Element"
 import Player from "./player"
 
@@ -60,7 +60,7 @@ class Map {
   }
 
   hasObstacle(x: number, y: number) {
-    if (y % 32 === 0 || x % 32 === 0) return false
+    if (y < 0 ||y % 32 === 0 || x % 32 === 0) return false
     return (this.images[Math.floor(y/32)][Math.floor(x/32)])
   }
 
@@ -94,9 +94,9 @@ class Map {
               width, 
               height,
               j * 32 - this.cameraX, 
-              i * 32 - this.cameraY, 
-              32, 
-              32
+              i * 32 - this.cameraY  + 32 - height, 
+              width, 
+              height
             )
           }
         }

@@ -1,24 +1,22 @@
-import React, { useEffect } from "react";
-import "./App.css";
-import EditorComponent from "./components/Editor";
-import Editor from "./lib/editor";
-import Game from "./game";
-import "normalize.css";
+import React, { useEffect } from 'react'
+import './App.css'
+import Game from './game'
+import 'normalize.css'
 
-let game: Game;
+let game: Game
 
-function App() {
+function App () {
   useEffect(() => {
     if (!game) {
-      game = new Game();
+      game = new Game()
     }
-  }, []);
+  }, [])
 
   return (
     <div className="App">
       <canvas id="canvas" />
     </div>
-  );
+  )
 }
 
 // function App() {
@@ -29,4 +27,4 @@ function App() {
 //   );
 // }
 
-export default App;
+export default App

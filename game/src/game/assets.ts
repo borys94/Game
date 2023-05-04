@@ -1,7 +1,7 @@
 
-import tiles, { TileType } from "./tiles"
+import tiles, { type TileType } from './tiles'
 
-export type AssetType = {
+export interface AssetType {
   img: HTMLImageElement
   width: number
   height: number
@@ -15,7 +15,7 @@ class Assets {
   loadedAssets = 0
   loaded = false
 
-  constructor() {
+  constructor () {
     this.loadAllAssets()
   }
 
@@ -23,10 +23,10 @@ class Assets {
 
   getAssetCount = () => tiles.filter(tile => tile).length
 
-  loadAllAssets() {
-    const allTiles = this.getAssetCount();
-  
-    for (let sprite of tiles) {
+  loadAllAssets () {
+    const allTiles = this.getAssetCount()
+
+    for (const sprite of tiles) {
       if (!sprite) continue
       const img = new Image()
       img.src = sprite.asset

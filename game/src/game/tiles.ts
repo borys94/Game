@@ -1,8 +1,8 @@
-import { Sprite } from "./types"
+import { type Sprite } from './types'
 
-export type TileType = 'chest' | 'collectable' | "trap"
-type Tile = Sprite & {id: number, hill?: true, interactive?: true, type?: TileType}
-let tiles: Tile[] = []
+export type TileType = 'chest' | 'collectable' | 'trap'
+type Tile = Sprite & { id: number, hill?: true, interactive?: true, type?: TileType }
+const tiles: Tile[] = []
 
 let i = 1
 for (; i <= 64; i++) {
@@ -24,8 +24,8 @@ tiles[i] = {
   height: 24,
   frames: 8,
   interactive: true,
-  type: "collectable",
-  asset: `assets/interactive/Card.png`
+  type: 'collectable',
+  asset: 'assets/interactive/Card.png'
 }
 
 tiles[++i] = {
@@ -34,8 +34,8 @@ tiles[++i] = {
   height: 24,
   frames: 6,
   interactive: true,
-  type: "collectable",
-  asset: `assets/interactive/Money.png`
+  type: 'collectable',
+  asset: 'assets/interactive/Money.png'
 }
 
 tiles[++i] = {
@@ -44,8 +44,8 @@ tiles[++i] = {
   height: 48,
   frames: 4,
   interactive: true,
-  type: "trap",
-  asset: `assets/interactive/Trap.png`
+  type: 'trap',
+  asset: 'assets/interactive/Trap.png'
 }
 
 tiles[++i] = {
@@ -54,8 +54,8 @@ tiles[++i] = {
   height: 32,
   frames: 4,
   interactive: true,
-  type: "chest",
-  asset: `assets/interactive/Chest.png`
+  type: 'chest',
+  asset: 'assets/interactive/Chest.png'
 }
 
 i++
@@ -64,7 +64,7 @@ tiles[i] = {
   width: 64,
   height: 39,
   frames: 1,
-  asset: `assets/decorations/1.png`
+  asset: 'assets/decorations/1.png'
 }
 
 i++
@@ -73,7 +73,7 @@ tiles[i] = {
   width: 73,
   height: 64,
   frames: 1,
-  asset: `assets/decorations/2.png`
+  asset: 'assets/decorations/2.png'
 }
 
 i++
@@ -82,7 +82,7 @@ tiles[i] = {
   width: 61,
   height: 192,
   frames: 1,
-  asset: `assets/decorations/3.png`
+  asset: 'assets/decorations/3.png'
 }
 
 i++
@@ -91,8 +91,7 @@ tiles[i] = {
   width: 69,
   height: 192,
   frames: 1,
-  asset: `assets/decorations/4.png`
+  asset: 'assets/decorations/4.png'
 }
-
 
 export default tiles

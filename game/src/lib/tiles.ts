@@ -1,8 +1,8 @@
-import { Sprite } from "./types"
+import { type Sprite } from './types'
 
-let tiles: Record<number, Sprite & {id: number, hill?: true}> = {}
+const tiles: Record<number, Sprite & { id: number, hill?: true }> = {}
 
-for (let i = 1; i <=64; i++) {
+for (let i = 1; i <= 64; i++) {
   tiles[i] = {
     id: i,
     width: 32,

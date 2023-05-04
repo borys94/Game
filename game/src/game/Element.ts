@@ -1,9 +1,9 @@
-import Assets, {AssetType} from "./assets"
-import { InputType } from "./inputHandler"
-import Player from "./player"
+import { type AssetType } from './assets'
+import type Assets from './assets'
+import { type InputType } from './inputHandler'
+import type Player from './player'
 
 export default class Element {
-
   asset: AssetType
   x: number
   y: number
@@ -19,9 +19,9 @@ export default class Element {
 
   animate = true
 
-  constructor(assets: Assets, assetId: number, y: number, x: number) {
+  constructor (assets: Assets, assetId: number, y: number, x: number) {
     this.asset = assets.getById(assetId)
-    this.x = x;
+    this.x = x
     this.y = y
 
     this.active = !!this.asset
@@ -30,10 +30,11 @@ export default class Element {
     }
   }
 
-  public enter(player: Player): void {
+  public enter (player: Player): void {
 
   }
-  public handleInput(player: Player, inputs: InputType[]) {
+
+  public handleInput (player: Player, inputs: InputType[]) {
 
   }
 
@@ -41,34 +42,34 @@ export default class Element {
     if (!this.asset || !this.active) {
       return
     }
+    this.updateFrameIfNeeded(deltaTime)
 
-    if (this.frameTimer > this.frameInterval && this.animate) {
-      if (this.frameX < this.frames - 1) this.frameX++;
+    const { img, width, height } = this.asset
+    if (img) {
+      ctx.drawImage(
+        img,
+        width * this.frameX,
+        0,
+        width,
+        height,
+        this.x * 32 - this.cameraX,
+        this.y * 32 - this.cameraY + 32 - height,
+        width,
+        height
+      )
+    }
+  }
+
+  updateFrameIfNeeded (deltaTime: number) {
+    if (!this.animate) {
+      return
+    }
+    if (this.frameTimer > this.frameInterval) {
+      if (this.frameX < this.frames - 1) this.frameX++
       else this.frameX = 0
       this.frameTimer = 0
     } else {
       this.frameTimer += deltaTime
-    }
-
-
-    let {img, width, height} = this.asset
-
-    if(height > 150 || width > 150) {
-      console.log(this.asset)
-    }
-
-    if (img) {
-      ctx.drawImage(
-        img, 
-        width * this.frameX, 
-        0, 
-        width, 
-        height,
-        this.x * 32 - this.cameraX, 
-        this.y * 32 - this.cameraY + 32 - height, 
-        width, 
-        height
-      )
     }
   }
 
@@ -79,7 +80,7 @@ export default class Element {
 }
 
 export class ElementBuilder {
-  static build(assets: Assets, assetId: number, y: number, x: number): Element {
+  static build (assets: Assets, assetId: number, y: number, x: number): Element {
     const asset = assets.getById(assetId)
 
     if (!asset) {
@@ -100,10 +101,11 @@ export class ElementBuilder {
 
 export class ChestElement extends Element {
   animate = false
-  enter(player: Player) {
+  enter (player: Player) {
 
   }
-  handleInput(player: Player, inputs: InputType[]) {
+
+  handleInput (player: Player, inputs: InputType[]) {
     if (inputs.includes('Space')) {
       this.animate = true
     }
@@ -114,12 +116,13 @@ export class ChestElement extends Element {
 }
 
 export class TrapElement extends Element {
-  enter(player: Player) {
+  enter (player: Player) {
     player.setState('hurt')
     if (player.direction === 'left') player.speed = 1
     else player.speed = -1
   }
-  handleInput(player: Player, inputs: InputType[]) {
+
+  handleInput (player: Player, inputs: InputType[]) {
     if (inputs.includes('Space')) {
 
     }
@@ -127,11 +130,12 @@ export class TrapElement extends Element {
 }
 
 export class CollectableElement extends Element {
-  enter(player: Player) {
+  enter (player: Player) {
     player.cards++
     this.active = false
   }
-  handleInput(player: Player, inputs: InputType[]) {
+
+  handleInput (player: Player, inputs: InputType[]) {
     if (inputs.includes('Space')) {
 
     }

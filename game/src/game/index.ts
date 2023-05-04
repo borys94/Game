@@ -25,18 +25,18 @@ class Game {
 
   lastTime = 0
 
-  constructor() {
+  constructor () {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.canvas.width = CANVAS_WIDTH
     this.canvas.height = CANVAS_HEIGHT
-    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.imageSmoothingEnabled = false
 
     this.assets = new Assets()
     this.map = new Map(this.assets)
     this.background = new Background()
     this.player = new Player(CANVAS_WIDTH, CANVAS_HEIGHT, this.map)
-    
+
     this.inputHandler = new InputHandler()
     this.camera = new Camera(this.player, this.map)
 
@@ -48,13 +48,13 @@ class Game {
     this.lastTime = timestamp
 
     this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-  
+
     this.camera.update()
 
     this.map.applyCamera(this.camera.x, this.camera.y)
     this.player.applyCamera(this.camera.x, this.camera.y)
     this.background.applyCamera(this.camera.x, this.camera.y)
-    
+
     if (this.inputHandler.lastKey) {
       this.player.update(this.inputHandler.activeKeys, this.map)
     }

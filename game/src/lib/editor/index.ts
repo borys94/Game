@@ -1,8 +1,8 @@
-import easyMap from "../../maps/easy"
-import mediumMap from "../../maps/medium"
-import emptyMap from "../../maps/empty"
+import easyMap from '../../maps/easy'
+import mediumMap from '../../maps/medium'
+import emptyMap from '../../maps/empty'
 
-type MapType = {
+interface MapType {
   tiles: number[][]
   bgTiles: number[][]
   interactive: number[][]
@@ -16,7 +16,6 @@ class Editor {
       return mediumMap
     }
     return easyMap
-    
   }
 }
 

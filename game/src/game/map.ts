@@ -1,7 +1,8 @@
-import Assets from "./assets"
+import type Assets from './assets'
 import easyMap from '../maps/medium'
-import Element, { ElementBuilder } from "./Element"
-import Player from "./player"
+import type Element from './Element'
+import { ElementBuilder } from './Element'
+import { TILE_SIZE } from './config'
 
 class Map {
   cameraX = 0
@@ -16,19 +17,19 @@ class Map {
 
   elements: Element[][] = []
 
-  framesX: number[][] = []
-
-  constructor(private assets: Assets) {
+  constructor (private readonly assets: Assets) {
     this.images = easyMap.tiles
     this.bgImages = easyMap.bgTiles
     this.interactive = easyMap.interactive
 
-    this.width = this.images[0].length * 32
-    this.height = this.images.length * 32
+    this.width = this.images[0].length * TILE_SIZE
+    this.height = this.images.length * TILE_SIZE
+    this.initInteractiveElements()
+  }
 
-    for (let i = 0;i < this.interactive.length; i++) {
-      for (let j = 0;j < this.interactive[0].length; j++) {
-
+  initInteractiveElements (): void {
+    for (let i = 0; i < this.interactive.length; i++) {
+      for (let j = 0; j < this.interactive[0].length; j++) {
         if (!this.elements[i]) {
           this.elements[i] = []
         }
@@ -38,64 +39,59 @@ class Map {
     }
   }
 
-  hasElementToCollect = (x: number, y: number) => {
-    return this.interactive[Math.floor(x /32)][Math.floor(y/32)]
+  hasElementToCollect = (x: number, y: number): boolean => {
+    return !!this.interactive[Math.floor(x / TILE_SIZE)][Math.floor(y / TILE_SIZE)]
   }
 
-  getElement = (x: number, y: number) => {
-    const element = this.elements[Math.floor(y /32)][Math.floor(x/32)]
+  getElement = (x: number, y: number): Element | null => {
+    const element = this.elements[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)]
     if (element.asset && element.active) {
       return element
     }
+    return null
   }
 
-  applyCamera = (x: number, y: number) => {
+  applyCamera = (x: number, y: number): void => {
     this.cameraX = x
     this.cameraY = y
-    for (let i = 0;i < this.interactive.length; i++) {
-      for (let j = 0;j < this.interactive[0].length; j++) {
-        this.elements[i][j].applyCamera(x, y)
-      }
-    }
+
+    for (const row of this.elements) { for (const element of row) element.applyCamera(x, y) }
   }
 
-  hasObstacle(x: number, y: number) {
-    if (y < 0 ||y % 32 === 0 || x % 32 === 0) return false
-    return (this.images[Math.floor(y/32)][Math.floor(x/32)])
+  hasObstacle (x: number, y: number): boolean {
+    if (y < 0 || y % TILE_SIZE === 0 || x % TILE_SIZE === 0) return false
+    return !!(this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
   }
 
-  draw = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
+  draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
     this.drawTiles(ctx, easyMap.bgTiles)
     this.drawTiles(ctx, easyMap.tiles)
-
-    for (let i = 0;i < this.elements.length; i++) {
-      for (let j = 0;j < this.elements[0].length; j++) {
-        this.elements[i][j].draw(ctx, deltaTime)
-      }
-    }
+    this.drawInteractiveElement(ctx, deltaTime)
   }
 
-  drawTiles(ctx: CanvasRenderingContext2D, tiles: number[][]) {
+  drawInteractiveElement (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+    for (const row of this.elements) { for (const element of row) element.draw(ctx, deltaTime) }
+  }
+
+  drawTiles (ctx: CanvasRenderingContext2D, tiles: number[][]): void {
     if (!this.assets.isLoaded()) {
       return
     }
-    for (let i = 0;i < tiles.length; i++) {
-      for (let j = 0;j < tiles[0].length; j++) {
+    for (let i = 0; i < tiles.length; i++) {
+      for (let j = 0; j < tiles[0].length; j++) {
         const asset = this.assets.getById(tiles[i][j])
         if (asset) {
-          let {img, width, height} = asset
-          // width = 32
-          //  height = 32
+          const { img, width, height } = asset
           if (img) {
             ctx.drawImage(
-              img, 
-              0, 
-              0, 
-              width, 
+              img,
+              0,
+              0,
+              width,
               height,
-              j * 32 - this.cameraX, 
-              i * 32 - this.cameraY  + 32 - height, 
-              width, 
+              j * TILE_SIZE - this.cameraX,
+              i * TILE_SIZE - this.cameraY + TILE_SIZE - height,
+              width,
               height
             )
           }

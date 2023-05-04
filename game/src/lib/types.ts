@@ -1,8 +1,8 @@
-export type Sprite = {
-  width: number,
-  height: number,
-  frames: number,
-  asset: string,
+export interface Sprite {
+  width: number
+  height: number
+  frames: number
+  asset: string
   img?: HTMLImageElement
   hill?: true
 }

@@ -1,10 +1,9 @@
-import {State, Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, StateType} from './state'
+import {State, Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, StateType, Hurt} from './state'
 import {InputType} from "./inputHandler"
 import Map from './map'
+import { clamp } from './utils'
 
 type Sprite = {
-  width: number
-  height: number
   frames: number
   asset: string
   framesX?: number[]
@@ -18,18 +17,17 @@ class Player {
   gameHeight: number
   states: Record<StateType, State> = {
     standing: new Standing(this),
-    // standingLeft: new StandingLeft(this),
     running: new Running(this),
     jumping: new Jumping(this),
     falling: new Falling(this),
     hit: new Hit(this),
     doubleHit: new DoubleHit(this),
     strongAttack: new StrongAttack(this),
+    use: new Use(this),
+    hurt: new Hurt(this),
   }
   currentState: State = this.states.standing
-
   map: Map
-
   direction: Direction = 'right'
 
   width = 48
@@ -51,57 +49,52 @@ class Player {
   maxVy = 15
   weight = 1.5
 
-  fps = 30
   frameTimer = 0
   frameInterval = 100//1000/this.fps
 
   loadedAssets = 0
   loaded = false
 
+  cards = 0
+
   sprites: Record<StateType, Sprite> = {
     standing: {
-      width: 48,
-      height: 48,
       frames: 4,
       asset: 'assets/heroes/punk/idle.png'
     },
     running: {
-      width: 48,
-      height: 48,
       frames: 4,
       asset: 'assets/heroes/punk/run.png'
     },
     jumping: {
-      width: 48,
-      height: 48,
       frames: 4,
       framesX: [0],
       asset: 'assets/heroes/punk/jump.png'
     },
     falling: {
-      width: 48,
-      height: 48,
       frames: 4,
       framesX: [3],
       asset: 'assets/heroes/punk/jump.png'
     },
     hit: {
-      width: 48,
-      height: 48,
-      frames: 8,
+      frames: 6,
       asset: 'assets/heroes/punk/attack1.png'
     },
     doubleHit: {
-      width: 48,
-      height: 48,
       frames: 8,
       asset: 'assets/heroes/punk/attack2.png'
     },
     strongAttack: {
-      width: 48,
-      height: 48,
       frames: 8,
       asset: 'assets/heroes/punk/attack3.png'
+    },
+    use: {
+      frames: 6,
+      asset: 'assets/heroes/punk/use.png'
+    },
+    hurt: {
+      frames: 2,
+      asset: 'assets/heroes/punk/hurt.png'
     },
   }
 
@@ -141,18 +134,22 @@ class Player {
     const image = this.sprites[this.currentState.state].img!
     const scaleX = this.direction === 'left' ? -1 : 1
 
-    if (this.frameTimer > this.frameInterval) {
-      if (this.frameX < this.sprites[this.currentState.state].frames - 1) this.frameX++;
+    if (this.frameTimer > this.frameInterval && this.currentState.animate) {
+      if (this.frameX < this.sprites[this.currentState.state].frames - 1) {
+        this.frameX++;
+        
+      }
       else this.frameX = 0
       this.frameTimer = 0
     } else {
       this.frameTimer += deltaTime
     }
 
+    if ((window as any).debug) {
+      ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, height)
+      ctx.strokeRect(this.x+4 - this.cameraX, this.y - this.cameraY, width/2 - 4, height)
+    }
     
-
-    ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, height)
-    ctx.strokeRect(this.x+4 - this.cameraX, this.y - this.cameraY, width/2 - 4, height)
     ctx.save();
     ctx.scale(scaleX, 1);
     ctx.drawImage(
@@ -174,6 +171,9 @@ class Player {
     
     this.handleHorizontalMovement()
     this.handleVerticalMovement()
+
+    this.collectObjects()
+    this.interactObjects(keys)
   }
 
   setState = (state: StateType, direction?: Direction) => {
@@ -187,7 +187,6 @@ class Player {
   onGround = () => {
     return (
       this.map.hasObstacle(this.x + 1, this.y + this.height + 1) || 
-      // this.map.hasObstacle(this.x + this.width, this.y + this.height + 1) ||
       this.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 1)
     )
   }
@@ -256,8 +255,20 @@ class Player {
     this.cameraX = x
     this.cameraY = y
   }
-}
 
-const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
+  interactObjects = (inputs: InputType[]) => {
+    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
+    if (element?.active) {
+      element.handleInput(this, inputs)
+    }
+  }
+
+  collectObjects = () => {
+    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
+    if (element?.active) {
+      element.enter(this)
+    }
+  }
+}
 
 export default Player

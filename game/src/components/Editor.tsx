@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Editor from "../lib/editor";
-import tileList from "../lib/tiles";
-import { Sprite } from "../lib/types";
+import tileList from "../game/tiles";
+import { Sprite } from "../game/types";
 
 import styles from "./Editor.module.scss";
 
 let editor: Editor;
+
+type DrawingType = "tiles" | "bgTiles" | "interactive";
 
 const emptyTiles = new Array(20).fill([]).map((x) => new Array(50).fill(0));
 
@@ -13,7 +15,8 @@ function EditorComponent() {
   const [map, setMap] = useState<string>();
   const [tiles, setTiles] = useState<number[][]>(emptyTiles);
   const [bgTiles, setBgTiles] = useState<number[][]>(emptyTiles);
-  const [tilesDrawing, setTilesDrawing] = useState(true);
+  const [interactive, setInteractive] = useState<number[][]>(emptyTiles);
+  const [drawingType, setDrawingType] = useState<DrawingType>("tiles");
   const [activeTile, setActiveTile] = useState<Sprite & { id: number }>();
 
   useEffect(() => {
@@ -32,11 +35,17 @@ function EditorComponent() {
     setBgTiles([...bgTiles]);
   };
 
+  const fillInteractive = (i: number, j: number) => {
+    interactive[i][j] = activeTile?.id ?? 0;
+    setInteractive([...interactive]);
+  };
+
   const save = () => {
     console.log(
       JSON.stringify({
         tiles,
         bgTiles,
+        interactive,
       })
     );
   };
@@ -49,7 +58,13 @@ function EditorComponent() {
     const map = editor.loadMap(value);
     setTiles([...map.tiles]);
     setBgTiles([...map.bgTiles]);
+    setInteractive([...map.interactive]);
     setMap(value);
+  };
+
+  const onLayerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
+    setDrawingType(e.target.value as any);
   };
 
   return (
@@ -62,8 +77,8 @@ function EditorComponent() {
                 style={{
                   top: i * 32,
                   left: j * 32,
-                  zIndex: !tilesDrawing ? 2 : 1,
-                  opacity: !tilesDrawing ? 1 : 0.5,
+                  zIndex: drawingType === "bgTiles" ? 2 : 1,
+                  opacity: drawingType === "bgTiles" ? 1 : 0.5,
                 }}
                 className={styles.tile}
                 onClick={() => fillBgTile(i, j)}
@@ -83,11 +98,32 @@ function EditorComponent() {
                 style={{
                   top: i * 32,
                   left: j * 32,
-                  zIndex: tilesDrawing ? 2 : 1,
-                  opacity: tilesDrawing ? 1 : 0.5,
+                  zIndex: drawingType === "tiles" ? 2 : 1,
+                  opacity: drawingType === "tiles" ? 1 : 0.5,
                 }}
                 className={styles.tile}
                 onClick={() => fillTile(i, j)}
+              >
+                <img
+                  src={tileList[tile]?.asset}
+                  alt={tileList[tile]?.asset}
+                  width="100%"
+                />
+              </div>
+            ))
+          )}
+
+          {interactive.map((row, i) =>
+            row.map((tile, j) => (
+              <div
+                style={{
+                  top: i * 32,
+                  left: j * 32,
+                  zIndex: drawingType === "interactive" ? 2 : 1,
+                  opacity: drawingType === "interactive" ? 1 : 0.5,
+                }}
+                className={styles.tile}
+                onClick={() => fillInteractive(i, j)}
               >
                 <img
                   src={tileList[tile]?.asset}
@@ -103,21 +139,31 @@ function EditorComponent() {
       <div>
         <div className={styles.elements}>
           {Object.keys(tileList).map((tile) => (
-            <img
-              src={tileList[+tile].asset}
-              alt={tile}
-              onClick={() => setActiveTile(tileList[+tile])}
-            />
+            <div className={styles.imgContainer}>
+              <img
+                src={tileList[+tile].asset}
+                alt={tile}
+                onClick={() => setActiveTile(tileList[+tile])}
+              />
+            </div>
           ))}
           <div onClick={() => setActiveTile(undefined)}>empty</div>
         </div>
         <div className={styles.activeElement}>
           <img src={activeTile?.asset} alt={activeTile?.asset} width="100%" />
         </div>
-        <h2>{tilesDrawing ? "main tiles" : "bg tiles"}</h2>
+        <h2>
+          {drawingType === "tiles" && "main tiles"}
+          {drawingType === "bgTiles" && "bg tiles"}
+          {drawingType === "interactive" && "interactive"}
+        </h2>
         <button onClick={save}>Save</button>
 
-        <button onClick={() => setTilesDrawing(!tilesDrawing)}>Swap</button>
+        <select onChange={onLayerChange} value={map}>
+          <option value="tiles">fg</option>
+          <option value="bgTiles">bg</option>
+          <option value="interactive">interactive</option>
+        </select>
 
         <select onChange={onChange} value={map}>
           <option value="easy">Easy</option>

@@ -1,13 +1,11 @@
 import { Sprite } from './types'
 import config from "./config"
+import Camera from "./camera"
 
 type Asset = {
   path: string
   img?: HTMLImageElement
 }
-
-const width = 576
-const height = 324
 
 class Background {
   width = 576
@@ -62,28 +60,28 @@ class Background {
 
     for (let asset of this.assets) {
       const img = asset.img!
-      const moved = Math.floor(index * this.speed * this.cameraX % width)
+      const moved = Math.floor(index * this.speed * this.cameraX % this.width)
       ctx.drawImage(
         img, 
         moved, 
         0, 
-        width, 
-        height,
+        this.width, 
+        this.height,
         0,
         0,
-        width * config.SCALE, 
-        height * config.SCALE)
+        this.width * config.SCALE, 
+        this.height * config.SCALE)
 
       ctx.drawImage(
         img, 
         0, 
         0, 
-        width, 
-        height,
+        this.width, 
+        this.height,
         (this.width - moved) * config.SCALE,
         0,
-        width * config.SCALE, 
-        height * config.SCALE)
+        this.width * config.SCALE, 
+        this.height * config.SCALE)
       index++
     }
     this.trainFrame++

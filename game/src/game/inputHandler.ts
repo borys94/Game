@@ -1,7 +1,7 @@
 
 
 // const INPUTS = ['PRESS_RIGHT', 'PRESS_LEFT', 'RELEASE_RIGHT', 'RELEASE_LEFT', 'PRESS_UP', 'RELEASE_UP'] as const
-const INPUTS = ['ArrowRight', 'ArrowLeft', 'ArrowUp', '1', '2', '3'] as const
+const INPUTS = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'Digit1', 'Digit2', 'Digit3', 'Space', 'Digit4'] as const
 export type InputType = typeof INPUTS[number]
 
 class InputHandler {
@@ -10,41 +10,40 @@ class InputHandler {
 
   constructor() {
     window.addEventListener("keydown", (e) => {
-      console.log(e.key)
-      switch(e.key) {
+      console.log(e.code)
+      switch(e.code) {
         case "ArrowRight":
         case "ArrowLeft":
         case "ArrowUp":
-        case "3":
-        case "2":
-        case "1":
-          this.lastKey = e.key
-          this.activeKeys.push(e.key)
+        case "Digit3":
+        case "Digit2":
+        case "Digit1":
+        case "Space":
+        case "Digit4":
+          this.lastKey = e.code
+          this.activeKeys.push(e.code)
           break
       }
     })
 
     window.addEventListener("keyup", (e) => {
-      switch(e.key) {
+      switch(e.code) {
         case "ArrowRight":
         case "ArrowLeft":
         case "ArrowUp":
-        case "3":
-        case "2":
-        case "1":
-          this.lastKey = e.key
-          this.activeKeys = this.activeKeys.filter(key => key !== e.key)
+        case "Digit3":
+        case "Digit2":
+        case "Digit1":
+        case "Space":
+        case "Digit4":
+          this.lastKey = e.code
+          this.activeKeys = this.activeKeys.filter(key => key !== e.code)
           break
       }
     })
   }
 
   hasInput = (input: InputType) => this.activeKeys.includes(input)
-}
-
-export function drawText(ctx: CanvasRenderingContext2D, message: string) {
-  ctx.font = "10px Helvetica"
-  ctx.fillText("Input: " + message, 10, 10)
 }
 
 export default InputHandler

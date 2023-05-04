@@ -1,11 +1,12 @@
 import Player from './player'
 // import Lava from './Lava'
 // import Background from './Background'
-// import Map from './Map'
+import Assets from './assets'
 import InputHandler from './inputHandler'
 import config from './config'
 import Map from './map'
 import Background from './background'
+import Camera from './camera'
 import { drawDebugInfo } from './debug'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
@@ -19,9 +20,8 @@ class Game {
   map: Map
   background: Background
   inputHandler: InputHandler
-
-  cameraX = 0
-  cameraY = 0
+  camera: Camera
+  assets: Assets
 
   lastTime = 0
 
@@ -32,11 +32,13 @@ class Game {
     this.canvas.height = CANVAS_HEIGHT
     this.ctx.imageSmoothingEnabled = false;
 
-    this.map = new Map()
+    this.assets = new Assets()
+    this.map = new Map(this.assets)
     this.background = new Background()
     this.player = new Player(CANVAS_WIDTH, CANVAS_HEIGHT, this.map)
     
     this.inputHandler = new InputHandler()
+    this.camera = new Camera(this.player, this.map)
 
     this.animate(0)
   }
@@ -47,27 +49,18 @@ class Game {
 
     this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
   
-    // Camera
-    this.cameraX = this.player.x > config.CANVAS_WIDTH * config.SCALE/2 ? this.player.x - config.CANVAS_WIDTH * config.SCALE/2 : 0
-    this.cameraY = this.player.y > config.CANVAS_HEIGHT * config.SCALE/2 ? this.player.y - config.CANVAS_HEIGHT * config.SCALE/2 : 0
+    this.camera.update()
 
-    if (this.player.x > this.map.width - config.CANVAS_WIDTH * config.SCALE/2) {
-      this.cameraX = this.map.width - config.CANVAS_WIDTH  * config.SCALE
-    }
-    if (this.player.y > this.map.height - config.CANVAS_HEIGHT * config.SCALE/2) {
-      this.cameraY = this.map.height - config.CANVAS_HEIGHT  * config.SCALE
-    }
-
-    this.map.applyCamera(this.cameraX, this.cameraY)
-    this.player.applyCamera(this.cameraX, this.cameraY)
-    this.background.applyCamera(this.cameraX, this.cameraY)
+    this.map.applyCamera(this.camera.x, this.camera.y)
+    this.player.applyCamera(this.camera.x, this.camera.y)
+    this.background.applyCamera(this.camera.x, this.camera.y)
     
     if (this.inputHandler.lastKey) {
       this.player.update(this.inputHandler.activeKeys, this.map)
     }
 
     this.background.draw(this.ctx)
-    this.map.draw(this.ctx)
+    this.map.draw(this.ctx, deltaTime)
     this.player.draw(this.ctx, deltaTime)
 
     drawDebugInfo(this.ctx, this.player, this.inputHandler)

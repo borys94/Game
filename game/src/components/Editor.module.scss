@@ -15,6 +15,13 @@
   // transform: translate(-50%, -50%);
 }
 
+.imgContainer {
+  // width: 32px;
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
 .tiles {
   display: grid;
   grid-template-rows: repeat(20,32px);

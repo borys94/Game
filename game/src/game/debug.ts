@@ -10,4 +10,5 @@ export function drawDebugInfo(ctx: CanvasRenderingContext2D, player: Player, inp
   drawText(ctx, `Last key: ${inputHandler.lastKey}`, 10, 10)
   drawText(ctx, `State: ${player.currentState.state}`, 10, 20)
   drawText(ctx, `Player x, y: ${player.x} ${player.y}`, 10, 30)
+  drawText(ctx, `cards: ${player.cards}`, 10, 40)
 }

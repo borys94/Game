@@ -1,89 +1,61 @@
-import { Sprite } from './types'
-import config from './config'
-import tiles from './tiles'
-
+import Assets from "./assets"
 import easyMap from '../maps/easy'
+import Element, { ElementBuilder } from "./Element"
+import Player from "./player"
 
 class Map {
-  loaded = false
-  frame = 0
-  loadedAssets = 0
-  positionX = 0
-  positionY = 0
-
   cameraX = 0
   cameraY = 0
 
   width: number
   height: number
 
-  images: Sprite[][]
-  bgImages: Sprite[][]
+  images: number[][]
+  bgImages: number[][]
+  interactive: number[][]
 
-  constructor() {
-    this.images = new Array(easyMap.tiles.length).fill(0).map(x => new Array(easyMap.tiles[0].length).fill(0))
-    this.bgImages = new Array(easyMap.bgTiles.length).fill(0).map(x => new Array(easyMap.bgTiles[0].length).fill(0))
-    this.loadAllAssets()
+  elements: Element[][] = []
+
+  framesX: number[][] = []
+
+  constructor(private assets: Assets) {
+    this.images = easyMap.tiles
+    this.bgImages = easyMap.bgTiles
+    this.interactive = easyMap.interactive
 
     this.width = this.images[0].length * 32
     this.height = this.images.length * 32
+
+    for (let i = 0;i < this.interactive.length; i++) {
+      for (let j = 0;j < this.interactive[0].length; j++) {
+
+        if (!this.elements[i]) {
+          this.elements[i] = []
+        }
+
+        this.elements[i][j] = ElementBuilder.build(this.assets, this.interactive[i][j], i, j)//  new Element(this.assets, this.interactive[i][j], i, j)
+      }
+    }
+  }
+
+  hasElementToCollect = (x: number, y: number) => {
+    return this.interactive[Math.floor(x /32)][Math.floor(y/32)]
+  }
+
+  getElement = (x: number, y: number) => {
+    const element = this.elements[Math.floor(y /32)][Math.floor(x/32)]
+    if (element.asset && element.active) {
+      return element
+    }
   }
 
   applyCamera = (x: number, y: number) => {
     this.cameraX = x
     this.cameraY = y
-  }
-
-
-  loadAllAssets() {
-    let i = 0;
-    let j = 0
-    
-    for(let row of easyMap.bgTiles) {
-      for (let tileIndex of row) {
-        if (!tileIndex) {
-          j++
-          continue
-        }
-        const img = new Image()
-        img.src = tiles[tileIndex].asset
-        img.onload = () => {
-          this.loadedAssets++
-
-        }
-        this.bgImages[i][j] = tiles[tileIndex]
-        this.bgImages[i][j].img = img
-        
-        j++
+    for (let i = 0;i < this.interactive.length; i++) {
+      for (let j = 0;j < this.interactive[0].length; j++) {
+        this.elements[i][j].applyCamera(x, y)
       }
-      i++;
-      j = 0
-      
-    }
-
-    i = 0;
-    j = 0;
-
-    for(let row of easyMap.tiles) {
-      for (let tileIndex of row) {
-        if (!tileIndex) {
-          j++
-          continue
-        }
-        const img = new Image()
-        img.src = tiles[tileIndex].asset
-        img.onload = () => {
-          this.loadedAssets++
-
-        }
-        this.images[i][j] = tiles[tileIndex]
-        this.images[i][j].img = img
-        
-        j++
-      }
-      i++;
-      j = 0
-      
     }
   }
 
@@ -92,34 +64,44 @@ class Map {
     return (this.images[Math.floor(y/32)][Math.floor(x/32)])
   }
 
-  nextSprite() {
-    // this.frame = this.frame < this.sprites[this.state].frames - 1 ? this.frame + 1 : 0
+  draw = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
+    this.drawTiles(ctx, easyMap.bgTiles)
+    this.drawTiles(ctx, easyMap.tiles)
+
+    for (let i = 0;i < this.elements.length; i++) {
+      for (let j = 0;j < this.elements[0].length; j++) {
+        this.elements[i][j].draw(ctx, deltaTime)
+      }
+    }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    // if (!this.loaded) {
-    //   return
-    // }
-
-    for (let i = 0;i < this.images.length; i++) {
-      for (let j = 0;j < this.images[0].length; j++) {
-        const {width, height, img} = this.bgImages[i][j]
-        if (img) {
-          ctx.drawImage(img!, width * this.frame, 0, width, height, j * width - this.cameraX, i * height + this.positionY - this.cameraY, width, height)
+  drawTiles(ctx: CanvasRenderingContext2D, tiles: number[][]) {
+    if (!this.assets.isLoaded()) {
+      return
+    }
+    for (let i = 0;i < tiles.length; i++) {
+      for (let j = 0;j < tiles[0].length; j++) {
+        const asset = this.assets.getById(tiles[i][j])
+        if (asset) {
+          let {img, width, height} = asset
+          // width = 32
+          //  height = 32
+          if (img) {
+            ctx.drawImage(
+              img, 
+              0, 
+              0, 
+              width, 
+              height,
+              j * 32 - this.cameraX, 
+              i * 32 - this.cameraY, 
+              32, 
+              32
+            )
+          }
         }
       }
     }
-    
-
-    for (let i = 0;i < this.images.length; i++) {
-      for (let j = 0;j < this.images[0].length; j++) {
-        const {width, height, img} = this.images[i][j]
-        if (img) {
-          ctx.drawImage(img!, width * this.frame, 0, width, height, j * width - this.cameraX, i * height + this.positionY - this.cameraY, width, height)
-        }
-      }
-    }
-    
   }
 }
 

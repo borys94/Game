@@ -5,6 +5,7 @@ import emptyMap from "../../maps/empty"
 type MapType = {
   tiles: number[][]
   bgTiles: number[][]
+  interactive: number[][]
 }
 
 class Editor {

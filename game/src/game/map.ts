@@ -1,7 +1,7 @@
 import type Assets from './assets'
 import easyMap from '../maps/medium'
 import type Element from './Element'
-import { ElementBuilder } from './Element'
+import { buildElement } from './Element'
 import { TILE_SIZE } from './config'
 
 class Map {
@@ -34,7 +34,7 @@ class Map {
           this.elements[i] = []
         }
 
-        this.elements[i][j] = ElementBuilder.build(this.assets, this.interactive[i][j], i, j)//  new Element(this.assets, this.interactive[i][j], i, j)
+        this.elements[i][j] = buildElement(this.assets, this.interactive[i][j], i, j)//  new Element(this.assets, this.interactive[i][j], i, j)
       }
     }
   }

@@ -3,9 +3,9 @@ import './App.css'
 import Game from './game'
 import 'normalize.css'
 
-let game: Game
+let game: Game | undefined
 
-function App () {
+function App (): JSX.Element {
   useEffect(() => {
     if (!game) {
       game = new Game()

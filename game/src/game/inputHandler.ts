@@ -42,7 +42,7 @@ class InputHandler {
     })
   }
 
-  hasInput = (input: InputType) => this.activeKeys.includes(input)
+  hasInput = (input: InputType): boolean => this.activeKeys.includes(input)
 }
 
 export default InputHandler

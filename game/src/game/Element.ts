@@ -34,11 +34,11 @@ export default class Element {
 
   }
 
-  public handleInput (player: Player, inputs: InputType[]) {
+  public handleInput (player: Player, inputs: InputType[]): void {
 
   }
 
-  draw = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
+  draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
     if (!this.asset || !this.active) {
       return
     }
@@ -60,7 +60,7 @@ export default class Element {
     }
   }
 
-  updateFrameIfNeeded (deltaTime: number) {
+  updateFrameIfNeeded (deltaTime: number): void {
     if (!this.animate) {
       return
     }
@@ -73,39 +73,37 @@ export default class Element {
     }
   }
 
-  applyCamera = (x: number, y: number) => {
+  applyCamera = (x: number, y: number): void => {
     this.cameraX = x
     this.cameraY = y
   }
 }
 
-export class ElementBuilder {
-  static build (assets: Assets, assetId: number, y: number, x: number): Element {
-    const asset = assets.getById(assetId)
+export const buildElement = (assets: Assets, assetId: number, y: number, x: number): Element => {
+  const asset = assets.getById(assetId)
 
-    if (!asset) {
-      return new Element(assets, assetId, y, x)
-    }
+  if (!asset) {
+    return new Element(assets, assetId, y, x)
+  }
 
-    if (asset.type === 'chest') {
-      return new ChestElement(assets, assetId, y, x)
-    } else if (asset.type === 'trap') {
-      return new TrapElement(assets, assetId, y, x)
-    } else if (asset.type === 'collectable') {
-      return new CollectableElement(assets, assetId, y, x)
-    } else {
-      return new Element(assets, assetId, y, x)
-    }
+  if (asset.type === 'chest') {
+    return new ChestElement(assets, assetId, y, x)
+  } else if (asset.type === 'trap') {
+    return new TrapElement(assets, assetId, y, x)
+  } else if (asset.type === 'collectable') {
+    return new CollectableElement(assets, assetId, y, x)
+  } else {
+    return new Element(assets, assetId, y, x)
   }
 }
 
 export class ChestElement extends Element {
   animate = false
-  enter (player: Player) {
+  enter (player: Player): void {
 
   }
 
-  handleInput (player: Player, inputs: InputType[]) {
+  handleInput (player: Player, inputs: InputType[]): void {
     if (inputs.includes('Space')) {
       this.animate = true
     }
@@ -116,28 +114,24 @@ export class ChestElement extends Element {
 }
 
 export class TrapElement extends Element {
-  enter (player: Player) {
+  enter (player: Player): void {
     player.setState('hurt')
     if (player.direction === 'left') player.speed = 1
     else player.speed = -1
   }
 
-  handleInput (player: Player, inputs: InputType[]) {
-    if (inputs.includes('Space')) {
+  handleInput (player: Player, inputs: InputType[]): void {
 
-    }
   }
 }
 
 export class CollectableElement extends Element {
-  enter (player: Player) {
+  enter (player: Player): void {
     player.cards++
     this.active = false
   }
 
-  handleInput (player: Player, inputs: InputType[]) {
-    if (inputs.includes('Space')) {
+  handleInput (player: Player, inputs: InputType[]): void {
 
-    }
   }
 }

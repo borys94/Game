@@ -19,11 +19,11 @@ class Assets {
     this.loadAllAssets()
   }
 
-  isLoaded = () => this.loaded
+  isLoaded = (): boolean => this.loaded
 
-  getAssetCount = () => tiles.filter(tile => tile).length
+  getAssetCount = (): number => tiles.filter(tile => tile).length
 
-  loadAllAssets () {
+  loadAllAssets (): void {
     const allTiles = this.getAssetCount()
 
     for (const sprite of tiles) {
@@ -47,7 +47,7 @@ class Assets {
     console.log(this.assets)
   }
 
-  getById = (id: number) => this.assets[id]
+  getById = (id: number): AssetType => this.assets[id]
 }
 
 export default Assets

@@ -1,6 +1,5 @@
 import easyMap from '../../maps/easy'
 import mediumMap from '../../maps/medium'
-import emptyMap from '../../maps/empty'
 
 interface MapType {
   tiles: number[][]

@@ -131,7 +131,7 @@ class Player {
   draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
     const width = this.width
     const height = this.height
-    const image = this.sprites[this.currentState.state].img!
+    const image = this.sprites[this.currentState.state].img
     const scaleX = this.direction === 'left' ? -1 : 1
 
     if (this.frameTimer > this.frameInterval && this.currentState.animate) {
@@ -146,6 +146,10 @@ class Player {
     if ((window as any).debug) {
       ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, height)
       ctx.strokeRect(this.x + 4 - this.cameraX, this.y - this.cameraY, width / 2 - 4, height)
+    }
+
+    if (!image) {
+      return
     }
 
     ctx.save()

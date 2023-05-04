@@ -55,30 +55,31 @@ class Background {
     let index = 0
 
     for (const asset of this.assets) {
-      const img = asset.img!
-      const moved = Math.floor(index * this.speed * this.cameraX % this.width)
-      ctx.drawImage(
-        img,
-        moved,
-        0,
-        this.width,
-        this.height,
-        0,
-        0,
-        this.width * config.SCALE,
-        this.height * config.SCALE)
+      const img = asset.img
+      const moved = Math.floor(index++ * this.speed * this.cameraX % this.width)
+      if (img) {
+        ctx.drawImage(
+          img,
+          moved,
+          0,
+          this.width,
+          this.height,
+          0,
+          0,
+          this.width * config.SCALE,
+          this.height * config.SCALE)
 
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        this.width,
-        this.height,
-        (this.width - moved) * config.SCALE,
-        0,
-        this.width * config.SCALE,
-        this.height * config.SCALE)
-      index++
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          this.width,
+          this.height,
+          (this.width - moved) * config.SCALE,
+          0,
+          this.width * config.SCALE,
+          this.height * config.SCALE)
+      }
     }
     this.trainFrame++
   }

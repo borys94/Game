@@ -43,7 +43,7 @@ class Game {
     this.animate(0)
   }
 
-  animate = (timestamp: number) => {
+  animate = (timestamp: number): void => {
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
 

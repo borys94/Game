@@ -6,8 +6,8 @@ import { State } from './state'
 const STATES = ['standing', 'walking'] as const
 export type StateType = typeof STATES[number]
 
-abstract class EnemyState extends State<StateType> {
-  constructor (public character: Enemy<StateType>, public state: StateType) {
+export abstract class EnemyState extends State<StateType> {
+  constructor (public character: Enemy, public state: StateType) {
     super(state)
   }
 
@@ -25,7 +25,7 @@ abstract class EnemyState extends State<StateType> {
 }
 
 export class Standing extends EnemyState {
-  constructor (character: Enemy<StateType>) {
+  constructor (character: Enemy) {
     super(character, 'standing')
   }
 
@@ -45,7 +45,7 @@ export class Standing extends EnemyState {
 }
 
 export class Walking extends EnemyState {
-  constructor (character: Enemy<StateType>) {
+  constructor (character: Enemy) {
     super(character, 'walking')
   }
 

@@ -1,8 +1,7 @@
 // import type Assets from './assets'
 import { type InputType } from '../inputHandler'
 import type Map from '../map'
-import { Standing, Walking } from '../states/enemyStates'
-import { type State } from '../states/state'
+import { Standing, Walking, type EnemyState } from '../states/enemyStates'
 import Character, { type Direction } from './character'
 import type Player from './player'
 
@@ -13,7 +12,7 @@ interface Sprite {
   img?: HTMLImageElement
 }
 
-abstract class Enemy<EnemyState extends string> extends Character<EnemyState> {
+abstract class Enemy extends Character<RatEnemyState, EnemyState> {
   direction: Direction = 'left'
   player?: Player
 
@@ -24,13 +23,13 @@ abstract class Enemy<EnemyState extends string> extends Character<EnemyState> {
 
 type RatEnemyState = 'standing' | 'walking'
 
-export class RatEnemy extends Enemy<RatEnemyState> {
-  states: Record<RatEnemyState, State<RatEnemyState>> = {
+export class RatEnemy extends Enemy {
+  states: Record<RatEnemyState, EnemyState> = {
     standing: new Standing(this),
     walking: new Walking(this)
   }
 
-  currentState: State<RatEnemyState> = this.states.walking
+  currentState: EnemyState = this.states.walking
 
   sprites: Record<RatEnemyState, Sprite> = {
     standing: {

@@ -13,14 +13,14 @@ interface Sprite {
 
 export type Direction = 'left' | 'right'
 
-abstract class Character<CharacterState extends string> {
+abstract class Character<T extends string, CharacterState extends State<T>> {
   mapWidth: number
   mapHeight: number
   map: Map
 
-  abstract states: Record<CharacterState, State<CharacterState>>
-  abstract currentState: State<CharacterState>
-  abstract sprites: Record<CharacterState, Sprite>
+  abstract states: Record<CharacterState['state'], CharacterState>
+  abstract currentState: CharacterState
+  abstract sprites: Record<T, Sprite>
 
   // character positions
   x: number
@@ -71,7 +71,7 @@ abstract class Character<CharacterState extends string> {
     const spritesCount = Object.keys(this.sprites).length
 
     for (const s of Object.keys(this.sprites)) {
-      const state = s as CharacterState
+      const state = s as T
       const img = new Image()
       this.sprites[state].img = img
       img.src = this.sprites[state].asset
@@ -137,7 +137,7 @@ abstract class Character<CharacterState extends string> {
     this.handleVerticalMovement()
   }
 
-  setState = (state: CharacterState, direction?: Direction): void => {
+  setState = (state: T, direction?: Direction): void => {
     if (direction) {
       this.direction = direction
     }

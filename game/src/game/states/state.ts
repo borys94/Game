@@ -4,7 +4,7 @@ import { type InputType } from '../inputHandler'
 export abstract class State<StateType extends string> {
   state: StateType
   animate = true
-  abstract character: Character<any>
+  abstract character: Character<StateType, any>
 
   constructor (state: StateType) {
     this.state = state

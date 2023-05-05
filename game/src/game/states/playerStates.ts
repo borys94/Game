@@ -3,9 +3,20 @@ import { type InputType } from '../inputHandler'
 import { State } from './state'
 
 const STATES = ['standing', 'running', 'jumping', 'falling', 'strongAttack', 'doubleHit', 'hit', 'use', 'hurt'] as const
-export type StateType = typeof STATES[number]
+export type PlayerStateTypes = typeof STATES[number]
 
-export class Standing extends State<StateType> {
+export abstract class PlayerState extends State<PlayerStateTypes> {
+  constructor (public character: Player, public state: PlayerStateTypes) {
+    super(state)
+  }
+
+  enter (): void {
+  }
+
+  // abstract handleInput (): void
+}
+
+export class Standing extends State<PlayerStateTypes> {
   constructor (public character: Player) {
     super('standing')
   }
@@ -26,7 +37,7 @@ export class Standing extends State<StateType> {
   }
 }
 
-export class Running extends State<StateType> {
+export class Running extends State<PlayerStateTypes> {
   constructor (public character: Player) {
     super('running')
   }
@@ -52,7 +63,7 @@ export class Running extends State<StateType> {
   }
 }
 
-export class Jumping extends State<StateType> {
+export class Jumping extends State<PlayerStateTypes> {
   constructor (public character: Player) {
     super('jumping')
   }
@@ -78,7 +89,7 @@ export class Jumping extends State<StateType> {
   }
 }
 
-export class Falling extends State<StateType> {
+export class Falling extends State<PlayerStateTypes> {
   constructor (public character: Player) {
     super('falling')
   }
@@ -94,7 +105,7 @@ export class Falling extends State<StateType> {
   }
 }
 
-export class StrongAttack extends State<StateType> {
+export class StrongAttack extends State<PlayerStateTypes> {
   performed = false
   constructor (public character: Player) {
     super('strongAttack')
@@ -116,7 +127,7 @@ export class StrongAttack extends State<StateType> {
   }
 }
 
-export class DoubleHit extends State<StateType> {
+export class DoubleHit extends State<PlayerStateTypes> {
   performed = false
   constructor (public character: Player) {
     super('doubleHit')
@@ -138,7 +149,7 @@ export class DoubleHit extends State<StateType> {
   }
 }
 
-export class Hit extends State<StateType> {
+export class Hit extends State<PlayerStateTypes> {
   performed = false
   constructor (public character: Player) {
     super('hit')
@@ -160,7 +171,7 @@ export class Hit extends State<StateType> {
   }
 }
 
-export class Use extends State<StateType> {
+export class Use extends State<PlayerStateTypes> {
   performed = false
   constructor (public character: Player) {
     super('use')
@@ -182,7 +193,7 @@ export class Use extends State<StateType> {
   }
 }
 
-export class Hurt extends State<StateType> {
+export class Hurt extends State<PlayerStateTypes> {
   performed = false
   animate = false
   time = 0

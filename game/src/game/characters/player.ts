@@ -1,5 +1,4 @@
-import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, type StateType, Hurt } from '../states/playerStates'
-import { type State } from '../states/state'
+import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, type PlayerStateTypes, Hurt, type PlayerState } from '../states/playerStates'
 import { type InputType } from '../inputHandler'
 import type Map from '../map'
 import Character from './character'
@@ -11,10 +10,8 @@ interface Sprite {
   img?: HTMLImageElement
 }
 
-type PlayerState = Exclude<StateType, 'walking'>
-
-class Player extends Character<PlayerState> {
-  states: Record<PlayerState, State<PlayerState>> = {
+class Player extends Character<PlayerStateTypes, PlayerState> {
+  states: Record<PlayerState['state'], PlayerState> = {
     standing: new Standing(this),
     running: new Running(this),
     jumping: new Jumping(this),
@@ -26,9 +23,9 @@ class Player extends Character<PlayerState> {
     hurt: new Hurt(this)
   }
 
-  currentState: State<PlayerState> = this.states.standing
+  currentState: PlayerState = this.states.standing
 
-  sprites: Record<PlayerState, Sprite> = {
+  sprites: Record<PlayerStateTypes, Sprite> = {
     standing: {
       frames: 4,
       asset: 'assets/heroes/punk/idle.png'

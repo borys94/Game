@@ -3,146 +3,60 @@ import Editor from '../lib/editor'
 import tileList from '../game/tiles'
 import { type Sprite } from '../game/types'
 import styles from './Editor.module.scss'
+// import config from '../game/config'
 
-let editor: Editor
+// const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
+// const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
 
 type DrawingType = 'tiles' | 'bgTiles' | 'interactive'
 
-const empty = (): number[][] =>
-  new Array(20).fill([]).map((x) => new Array(50).fill(0))
+let ed: Editor | undefined
 
-function EditorComponent (): React.ReactNode {
-  const [map, setMap] = useState<string>()
-  const [tiles, setTiles] = useState<number[][]>(empty())
-  const [bgTiles, setBgTiles] = useState<number[][]>(empty())
-  const [interactive, setInteractive] = useState<number[][]>(empty())
+function EditorComponent (): React.ReactElement {
+  const [editor, setEditor] = useState<Editor>()
   const [drawingType, setDrawingType] = useState<DrawingType>('tiles')
   const [activeTile, setActiveTile] = useState<Sprite & { id: number }>()
 
   useEffect(() => {
-    if (!editor) {
-      editor = new Editor()
+    if (!ed) {
+      ed = new Editor()
+      setEditor(ed)
     }
   }, [])
 
-  const fillTile = (i: number, j: number): void => {
-    tiles[i][j] = activeTile?.id ?? 0
-    setTiles([...tiles])
-  }
+  // const fillTile = (i: number, j: number): void => {
+  //   editor?.fillFgTile(i, j)
+  // }
 
-  const fillBgTile = (i: number, j: number): void => {
-    bgTiles[i][j] = activeTile?.id ?? 0
-    setBgTiles([...bgTiles])
-  }
+  // const fillBgTile = (i: number, j: number): void => {
+  //   editor?.fillBgTile(i, j)
+  // }
 
-  const fillInteractive = (i: number, j: number): void => {
-    interactive[i][j] = activeTile?.id ?? 0
-    setInteractive([...interactive])
-  }
+  // const fillInteractive = (i: number, j: number): void => {
+  //   editor?.fillInteractiveTile(i, j)
+  // }
 
   const save = (): void => {
     console.log(
       JSON.stringify({
-        tiles,
-        bgTiles,
-        interactive
+        tiles: editor?.map.images,
+        bgTiles: editor?.map.bgImages,
+        interactive: editor?.map.elements.map(el => el.map(e => e.asset?.id ?? 0))
       })
     )
-  }
-
-  const onChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    if (!e) {
-      return
-    }
-    const value = e.target.value
-    const map = editor.loadMap(value)
-    setTiles([...map.tiles])
-    setBgTiles([...map.bgTiles])
-    setInteractive([...map.interactive])
-    setMap(value)
+    console.log(editor)
   }
 
   const onLayerChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     console.log(e.target.value)
     setDrawingType(e.target.value as any)
+    editor?.setLayer(e.target.value as any)
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.editor}>
-        <div className={styles.tiles}>
-          {bgTiles.map((row, i) =>
-            row.map((tile, j) => (
-              <div
-                key={i * row.length + j}
-                style={{
-                  top: i * 32,
-                  left: j * 32,
-                  zIndex: drawingType === 'bgTiles' ? 2 : 1,
-                  opacity: drawingType === 'bgTiles' ? 1 : 0.5
-                }}
-                className={styles.tile}
-                onClick={() => {
-                  fillBgTile(i, j)
-                }}
-              >
-                <img
-                  src={tileList[tile]?.asset}
-                  alt={tileList[tile]?.asset}
-                  width="100%"
-                />
-              </div>
-            ))
-          )}
-
-          {tiles.map((row, i) =>
-            row.map((tile, j) => (
-              <div
-                key={i * row.length + j}
-                style={{
-                  top: i * 32,
-                  left: j * 32,
-                  zIndex: drawingType === 'tiles' ? 2 : 1,
-                  opacity: drawingType === 'tiles' ? 1 : 0.5
-                }}
-                className={styles.tile}
-                onClick={() => {
-                  fillTile(i, j)
-                }}
-              >
-                <img
-                  src={tileList[tile]?.asset}
-                  alt={tileList[tile]?.asset}
-                  width="100%"
-                />
-              </div>
-            ))
-          )}
-
-          {interactive.map((row, i) =>
-            row.map((tile, j) => (
-              <div
-                key={i * row.length + j}
-                style={{
-                  top: i * 32,
-                  left: j * 32,
-                  zIndex: drawingType === 'interactive' ? 2 : 1,
-                  opacity: drawingType === 'interactive' ? 1 : 0.5
-                }}
-                className={styles.tile}
-                onClick={() => {
-                  fillInteractive(i, j)
-                }}
-              >
-                <img
-                  src={tileList[tile]?.asset}
-                  alt={tileList[tile]?.asset}
-                  width="100%"
-                />
-              </div>
-            ))
-          )}
-        </div>
+        <canvas id="canvas" />
       </div>
 
       <div>
@@ -154,6 +68,7 @@ function EditorComponent (): React.ReactNode {
                 alt={tile}
                 onClick={() => {
                   setActiveTile(tileList[+tile])
+                  editor?.setCurrentAsset(editor.assets.getById(tileList[+tile].id))
                 }}
               />
             </div>
@@ -161,6 +76,7 @@ function EditorComponent (): React.ReactNode {
           <div
             onClick={() => {
               setActiveTile(undefined)
+              editor?.setCurrentAsset(null)
             }}
           >
             empty
@@ -176,17 +92,12 @@ function EditorComponent (): React.ReactNode {
         </h2>
         <button onClick={save}>Save</button>
 
-        <select onChange={onLayerChange} value={map}>
+        <select onChange={onLayerChange} value={drawingType}>
           <option value="tiles">fg</option>
           <option value="bgTiles">bg</option>
           <option value="interactive">interactive</option>
         </select>
 
-        <select onChange={onChange} value={map}>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="empty">Empty</option>
-        </select>
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ export interface AssetType {
   height: number
   frames: number
   type?: TileType
+  id: number
 }
 
 class Assets {
@@ -32,6 +33,7 @@ class Assets {
       img.src = sprite.asset
       this.assets[sprite.id] = {
         img,
+        id: sprite.id,
         width: sprite.width,
         height: sprite.height,
         frames: sprite.frames,
@@ -44,7 +46,6 @@ class Assets {
         }
       }
     }
-    console.log(this.assets)
   }
 
   getById = (id: number): AssetType => this.assets[id]

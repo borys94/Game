@@ -1,7 +1,8 @@
-import { type State, Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, type StateType, Hurt } from './state'
-import { type InputType } from './inputHandler'
-import type Map from './map'
-import { clamp } from './utils'
+import { TILE_SIZE } from '../config'
+import { type InputType } from '../inputHandler'
+import type Map from '../map'
+import { type State } from '../states/state'
+import { clamp } from '../utils'
 
 interface Sprite {
   frames: number
@@ -10,111 +11,67 @@ interface Sprite {
   img?: HTMLImageElement
 }
 
-type Direction = 'left' | 'right'
+export type Direction = 'left' | 'right'
 
-class Player {
-  gameWidth: number
-  gameHeight: number
-  states: Record<StateType, State> = {
-    standing: new Standing(this),
-    running: new Running(this),
-    jumping: new Jumping(this),
-    falling: new Falling(this),
-    hit: new Hit(this),
-    doubleHit: new DoubleHit(this),
-    strongAttack: new StrongAttack(this),
-    use: new Use(this),
-    hurt: new Hurt(this)
-  }
-
-  currentState: State = this.states.standing
+abstract class Character<CharacterState extends string> {
+  mapWidth: number
+  mapHeight: number
   map: Map
-  direction: Direction = 'right'
+
+  abstract states: Record<CharacterState, State<CharacterState>>
+  abstract currentState: State<CharacterState>
+  abstract sprites: Record<CharacterState, Sprite>
+
+  // character positions
+  x: number
+  y: number
 
   width = 48
   height = 48
 
-  frameX = 0
-  frameY = 0
-
   cameraX = 0
   cameraY = 0
 
-  x = 0
-  y = 0
+  frameX = 0
 
   speed = 0
   maxSpeed = 5
 
+  direction: Direction = 'right'
+
   vy = 0
-  maxVy = 15
+  maxVy: number
   weight = 1.5
 
   frameTimer = 0
-  frameInterval = 100// 1000/this.fps
+  frameInterval = 100
 
   loadedAssets = 0
   loaded = false
 
-  cards = 0
-
-  sprites: Record<StateType, Sprite> = {
-    standing: {
-      frames: 4,
-      asset: 'assets/heroes/punk/idle.png'
-    },
-    running: {
-      frames: 4,
-      asset: 'assets/heroes/punk/run.png'
-    },
-    jumping: {
-      frames: 4,
-      framesX: [0],
-      asset: 'assets/heroes/punk/jump.png'
-    },
-    falling: {
-      frames: 4,
-      framesX: [3],
-      asset: 'assets/heroes/punk/jump.png'
-    },
-    hit: {
-      frames: 6,
-      asset: 'assets/heroes/punk/attack1.png'
-    },
-    doubleHit: {
-      frames: 8,
-      asset: 'assets/heroes/punk/attack2.png'
-    },
-    strongAttack: {
-      frames: 8,
-      asset: 'assets/heroes/punk/attack3.png'
-    },
-    use: {
-      frames: 6,
-      asset: 'assets/heroes/punk/use.png'
-    },
-    hurt: {
-      frames: 2,
-      asset: 'assets/heroes/punk/hurt.png'
+  constructor (map: Map, x: number, y: number, width: number, height: number, maxVy: number) {
+    if (maxVy > TILE_SIZE) {
+      throw new Error(`maxVy cannot be larger than TILE_SIZE=${TILE_SIZE}`)
     }
-  }
 
-  constructor (gameWidth: number, gameHeight: number, map: Map) {
-    this.gameWidth = gameWidth
-    this.gameHeight = gameHeight
+    this.mapWidth = map.width
+    this.mapHeight = map.height
     this.map = map
 
-    this.x = 30// this.gameWidth / 2 - this.width / 2;
-    this.y = 400// this.gameHeight/2 - this.height
+    this.width = width
+    this.height = height
 
-    this.loadAllAssets()
+    this.maxVy = maxVy
+
+    this.x = x
+    this.y = y
   }
 
   loadAllAssets (): void {
     const spritesCount = Object.keys(this.sprites).length
 
     for (const s of Object.keys(this.sprites)) {
-      const state = s as StateType
+      const state = s as CharacterState
       const img = new Image()
       this.sprites[state].img = img
       img.src = this.sprites[state].asset
@@ -128,7 +85,7 @@ class Player {
     }
   }
 
-  draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
+  draw (ctx: CanvasRenderingContext2D, deltaTime: number): void {
     const width = this.width
     const height = this.height
     const image = this.sprites[this.currentState.state].img
@@ -168,28 +125,31 @@ class Player {
     ctx.restore()
   }
 
-  update = (keys: InputType[], map: Map): void => {
+  applyCamera = (x: number, y: number): void => {
+    this.cameraX = x
+    this.cameraY = y
+  }
+
+  update (keys: InputType[], map: Map): void {
     this.currentState.handleInput(keys)
 
     this.handleHorizontalMovement()
     this.handleVerticalMovement()
-
-    this.collectObjects()
-    this.interactObjects(keys)
   }
 
-  setState = (state: StateType, direction?: Direction): void => {
+  setState = (state: CharacterState, direction?: Direction): void => {
     if (direction) {
       this.direction = direction
     }
+
     this.currentState = this.states[state]
     this.currentState.enter()
   }
 
   onGround = (): boolean => {
     return (
-      this.map.hasObstacle(this.x + 1, this.y + this.height + 1) ||
-      this.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 1)
+      this.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
+      this.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
     )
   }
 
@@ -206,8 +166,8 @@ class Player {
 
   checkTopCollision = (): void => {
     if (
-      this.map.hasObstacle(this.x, this.y) ||
-      this.map.hasObstacle(this.x + this.width / 2, this.y)
+      this.map.hasObstacle(this.x + 1, this.y - 1) ||
+      this.map.hasObstacle(this.x + this.width / 2 - 1, this.y - 1)
     ) {
       this.y = Math.floor((this.y) / 32 + 1) * 32
       this.vy = 0
@@ -220,7 +180,7 @@ class Player {
       this.vy = clamp(this.vy, -this.maxVy, this.maxVy)
     } else {
       this.vy = 0
-      this.y = Math.floor((this.y - 1) / 32) * 32 + 16
+      this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
     }
   }
 
@@ -248,25 +208,6 @@ class Player {
       this.x = this.map.width - this.width
     }
   }
-
-  applyCamera = (x: number, y: number): void => {
-    this.cameraX = x
-    this.cameraY = y
-  }
-
-  interactObjects = (inputs: InputType[]): void => {
-    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
-    if (element?.active) {
-      element.handleInput(this, inputs)
-    }
-  }
-
-  collectObjects = (): void => {
-    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
-    if (element?.active) {
-      element.enter(this)
-    }
-  }
 }
 
-export default Player
+export default Character

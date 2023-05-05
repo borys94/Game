@@ -1,4 +1,4 @@
-import Player from './player'
+import Player from './characters/player'
 // import Lava from './Lava'
 // import Background from './Background'
 import Assets from './assets'
@@ -8,6 +8,7 @@ import Map from './map'
 import Background from './background'
 import Camera from './camera'
 import { drawDebugInfo } from './debug'
+import { RatEnemy } from './characters/enemy'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -17,6 +18,7 @@ class Game {
   ctx: CanvasRenderingContext2D
 
   player: Player
+  enemy: RatEnemy
   map: Map
   background: Background
   inputHandler: InputHandler
@@ -35,7 +37,9 @@ class Game {
     this.assets = new Assets()
     this.map = new Map(this.assets)
     this.background = new Background()
-    this.player = new Player(CANVAS_WIDTH, CANVAS_HEIGHT, this.map)
+    this.player = new Player(this.map)
+    this.enemy = new RatEnemy(this.map, 200, 416 - 100)
+    this.enemy.setPlayer(this.player)
 
     this.inputHandler = new InputHandler()
     this.camera = new Camera(this.player, this.map)
@@ -54,14 +58,15 @@ class Game {
     this.map.applyCamera(this.camera.x, this.camera.y)
     this.player.applyCamera(this.camera.x, this.camera.y)
     this.background.applyCamera(this.camera.x, this.camera.y)
+    this.enemy.applyCamera(this.camera.x, this.camera.y)
 
-    if (this.inputHandler.lastKey) {
-      this.player.update(this.inputHandler.activeKeys, this.map)
-    }
+    this.player.update(this.inputHandler.activeKeys, this.map)
+    this.enemy.update(this.inputHandler.activeKeys, this.map)
 
     this.background.draw(this.ctx)
     this.map.draw(this.ctx, deltaTime)
     this.player.draw(this.ctx, deltaTime)
+    this.enemy.draw(this.ctx, deltaTime)
 
     drawDebugInfo(this.ctx, this.player, this.inputHandler)
 

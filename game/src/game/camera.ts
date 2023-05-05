@@ -1,5 +1,5 @@
 import type Map from './map'
-import type Player from './player'
+import type Player from './characters/player'
 import config from './config'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE

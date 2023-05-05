@@ -1,7 +1,7 @@
 import { type AssetType } from './assets'
 import type Assets from './assets'
 import { type InputType } from './inputHandler'
-import type Player from './player'
+import type Player from './characters/player'
 
 export default class Element {
   asset: AssetType

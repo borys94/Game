@@ -8,7 +8,8 @@ import Map from './map'
 import Background from './background'
 import Camera from './camera'
 import { drawDebugInfo } from './debug'
-import { RatEnemy } from './characters/enemy'
+// import RatEnemy from './characters/enemies/rat/rat'
+import DogEnemy from './characters/enemies/dog'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -18,7 +19,7 @@ class Game {
   ctx: CanvasRenderingContext2D
 
   player: Player
-  enemy: RatEnemy
+  enemy: DogEnemy
   map: Map
   background: Background
   inputHandler: InputHandler
@@ -38,7 +39,7 @@ class Game {
     this.map = new Map(this.assets)
     this.background = new Background()
     this.player = new Player(this.map)
-    this.enemy = new RatEnemy(this.map, 200, 416 - 100)
+    this.enemy = new DogEnemy(this.map, 200, 416 - 100)
     this.enemy.setPlayer(this.player)
 
     this.inputHandler = new InputHandler()

@@ -1,31 +1,18 @@
-import type Enemy from '../characters/enemy'
-import type Player from '../characters/player'
-import { type InputType } from '../inputHandler'
-import { State } from './state'
+import type Enemy from '../../characters/enemy'
+import { type InputType } from '../../inputHandler'
+import EnemyState from './state'
 
 const STATES = ['standing', 'walking'] as const
-export type StateType = typeof STATES[number]
+type StateType = typeof STATES[number]
 
-export abstract class EnemyState extends State<StateType> {
-  constructor (public character: Enemy, public state: StateType) {
-    super(state)
-  }
-
-  enter (): void {
-  }
-
-  // abstract handleInput (): void
-
-  getPlayer (): Player {
-    if (!this.character.player) {
-      throw new Error()
-    }
-    return this.character.player
+export abstract class CowardlyEnemyState extends EnemyState<StateType> {
+  constructor (public character: Enemy<StateType>, public state: StateType) {
+    super(character, state)
   }
 }
 
-export class Standing extends EnemyState {
-  constructor (character: Enemy) {
+export class Standing extends CowardlyEnemyState {
+  constructor (character: CowardlyEnemyState['character']) {
     super(character, 'standing')
   }
 
@@ -44,8 +31,8 @@ export class Standing extends EnemyState {
   }
 }
 
-export class Walking extends EnemyState {
-  constructor (character: Enemy) {
+export class Walking extends CowardlyEnemyState {
+  constructor (character: Enemy<StateType>) {
     super(character, 'walking')
   }
 

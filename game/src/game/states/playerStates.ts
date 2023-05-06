@@ -3,7 +3,7 @@ import { type InputType } from '../inputHandler'
 import { State } from './state'
 
 const STATES = ['standing', 'running', 'jumping', 'falling', 'strongAttack', 'doubleHit', 'hit', 'use', 'hurt'] as const
-export type PlayerStateTypes = typeof STATES[number]
+type PlayerStateTypes = typeof STATES[number]
 
 export abstract class PlayerState extends State<PlayerStateTypes> {
   constructor (public character: Player, public state: PlayerStateTypes) {
@@ -12,8 +12,6 @@ export abstract class PlayerState extends State<PlayerStateTypes> {
 
   enter (): void {
   }
-
-  // abstract handleInput (): void
 }
 
 export class Standing extends State<PlayerStateTypes> {

@@ -20,7 +20,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   abstract states: Record<CharacterState['state'], CharacterState>
   abstract currentState: CharacterState
-  abstract sprites: Record<T, Sprite>
+  abstract sprites: Record<CharacterState['state'], Sprite>
 
   // character positions
   x: number
@@ -71,7 +71,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     const spritesCount = Object.keys(this.sprites).length
 
     for (const s of Object.keys(this.sprites)) {
-      const state = s as T
+      const state = s as CharacterState['state']
       const img = new Image()
       this.sprites[state].img = img
       img.src = this.sprites[state].asset
@@ -110,6 +110,14 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     }
 
     ctx.save()
+    ctx.strokeStyle = '#000000'
+    ctx.fillStyle = '#00FF00'
+    ctx.lineWidth = 2
+    ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, 5)
+    ctx.fillRect(this.x - this.cameraX, this.y - this.cameraY, width, 5)
+    ctx.restore()
+
+    ctx.save()
     ctx.scale(scaleX, 1)
     ctx.drawImage(
       image,
@@ -137,7 +145,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     this.handleVerticalMovement()
   }
 
-  setState = (state: T, direction?: Direction): void => {
+  setState = (state: CharacterState['state'], direction?: Direction): void => {
     if (direction) {
       this.direction = direction
     }

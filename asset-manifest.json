@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.3ecb2dd0.css",
-    "main.js": "/static/js/main.2bc69993.js",
-    "index.html": "/index.html",
-    "main.3ecb2dd0.css.map": "/static/css/main.3ecb2dd0.css.map",
-    "main.2bc69993.js.map": "/static/js/main.2bc69993.js.map"
+    "main.css": "/Game/static/css/main.3ecb2dd0.css",
+    "main.js": "/Game/static/js/main.2bc69993.js",
+    "index.html": "/Game/index.html",
+    "main.3ecb2dd0.css.map": "/Game/static/css/main.3ecb2dd0.css.map",
+    "main.2bc69993.js.map": "/Game/static/js/main.2bc69993.js.map"
   },
   "entrypoints": [
     "static/css/main.3ecb2dd0.css",

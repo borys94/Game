@@ -110,10 +110,10 @@ class Player extends Character<PlayerState['state'], PlayerState> {
   }
 
   hurt (hurtValue: number): void {
-    this.health = Math.max(this.health - hurtValue, 0)
-    if (this.health <= 0) {
-      this.setState('death')
+    if (this.health > 0) {
+      this.setState('hurt')
     }
+    this.health = Math.max(this.health - hurtValue, 0)
   }
 }
 

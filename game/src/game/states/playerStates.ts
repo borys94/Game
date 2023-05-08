@@ -112,6 +112,18 @@ export class StrongAttack extends State<PlayerStateTypes> {
   enter (): void {
     this.performed = false
     this.character.frameX = 0
+
+    const enemy = this.character.game.enemy
+    const character = this.character
+    if (
+      enemy.health > 0 &&
+      enemy.y < character.y + character.height / 2 &&
+      enemy.y + enemy.height > character.y + character.height / 2 &&
+      enemy.x > character.x - 64 && enemy.x < character.x + 64
+    ) {
+      enemy.health = Math.max(enemy.health - 8, 0)
+      enemy.setState('hurt')
+    }
   }
 
   handleInput (inputs: InputType[]): void {
@@ -134,6 +146,18 @@ export class DoubleHit extends State<PlayerStateTypes> {
   enter (): void {
     this.performed = false
     this.character.frameX = 0
+
+    const enemy = this.character.game.enemy
+    const character = this.character
+    if (
+      enemy.health > 0 &&
+      enemy.y < character.y + character.height / 2 &&
+      enemy.y + enemy.height > character.y + character.height / 2 &&
+      enemy.x > character.x - 32 && enemy.x < character.x + 32
+    ) {
+      enemy.health = Math.max(enemy.health - 4, 0)
+      enemy.setState('hurt')
+    }
   }
 
   handleInput (inputs: InputType[]): void {
@@ -156,6 +180,18 @@ export class Hit extends State<PlayerStateTypes> {
   enter (): void {
     this.performed = false
     this.character.frameX = 0
+
+    const enemy = this.character.game.enemy
+    const character = this.character
+    if (
+      enemy.health > 0 &&
+      enemy.y < character.y + character.height / 2 &&
+      enemy.y + enemy.height > character.y + character.height / 2 &&
+      enemy.x > character.x - 32 && enemy.x < character.x + 32
+    ) {
+      enemy.health = Math.max(enemy.health - 2, 0)
+      enemy.setState('hurt')
+    }
   }
 
   handleInput (inputs: InputType[]): void {
@@ -211,7 +247,9 @@ export class Hurt extends State<PlayerStateTypes> {
 
   handleInput (inputs: InputType[]): void {
     this.timestamp = Date.now()
-    if (this.timestamp - this.time >= this.deltaTime) {
+    if (this.character.health <= 0) {
+      this.character.setState('death')
+    } else if (this.timestamp - this.time >= this.deltaTime) {
       this.character.frameX = 0
       this.character.setState('standing')
     }

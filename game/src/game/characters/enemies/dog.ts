@@ -1,5 +1,5 @@
 // import type Assets from './assets'
-import { type AttackableEnemyState, Standing, Walking, Attack } from '../../states/enemies/attackable'
+import { type AttackableEnemyState, Standing, Walking, Attack, Hurt, Death } from '../../states/enemies/attackable'
 import Enemy from '../enemy'
 import type Game from '../..'
 
@@ -13,7 +13,9 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
   states: Record<AttackableEnemyState['state'], AttackableEnemyState> = {
     standing: new Standing(this),
     walking: new Walking(this),
-    attack: new Attack(this)
+    attack: new Attack(this),
+    hurt: new Hurt(this),
+    death: new Death(this)
   }
 
   currentState: AttackableEnemyState = this.states.walking
@@ -30,6 +32,14 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
     attack: {
       frames: 4,
       asset: 'assets/enemies/dog/attack.png'
+    },
+    hurt: {
+      frames: 2,
+      asset: 'assets/enemies/dog/hurt.png'
+    },
+    death: {
+      frames: 4,
+      asset: 'assets/enemies/dog/death.png'
     }
   }
 

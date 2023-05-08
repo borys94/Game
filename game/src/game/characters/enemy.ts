@@ -8,7 +8,7 @@ abstract class Enemy<T extends string> extends Character<T, State<T>> {
   lastInteractionInterval = 0
 
   canAttack (): boolean {
-    return this.lastAttackTimestamp + this.interactionInterval < Date.now()
+    return this.lastAttackTimestamp + this.interactionInterval < Date.now() && this.game.player.health > 0
   }
 }
 

@@ -2,7 +2,7 @@ import type Enemy from '../../characters/enemy'
 import { type InputType } from '../../inputHandler'
 import EnemyState from './state'
 
-const STATES = ['standing', 'walking', 'attack'] as const
+const STATES = ['standing', 'walking', 'attack', 'hurt', 'death'] as const
 type StateType = typeof STATES[number]
 
 export abstract class AttackableEnemyState extends EnemyState<StateType> {
@@ -94,6 +94,58 @@ export class Attack extends AttackableEnemyState {
     if (this.character.frameX === 3) {
       this.animate = false
       this.character.setState('standing')
+    }
+  }
+}
+
+export class Hurt extends AttackableEnemyState {
+  performed = false
+  animate = false
+  time = 0
+  timestamp = 0
+  deltaTime = 300
+
+  constructor (public character: Enemy<StateType>) {
+    super(character, 'hurt')
+  }
+
+  enter (): void {
+    this.time = Date.now()
+    this.performed = false
+    this.character.frameX = 1
+    this.character.speed = 0
+  }
+
+  handleInput (inputs: InputType[]): void {
+    this.timestamp = Date.now()
+    if (this.character.health <= 0) {
+      this.character.setState('death')
+    } else if (this.timestamp - this.time >= this.deltaTime) {
+      this.character.frameX = 0
+      this.character.setState('standing')
+    }
+  }
+}
+
+export class Death extends AttackableEnemyState {
+  performed = false
+  constructor (public character: Enemy<StateType>) {
+    super(character, 'death')
+  }
+
+  enter (): void {
+    // this.performed = false
+    // this.character.frameX = 0
+  }
+
+  handleInput (inputs: InputType[]): void {
+    if (this.performed) {
+      this.animate = false
+      return
+      // this.character.setState('standing')
+    }
+    if (this.character.frameX === 3) {
+      this.performed = true
     }
   }
 }

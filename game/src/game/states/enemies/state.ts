@@ -1,5 +1,4 @@
 import type Enemy from '../../characters/enemy'
-import type Player from '../../characters/player'
 import { State } from '../state'
 
 abstract class EnemyState<T extends string> extends State<T> {
@@ -9,13 +8,7 @@ abstract class EnemyState<T extends string> extends State<T> {
   }
 
   enter (): void {
-  }
 
-  getPlayer (): Player {
-    if (!this.character.player) {
-      throw new Error()
-    }
-    return this.character.player
   }
 }
 

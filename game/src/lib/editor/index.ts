@@ -1,8 +1,7 @@
+import Game from '../../game'
 import Assets, { type AssetType } from '../../game/assets'
-import Background from '../../game/background'
 import config from '../../game/config'
 import { buildElement } from '../../game/Element'
-import Map from '../../game/map'
 import { clamp } from '../../game/utils'
 import easyMap from '../../maps/easy'
 import mediumMap from '../../maps/medium'
@@ -18,12 +17,12 @@ interface MapType {
   interactive: number[][]
 }
 
-class Editor {
+class Editor extends Game {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
 
-  map: Map
-  background: Background
+  // map: Map
+  // background: Background
   assets: Assets
 
   currentAsset: AssetType | null = null
@@ -32,13 +31,11 @@ class Editor {
 
   lastTime = 0
 
-  cameraX = 0
-  cameraY = 0
-
   hoverX = 0
   hoverY = 0
 
   constructor () {
+    super()
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.canvas.width = CANVAS_WIDTH
@@ -46,15 +43,14 @@ class Editor {
     this.ctx.imageSmoothingEnabled = false
 
     this.assets = new Assets()
-    this.map = new Map(this.assets)
-    this.background = new Background()
+    // this.map = new Map(this.assets)
+    // this.background = new Background()
 
     this.animate(0)
 
     this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
       this.hoverX = e.clientX
       this.hoverY = e.clientY
-      // console.log(e)
     })
 
     // this.onMouseDown.bind(this)
@@ -62,8 +58,8 @@ class Editor {
 
     window.addEventListener('wheel', (e: WheelEvent) => {
       e.preventDefault()
-      this.cameraX = clamp(this.cameraX + e.deltaX, 0, this.map.width - this.canvas.width)
-      this.cameraY = clamp(this.cameraY + e.deltaY, 0, this.map.height - this.canvas.height)
+      this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width)
+      this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height)
     }, { passive: false })
   }
 
@@ -83,16 +79,9 @@ class Editor {
   }
 
   animate = (timestamp: number): void => {
-    const deltaTime = timestamp - this.lastTime
-    this.lastTime = timestamp
-
-    this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-
-    this.map.applyCamera(this.cameraX, this.cameraY)
-    this.background.applyCamera(this.cameraX, this.cameraY)
-
-    this.background.draw(this.ctx)
-    this.map.draw(this.ctx, deltaTime)
+    super.animate(timestamp)
+    // const deltaTime = timestamp - this.lastTime
+    // this.lastTime = timestamp
 
     if (this.currentAsset) {
       this.ctx.drawImage(
@@ -101,8 +90,8 @@ class Editor {
         0,
         this.currentAsset.width,
         this.currentAsset.height,
-        Math.floor((this.hoverX + this.cameraX) / 32) * 32 - this.cameraX,
-        Math.floor((this.hoverY + this.cameraY) / 32) * 32 - this.cameraY + 32 - this.currentAsset.height,
+        Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
+        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
         this.currentAsset.width,
         this.currentAsset.height
       )
@@ -116,9 +105,8 @@ class Editor {
   }
 
   fillFgTile = (): void => {
-    console.log('tiles')
-    const a = Math.floor((this.hoverX + this.cameraX) / 32)
-    const b = Math.floor((this.hoverY + this.cameraY) / 32)
+    const a = Math.floor((this.hoverX + this.camera.x) / 32)
+    const b = Math.floor((this.hoverY + this.camera.y) / 32)
     if (this.currentAsset) {
       this.map.images[b][a] = this.currentAsset.id
     } else {
@@ -127,9 +115,8 @@ class Editor {
   }
 
   fillBgTile = (): void => {
-    console.log('bg')
-    const a = Math.floor((this.hoverX + this.cameraX) / 32)
-    const b = Math.floor((this.hoverY + this.cameraY) / 32)
+    const a = Math.floor((this.hoverX + this.camera.x) / 32)
+    const b = Math.floor((this.hoverY + this.camera.y) / 32)
     if (this.currentAsset) {
       this.map.bgImages[b][a] = this.currentAsset.id
     } else {
@@ -138,13 +125,12 @@ class Editor {
   }
 
   fillInteractiveTile = (): void => {
-    console.log('in')
-    const a = Math.floor((this.hoverX + this.cameraX) / 32)
-    const b = Math.floor((this.hoverY + this.cameraY) / 32)
+    const a = Math.floor((this.hoverX + this.camera.x) / 32)
+    const b = Math.floor((this.hoverY + this.camera.y) / 32)
     if (this.currentAsset) {
-      this.map.elements[b][a] = buildElement(this.assets, this.currentAsset.id, b, a)
+      this.map.elements[b][a] = buildElement(this, this.currentAsset.id, b, a)
     } else {
-      this.map.elements[b][a] = buildElement(this.assets, 0, b, a)
+      this.map.elements[b][a] = buildElement(this, 0, b, a)
     }
   }
 

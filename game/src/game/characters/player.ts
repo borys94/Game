@@ -1,7 +1,7 @@
-import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, Hurt, type PlayerState } from '../states/playerStates'
+import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, Hurt, Death, type PlayerState } from '../states/playerStates'
 import { type InputType } from '../inputHandler'
-import type Map from '../map'
 import Character from './character'
+import type Game from '..'
 
 interface Sprite {
   frames: number
@@ -20,7 +20,8 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     doubleHit: new DoubleHit(this),
     strongAttack: new StrongAttack(this),
     use: new Use(this),
-    hurt: new Hurt(this)
+    hurt: new Hurt(this),
+    death: new Death(this)
   }
 
   currentState: PlayerState = this.states.standing
@@ -63,37 +64,55 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     hurt: {
       frames: 2,
       asset: 'assets/heroes/punk/hurt.png'
+    },
+    death: {
+      frames: 6,
+      asset: 'assets/heroes/punk/death.png'
     }
   }
 
   cards = 0
 
-  constructor (map: Map) {
-    super(map, 20, 400, 48, 48, 15)
+  constructor (game: Game) {
+    super(game, {
+      x: 20,
+      y: 400,
+      width: 48,
+      height: 48,
+      maxVy: 15,
+      maxHealth: 20
+    })
 
     this.loadAllAssets()
   }
 
-  update = (keys: InputType[], map: Map): void => {
-    super.update(keys, map)
+  update = (): void => {
+    super.update()
 
-    this.currentState.handleInput(keys)
+    this.currentState.handleInput(this.game.inputHandler.activeKeys)
 
     this.collectObjects()
-    this.interactObjects(keys)
+    this.interactObjects(this.game.inputHandler.activeKeys)
   }
 
   interactObjects = (inputs: InputType[]): void => {
-    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
+    const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
       element.handleInput(this, inputs)
     }
   }
 
   collectObjects = (): void => {
-    const element = this.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
+    const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
       element.enter(this)
+    }
+  }
+
+  hurt (hurtValue: number): void {
+    this.health = Math.max(this.health - hurtValue, 0)
+    if (this.health <= 0) {
+      this.setState('death')
     }
   }
 }

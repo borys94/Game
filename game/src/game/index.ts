@@ -36,38 +36,32 @@ class Game {
     this.ctx.imageSmoothingEnabled = false
 
     this.assets = new Assets()
-    this.map = new Map(this.assets)
-    this.background = new Background()
-    this.player = new Player(this.map)
-    this.enemy = new DogEnemy(this.map, 200, 416 - 100)
-    this.enemy.setPlayer(this.player)
+    this.map = new Map(this)
+    this.background = new Background(this)
+    this.player = new Player(this)
+    this.enemy = new DogEnemy(this, 200, 416 - 100)
 
     this.inputHandler = new InputHandler()
     this.camera = new Camera(this.player, this.map)
+    this.animate = this.animate.bind(this)
 
     this.animate(0)
   }
 
-  animate = (timestamp: number): void => {
+  animate (timestamp: number): void {
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
 
     this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
     this.camera.update()
-
-    this.map.applyCamera(this.camera.x, this.camera.y)
-    this.player.applyCamera(this.camera.x, this.camera.y)
-    this.background.applyCamera(this.camera.x, this.camera.y)
-    this.enemy.applyCamera(this.camera.x, this.camera.y)
-
-    this.player.update(this.inputHandler.activeKeys, this.map)
-    this.enemy.update(this.inputHandler.activeKeys, this.map)
+    this.player.update()
+    this.enemy.update()
 
     this.background.draw(this.ctx)
-    this.map.draw(this.ctx, deltaTime)
-    this.player.draw(this.ctx, deltaTime)
-    this.enemy.draw(this.ctx, deltaTime)
+    this.map.draw(deltaTime)
+    this.player.draw(deltaTime)
+    this.enemy.draw(deltaTime)
 
     drawDebugInfo(this.ctx, this.player, this.inputHandler)
 

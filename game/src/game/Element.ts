@@ -1,7 +1,7 @@
 import { type AssetType } from './assets'
-import type Assets from './assets'
 import { type InputType } from './inputHandler'
 import type Player from './characters/player'
+import type Game from '.'
 
 export default class Element {
   asset: AssetType
@@ -11,16 +11,16 @@ export default class Element {
   frames: number = 0
   frameX = 0
 
-  cameraX = 0
-  cameraY = 0
+  game: Game
 
   frameTimer = 0
   frameInterval = 200
 
   animate = true
 
-  constructor (assets: Assets, assetId: number, y: number, x: number) {
-    this.asset = assets.getById(assetId)
+  constructor (game: Game, assetId: number, y: number, x: number) {
+    this.game = game
+    this.asset = game.assets.getById(assetId)
     this.x = x
     this.y = y
 
@@ -52,8 +52,8 @@ export default class Element {
         0,
         width,
         height,
-        this.x * 32 - this.cameraX,
-        this.y * 32 - this.cameraY + 32 - height,
+        this.x * 32 - this.game.camera.x,
+        this.y * 32 - this.game.camera.y + 32 - height,
         width,
         height
       )
@@ -72,28 +72,23 @@ export default class Element {
       this.frameTimer += deltaTime
     }
   }
-
-  applyCamera = (x: number, y: number): void => {
-    this.cameraX = x
-    this.cameraY = y
-  }
 }
 
-export const buildElement = (assets: Assets, assetId: number, y: number, x: number): Element => {
-  const asset = assets.getById(assetId)
+export const buildElement = (game: Game, assetId: number, y: number, x: number): Element => {
+  const asset = game.assets.getById(assetId)
 
   if (!asset) {
-    return new Element(assets, assetId, y, x)
+    return new Element(game, assetId, y, x)
   }
 
   if (asset.type === 'chest') {
-    return new ChestElement(assets, assetId, y, x)
+    return new ChestElement(game, assetId, y, x)
   } else if (asset.type === 'trap') {
-    return new TrapElement(assets, assetId, y, x)
+    return new TrapElement(game, assetId, y, x)
   } else if (asset.type === 'collectable') {
-    return new CollectableElement(assets, assetId, y, x)
+    return new CollectableElement(game, assetId, y, x)
   } else {
-    return new Element(assets, assetId, y, x)
+    return new Element(game, assetId, y, x)
   }
 }
 

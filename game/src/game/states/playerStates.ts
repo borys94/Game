@@ -2,7 +2,7 @@ import type Player from '../characters/player'
 import { type InputType } from '../inputHandler'
 import { State } from './state'
 
-const STATES = ['standing', 'running', 'jumping', 'falling', 'strongAttack', 'doubleHit', 'hit', 'use', 'hurt'] as const
+const STATES = ['standing', 'running', 'jumping', 'falling', 'strongAttack', 'doubleHit', 'hit', 'use', 'hurt', 'death'] as const
 type PlayerStateTypes = typeof STATES[number]
 
 export abstract class PlayerState extends State<PlayerStateTypes> {
@@ -14,9 +14,9 @@ export abstract class PlayerState extends State<PlayerStateTypes> {
   }
 }
 
-export class Standing extends State<PlayerStateTypes> {
+export class Standing extends PlayerState {
   constructor (public character: Player) {
-    super('standing')
+    super(character, 'standing')
   }
 
   enter (): void {
@@ -214,6 +214,29 @@ export class Hurt extends State<PlayerStateTypes> {
     if (this.timestamp - this.time >= this.deltaTime) {
       this.character.frameX = 0
       this.character.setState('standing')
+    }
+  }
+}
+
+export class Death extends State<PlayerStateTypes> {
+  performed = false
+  constructor (public character: Player) {
+    super('death')
+  }
+
+  enter (): void {
+    // this.performed = false
+    // this.character.frameX = 0
+  }
+
+  handleInput (inputs: InputType[]): void {
+    if (this.performed) {
+      this.animate = false
+      return
+      // this.character.setState('standing')
+    }
+    if (this.character.frameX === 5) {
+      this.performed = true
     }
   }
 }

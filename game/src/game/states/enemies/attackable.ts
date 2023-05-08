@@ -21,11 +21,13 @@ export class Standing extends AttackableEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    const { player } = this.character
-    if (!player) {
+    const { player } = this.character.game
+
+    if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
       return
     }
-    if (Math.abs(player.x - this.character.x) < 60) {
+
+    if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
       this.character.setState('attack')
     } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.x - this.character.x) > 32) {
       this.character.setState('walking')
@@ -43,14 +45,10 @@ export class Walking extends AttackableEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    const player = this.getPlayer()
-    if (!player) {
-      return
-    }
-
+    const player = this.character.game.player
     this.updateSpeed()
 
-    if (Math.abs(player.x - this.character.x) < 60) {
+    if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
       this.character.setState('attack')
     } else if (Math.abs(player.x - this.character.x) > this.sightArea || Math.abs(player.x - this.character.x) < 32) {
       this.character.setState('standing')
@@ -58,7 +56,7 @@ export class Walking extends AttackableEnemyState {
   }
 
   private updateSpeed (): void {
-    const player = this.getPlayer()
+    const player = this.character.game.player
     this.character.direction = player.x - this.character.x < 0 ? 'left' : 'right'
 
     if (this.character.direction === 'right') {
@@ -86,6 +84,10 @@ export class Attack extends AttackableEnemyState {
     this.animate = true
     this.character.frameX = 0
     this.character.speed = 0
+
+    this.character.lastAttackTimestamp = Date.now()
+    this.character.lastInteractionInterval = Date.now()
+    this.character.game.player.hurt(2)
   }
 
   handleInput (inputs: InputType[]): void {

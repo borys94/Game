@@ -1,3 +1,4 @@
+import type Game from '.'
 import config from './config'
 
 interface Asset {
@@ -8,9 +9,6 @@ interface Asset {
 class Background {
   width = 576
   height = 324
-
-  cameraX = 0
-  cameraY = 0
 
   assets: Asset[] = [
     { path: 'assets/backgrounds/day/1.png' },
@@ -29,7 +27,7 @@ class Background {
   trainFrameIndex = 3
   trainFrame = 0
 
-  constructor () {
+  constructor (private readonly game: Game) {
     this.loadAllAssets()
   }
 
@@ -56,7 +54,7 @@ class Background {
 
     for (const asset of this.assets) {
       const img = asset.img
-      const moved = Math.floor(index++ * this.speed * this.cameraX % this.width)
+      const moved = Math.floor(index++ * this.speed * this.game.camera.x % this.width)
       if (img) {
         ctx.drawImage(
           img,
@@ -82,11 +80,6 @@ class Background {
       }
     }
     this.trainFrame++
-  }
-
-  applyCamera = (x: number, y: number): void => {
-    this.cameraX = x
-    this.cameraY = y
   }
 }
 

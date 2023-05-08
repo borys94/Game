@@ -21,10 +21,7 @@ export class Standing extends CowardlyEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    const { player } = this.character
-    if (!player) {
-      return
-    }
+    const { player } = this.character.game
     if (Math.abs(player.x - this.character.x) < 150 && Math.abs(player.x - this.character.x) > 32) {
       this.character.setState('walking')
     }
@@ -41,20 +38,18 @@ export class Walking extends CowardlyEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    const player = this.getPlayer()
-    if (!player) {
-      return
-    }
-
     this.updateSpeed()
 
-    if (Math.abs(player.x - this.character.x) > 150 || Math.abs(player.x - this.character.x) < 32) {
+    if (
+      Math.abs(this.character.game.player.x - this.character.x) > 150 ||
+      Math.abs(this.character.game.player.x - this.character.x) < 32
+    ) {
       this.character.setState('standing')
     }
   }
 
   private updateSpeed (): void {
-    const player = this.getPlayer()
+    const { player } = this.character.game
     this.character.direction = player.x - this.character.x < 0 ? 'left' : 'right'
 
     if (this.character.direction === 'right') {

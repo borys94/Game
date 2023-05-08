@@ -1,5 +1,4 @@
-import { type InputType } from '../../inputHandler'
-import type Map from '../../map'
+import type Game from '../..'
 import { Standing, Walking, type CowardlyEnemyState } from '../../states/enemies/cowardly'
 import Enemy from '../enemy'
 
@@ -28,16 +27,23 @@ class RatEnemy extends Enemy<CowardlyEnemyState['state']> {
     }
   }
 
-  constructor (map: Map, x: number, y: number) {
-    super(map, x, y, 32, 32, 10)
+  constructor (game: Game, x: number, y: number) {
+    super(game, {
+      x,
+      y,
+      width: 32,
+      height: 32,
+      maxVy: 10,
+      maxHealth: 5
+    })
 
     this.loadAllAssets()
   }
 
-  update (keys: InputType[], map: Map): void {
-    super.update([], map)
-    // this.currentState.handleInput()
-  }
+  // update (keys: InputType[], map: Map): void {
+  //   super.update([], map)
+  //   // this.currentState.handleInput()
+  // }
 }
 
 export default RatEnemy

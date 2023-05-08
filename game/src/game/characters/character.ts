@@ -1,6 +1,5 @@
+import type Game from '..'
 import { TILE_SIZE } from '../config'
-import { type InputType } from '../inputHandler'
-import type Map from '../map'
 import { type State } from '../states/state'
 import { clamp } from '../utils'
 
@@ -11,12 +10,22 @@ interface Sprite {
   img?: HTMLImageElement
 }
 
+interface CharacterOptions {
+  x: number
+  y: number
+  width: number
+  height: number
+  maxVy: number
+  maxHealth: number
+}
+
 export type Direction = 'left' | 'right'
 
 abstract class Character<T extends string, CharacterState extends State<T>> {
   mapWidth: number
   mapHeight: number
-  map: Map
+
+  game: Game
 
   abstract states: Record<CharacterState['state'], CharacterState>
   abstract currentState: CharacterState
@@ -29,13 +38,13 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   width = 48
   height = 48
 
-  cameraX = 0
-  cameraY = 0
-
   frameX = 0
 
   speed = 0
   maxSpeed = 5
+
+  maxHealth: number
+  health: number
 
   direction: Direction = 'right'
 
@@ -49,22 +58,24 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   loadedAssets = 0
   loaded = false
 
-  constructor (map: Map, x: number, y: number, width: number, height: number, maxVy: number) {
-    if (maxVy > TILE_SIZE) {
+  constructor (game: Game, options: CharacterOptions) {
+    if (options.maxVy > TILE_SIZE) {
       throw new Error(`maxVy cannot be larger than TILE_SIZE=${TILE_SIZE}`)
     }
 
-    this.mapWidth = map.width
-    this.mapHeight = map.height
-    this.map = map
+    this.game = game
+    this.mapWidth = this.game.map.width
+    this.mapHeight = this.game.map.height
 
-    this.width = width
-    this.height = height
+    this.width = options.width
+    this.height = options.height
 
-    this.maxVy = maxVy
+    this.maxVy = options.maxVy
+    this.maxHealth = options.maxHealth
+    this.health = this.maxHealth
 
-    this.x = x
-    this.y = y
+    this.x = options.x
+    this.y = options.y
   }
 
   loadAllAssets (): void {
@@ -85,11 +96,12 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     }
   }
 
-  draw (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  draw (deltaTime: number): void {
     const width = this.width
     const height = this.height
     const image = this.sprites[this.currentState.state].img
     const scaleX = this.direction === 'left' ? -1 : 1
+    const ctx = this.game.ctx
 
     if (this.frameTimer > this.frameInterval && this.currentState.animate) {
       if (this.frameX < this.sprites[this.currentState.state].frames - 1) {
@@ -101,8 +113,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     }
 
     if ((window as any).debug) {
-      ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, height)
-      ctx.strokeRect(this.x + 4 - this.cameraX, this.y - this.cameraY, width / 2 - 4, height)
+      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
+      ctx.strokeRect(this.x + 4 - this.game.camera.x, this.y - this.game.camera.y, width / 2 - 4, height)
     }
 
     if (!image) {
@@ -113,8 +125,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     ctx.strokeStyle = '#000000'
     ctx.fillStyle = '#00FF00'
     ctx.lineWidth = 2
-    ctx.strokeRect(this.x - this.cameraX, this.y - this.cameraY, width, 5)
-    ctx.fillRect(this.x - this.cameraX, this.y - this.cameraY, width, 5)
+    ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, 5)
+    ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width * (this.health / this.maxHealth), 5)
     ctx.restore()
 
     ctx.save()
@@ -125,21 +137,16 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       0,
       width,
       height,
-      this.x * scaleX - 14 * (scaleX * -1 + 1) - this.cameraX * scaleX,
-      this.y - this.cameraY,
+      this.x * scaleX - 14 * (scaleX * -1 + 1) - this.game.camera.x * scaleX,
+      this.y - this.game.camera.y,
       width,
       height
     )
     ctx.restore()
   }
 
-  applyCamera = (x: number, y: number): void => {
-    this.cameraX = x
-    this.cameraY = y
-  }
-
-  update (keys: InputType[], map: Map): void {
-    this.currentState.handleInput(keys)
+  update (): void {
+    this.currentState.handleInput(this.game.inputHandler.activeKeys)
 
     this.handleHorizontalMovement()
     this.handleVerticalMovement()
@@ -156,8 +163,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   onGround = (): boolean => {
     return (
-      this.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
-      this.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
+      this.game.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
+      this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
     )
   }
 
@@ -174,8 +181,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   checkTopCollision = (): void => {
     if (
-      this.map.hasObstacle(this.x + 1, this.y - 1) ||
-      this.map.hasObstacle(this.x + this.width / 2 - 1, this.y - 1)
+      this.game.map.hasObstacle(this.x + 1, this.y - 1) ||
+      this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y - 1)
     ) {
       this.y = Math.floor((this.y) / 32 + 1) * 32
       this.vy = 0
@@ -196,15 +203,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     this.x += this.speed
 
     if (
-      this.map.hasObstacle(this.x + this.width / 2, this.y) ||
-      this.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
-      this.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
+      this.game.map.hasObstacle(this.x + this.width / 2, this.y) ||
+      this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
+      this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
     ) {
       this.x = Math.floor((this.x) / 32) * 32 + 8
     } else if (
-      this.map.hasObstacle(this.x, this.y) ||
-      this.map.hasObstacle(this.x, this.y + this.height) ||
-      this.map.hasObstacle(this.x, this.y + this.height / 2)
+      this.game.map.hasObstacle(this.x, this.y) ||
+      this.game.map.hasObstacle(this.x, this.y + this.height) ||
+      this.game.map.hasObstacle(this.x, this.y + this.height / 2)
     ) {
       this.x = Math.floor((this.x) / 32 + 0.5) * 32
     }
@@ -212,10 +219,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     if (this.x < 0) {
       this.x = 0
     }
-    if (this.x >= this.map.width - this.width) {
-      this.x = this.map.width - this.width
+    if (this.x >= this.game.map.width - this.width) {
+      this.x = this.game.map.width - this.width
     }
   }
+
+  // hurt = (hurtValue: number): void => {
+  //   this.health = Math.max(this.health - hurtValue, 0)
+  //   // this.setState()
+  // }
 }
 
 export default Character

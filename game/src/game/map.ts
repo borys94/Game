@@ -1,13 +1,10 @@
-import type Assets from './assets'
 import easyMap from '../maps/medium'
 import type Element from './Element'
 import { buildElement } from './Element'
 import { TILE_SIZE } from './config'
+import type Game from '.'
 
 class Map {
-  cameraX = 0
-  cameraY = 0
-
   width: number
   height: number
 
@@ -17,7 +14,7 @@ class Map {
 
   elements: Element[][] = []
 
-  constructor (private readonly assets: Assets) {
+  constructor (private readonly game: Game) {
     this.images = easyMap.tiles
     this.bgImages = easyMap.bgTiles
     this.interactive = easyMap.interactive
@@ -34,7 +31,7 @@ class Map {
           this.elements[i] = []
         }
 
-        this.elements[i][j] = buildElement(this.assets, this.interactive[i][j], i, j)//  new Element(this.assets, this.interactive[i][j], i, j)
+        this.elements[i][j] = buildElement(this.game, this.interactive[i][j], i, j)//  new Element(this.assets, this.interactive[i][j], i, j)
       }
     }
   }
@@ -51,22 +48,15 @@ class Map {
     return null
   }
 
-  applyCamera = (x: number, y: number): void => {
-    this.cameraX = x
-    this.cameraY = y
-
-    for (const row of this.elements) { for (const element of row) element.applyCamera(x, y) }
-  }
-
   hasObstacle (x: number, y: number): boolean {
     if (y < 0 || y % TILE_SIZE === 0 || x % TILE_SIZE === 0) return false
     return !!(this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
   }
 
-  draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
-    this.drawTiles(ctx, easyMap.bgTiles)
-    this.drawTiles(ctx, easyMap.tiles)
-    this.drawInteractiveElement(ctx, deltaTime)
+  draw = (deltaTime: number): void => {
+    this.drawTiles(this.game.ctx, easyMap.bgTiles)
+    this.drawTiles(this.game.ctx, easyMap.tiles)
+    this.drawInteractiveElement(this.game.ctx, deltaTime)
   }
 
   drawInteractiveElement (ctx: CanvasRenderingContext2D, deltaTime: number): void {
@@ -74,12 +64,12 @@ class Map {
   }
 
   drawTiles (ctx: CanvasRenderingContext2D, tiles: number[][]): void {
-    if (!this.assets.isLoaded()) {
+    if (!this.game.assets.isLoaded()) {
       return
     }
     for (let i = 0; i < tiles.length; i++) {
       for (let j = 0; j < tiles[0].length; j++) {
-        const asset = this.assets.getById(tiles[i][j])
+        const asset = this.game.assets.getById(tiles[i][j])
         if (asset) {
           const { img, width, height } = asset
           if (img) {
@@ -89,8 +79,8 @@ class Map {
               0,
               width,
               height,
-              j * TILE_SIZE - this.cameraX,
-              i * TILE_SIZE - this.cameraY + TILE_SIZE - height,
+              j * TILE_SIZE - this.game.camera.x,
+              i * TILE_SIZE - this.game.camera.y + TILE_SIZE - height,
               width,
               height
             )

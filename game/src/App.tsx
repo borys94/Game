@@ -10,7 +10,8 @@ let game: Game | undefined
 function App (): JSX.Element {
   useEffect(() => {
     if (!game) {
-      game = new Game()
+      game = new Game();
+      (window as any).game = game
     }
   }, [])
 

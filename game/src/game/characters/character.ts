@@ -32,6 +32,11 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   abstract currentState: CharacterState
   abstract sprites: Record<CharacterState['state'], Sprite>
 
+  // abstract paddingLeft: number
+  // abstract paddingRight: number
+  paddingLeft: number = 4 + 6
+  paddingRight: number = 24 - 6
+
   // character positions
   x: number
   y: number
@@ -58,8 +63,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   loadedAssets = 0
   loaded = false
-
-  paddingLeft = 4
 
   constructor (game: Game, options: CharacterOptions) {
     if (options.maxVy > TILE_SIZE) {
@@ -117,7 +120,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
     if ((window as any).debug) {
       ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
-      ctx.strokeRect(this.x + 4 - this.game.camera.x, this.y - this.game.camera.y, width / 2 - 4, height)
+      ctx.strokeRect(this.x + this.paddingLeft - this.game.camera.x, this.y - this.game.camera.y, width - this.paddingRight - this.paddingLeft, height)
     }
 
     if (!image) {
@@ -142,8 +145,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       0,
       width,
       height,
-      this.x * scaleX - 14 * (scaleX * -1 + 1) - this.game.camera.x * scaleX,
-      this.y - this.game.camera.y,
+      this.x * scaleX - ((this.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft) * (scaleX * -1 + 1) - this.game.camera.x * scaleX,
+      (this.y + 5) - this.game.camera.y,
       width,
       height
     )
@@ -166,11 +169,19 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     this.currentState.enter()
   }
 
+  isOnDownHill (): boolean {
+    return this.game.map.isDownHill(this.x, this.y + this.height - 1)
+  }
+
+  isOnUpHill (y = this.y): boolean {
+    return this.game.map.isUpHill(this.x + this.width / 2, y + this.height - 1)
+  }
+
   onGround = (): boolean => {
-    const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
+    const isUpHill = this.isOnUpHill()
     const isUpHillTileAbove = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height + 0.1)
 
-    const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
+    const isDownHill = this.isOnDownHill()
     const isDownHillTileAbove = this.game.map.isDownHill(this.x, this.y + this.height + 0.1)
 
     if (isDownHill) {
@@ -224,8 +235,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.vy = clamp(this.vy, -this.maxVy, this.maxVy)
     } else {
       this.vy = 0
-      const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
-      const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
+      const isUpHill = this.isOnUpHill()
+      const isDownHill = this.isOnDownHill()
 
       if (isUpHill) {
         const right = (this.x + this.width / 2) % 32
@@ -240,7 +251,19 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   }
 
   handleHorizontalMovement = (): void => {
+    const wasPrevOnUpHill = this.isOnUpHill()
+    const wasPrevDownUpHill = this.isOnDownHill()
     this.x += this.speed
+
+    if (this.speed && wasPrevOnUpHill) {
+      this.y -= this.speed
+      return
+    }
+
+    if (this.speed && wasPrevDownUpHill) {
+      this.y += this.speed
+      return
+    }
 
     if (
       this.game.map.hasObstacle(this.x + this.width / 2, this.y) ||
@@ -263,7 +286,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.game.map.hasObstacle(this.x, this.y + this.height / 2)
     ) {
       const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
-      if (isDownHill) {
+      const isUpHill = this.isOnUpHill()
+      if (isDownHill || isUpHill) {
         return
       }
       this.x = Math.floor((this.x) / 32 + 0.5) * 32

@@ -21,17 +21,17 @@ export class Standing extends AttackableEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    // const { player } = this.character.game
+    const { player } = this.character.game
 
-    // if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
-    //   return
-    // }
+    if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
+      return
+    }
 
-    // if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
-    //   this.character.setState('attack')
-    // } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.x - this.character.x) > 32) {
-    //   this.character.setState('walking')
-    // }
+    if (Math.abs(player.x - this.character.x) < 64 && Math.abs(player.y - this.character.y) < 64 && this.character.canAttack()) {
+      this.character.setState('attack')
+    } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.y - this.character.y) < 64 && Math.abs(player.x - this.character.x) > 32) {
+      this.character.setState('walking')
+    }
   }
 }
 
@@ -48,7 +48,7 @@ export class Walking extends AttackableEnemyState {
     const player = this.character.game.player
     this.updateSpeed()
 
-    if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
+    if (Math.abs(player.x - this.character.x) < 60 && Math.abs(player.y - this.character.y) < 32 && this.character.canAttack()) {
       this.character.setState('attack')
     } else if (Math.abs(player.x - this.character.x) > this.sightArea || Math.abs(player.x - this.character.x) < 32) {
       this.character.setState('standing')
@@ -73,6 +73,7 @@ export class Attack extends AttackableEnemyState {
   time = 0
   timestamp = 0
   deltaTime = 200
+  hit = false
 
   constructor (character: Enemy<StateType>) {
     super(character, 'attack')
@@ -84,16 +85,33 @@ export class Attack extends AttackableEnemyState {
     this.animate = true
     this.character.frameX = 0
     this.character.speed = 0
+    this.hit = false
 
     this.character.lastAttackTimestamp = Date.now()
     this.character.lastInteractionInterval = Date.now()
-    this.character.game.player.hurt(2)
   }
 
   handleInput (inputs: InputType[]): void {
+    const { player } = this.character.game
+
+    if (player.x - this.character.x > 0) {
+      this.character.direction = 'right'
+    } else {
+      this.character.direction = 'left'
+    }
+
     if (this.character.frameX === 3) {
       this.animate = false
+      this.hit = false
       this.character.setState('standing')
+    } else if (this.character.frameX === 2 && !this.hit && Math.abs(player.y - this.character.y) < 32) {
+      if (
+        (this.character.direction === 'left' && this.character.x - player.x < 60 && this.character.x - player.x > 0) ||
+        (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)
+      ) {
+        this.hit = true
+        player.hurt(2)
+      }
     }
   }
 }

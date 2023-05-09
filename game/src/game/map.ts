@@ -55,6 +55,11 @@ class Map {
   }
 
   isUpHill (x: number, y: number): boolean {
+    if (x % 32 === 0) {
+      const tile1 = (this.images[Math.floor((y + 2) / TILE_SIZE)][Math.floor((x - 1) / TILE_SIZE)])
+      const tile2 = (this.images[Math.floor((y - 2) / TILE_SIZE)][Math.floor((x + 1) / TILE_SIZE)])
+      return (!!tile1 && !!tile2 && (tiles[tile1].upHill ?? tiles[tile2].upHill)) ?? false
+    }
     const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
     return (!!tileId && tiles[tileId].upHill) ?? false
   }

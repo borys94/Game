@@ -2,7 +2,7 @@ import { type State } from '../states/state'
 import Character, { type Direction } from './character'
 
 abstract class Enemy<T extends string> extends Character<T, State<T>> {
-  direction: Direction = 'left'
+  direction: Direction = 'right'
   lastAttackTimestamp = 0
   interactionInterval = 2000
   lastInteractionInterval = 0

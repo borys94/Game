@@ -24,6 +24,9 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     death: new Death(this)
   }
 
+  paddingLeft: number = 4
+  paddingRight: number = 24
+
   currentState: PlayerState = this.states.standing
 
   sprites: Record<PlayerState['state'], Sprite> = {

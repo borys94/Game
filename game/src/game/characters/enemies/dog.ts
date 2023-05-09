@@ -43,6 +43,9 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
     }
   }
 
+  paddingLeft: number = 4
+  paddingRight: number = 12
+
   constructor (game: Game, x: number, y: number) {
     super(game, {
       x,

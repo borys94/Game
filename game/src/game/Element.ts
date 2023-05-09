@@ -110,7 +110,11 @@ export class ChestElement extends Element {
 
 export class TrapElement extends Element {
   enter (player: Player): void {
-    player.setState('hurt')
+    if (!player.isAlive()) {
+      return
+    }
+    player.hurt(2)
+    console.log('enter trap')
     if (player.direction === 'left') player.speed = 1
     else player.speed = -1
   }

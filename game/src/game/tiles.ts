@@ -1,7 +1,7 @@
 import { type Sprite } from './types'
 
 export type TileType = 'chest' | 'collectable' | 'trap'
-type Tile = Sprite & { id: number, hill?: true, interactive?: true, type?: TileType }
+type Tile = Sprite & { id: number, upHill?: true, downHill?: true, interactive?: true, type?: TileType }
 const tiles: Tile[] = []
 
 let i = 1
@@ -15,8 +15,8 @@ for (; i <= 64; i++) {
   }
 }
 
-tiles[33].hill = true
-tiles[34].hill = true
+tiles[33].upHill = true
+tiles[34].downHill = true
 
 tiles[i] = {
   id: i,

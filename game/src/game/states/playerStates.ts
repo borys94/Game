@@ -103,44 +103,11 @@ export class Falling extends State<PlayerStateTypes> {
   }
 }
 
-export class StrongAttack extends State<PlayerStateTypes> {
+abstract class BaseHit extends State<PlayerStateTypes> {
   performed = false
-  constructor (public character: Player) {
-    super('strongAttack')
-  }
 
-  enter (): void {
-    this.performed = false
-    this.character.frameX = 0
-
-    const enemy = this.character.game.enemy
-    const character = this.character
-    if (
-      enemy.health > 0 &&
-      enemy.y < character.y + character.height / 2 &&
-      enemy.y + enemy.height > character.y + character.height / 2 &&
-      enemy.x > character.x - 64 && enemy.x < character.x + 64
-    ) {
-      enemy.health = Math.max(enemy.health - 8, 0)
-      enemy.setState('hurt')
-    }
-  }
-
-  handleInput (inputs: InputType[]): void {
-    if (this.performed) {
-      this.character.frameX = 0
-      this.character.setState('standing')
-    }
-    if (this.character.frameX === 7) {
-      this.performed = true
-    }
-  }
-}
-
-export class DoubleHit extends State<PlayerStateTypes> {
-  performed = false
-  constructor (public character: Player) {
-    super('doubleHit')
+  constructor (public character: Player, state: PlayerStateTypes) {
+    super(state)
   }
 
   enter (): void {
@@ -155,7 +122,7 @@ export class DoubleHit extends State<PlayerStateTypes> {
       enemy.y + enemy.height > character.y + character.height / 2 &&
       enemy.x > character.x - 32 && enemy.x < character.x + 32
     ) {
-      enemy.health = Math.max(enemy.health - 4, 0)
+      enemy.health = Math.max(enemy.health - this.getHurtValue(), 0)
       enemy.setState('hurt')
     }
   }
@@ -165,43 +132,42 @@ export class DoubleHit extends State<PlayerStateTypes> {
       this.character.frameX = 0
       this.character.setState('standing')
     }
-    if (this.character.frameX === 7) {
+    if (this.character.frameX === this.character.sprites[this.character.currentState.state].frames - 1) {
       this.performed = true
     }
+  }
+
+  abstract getHurtValue (): number
+}
+
+export class StrongAttack extends BaseHit {
+  performed = false
+  constructor (public character: Player) {
+    super(character, 'strongAttack')
+  }
+
+  getHurtValue (): number {
+    return 8
   }
 }
 
-export class Hit extends State<PlayerStateTypes> {
-  performed = false
+export class DoubleHit extends BaseHit {
   constructor (public character: Player) {
-    super('hit')
+    super(character, 'doubleHit')
   }
 
-  enter (): void {
-    this.performed = false
-    this.character.frameX = 0
+  getHurtValue (): number {
+    return 4
+  }
+}
 
-    const enemy = this.character.game.enemy
-    const character = this.character
-    if (
-      enemy.health > 0 &&
-      enemy.y < character.y + character.height / 2 &&
-      enemy.y + enemy.height > character.y + character.height / 2 &&
-      enemy.x > character.x - 32 && enemy.x < character.x + 32
-    ) {
-      enemy.health = Math.max(enemy.health - 2, 0)
-      enemy.setState('hurt')
-    }
+export class Hit extends BaseHit {
+  constructor (public character: Player) {
+    super(character, 'hit')
   }
 
-  handleInput (inputs: InputType[]): void {
-    if (this.performed) {
-      this.character.frameX = 0
-      this.character.setState('standing')
-    }
-    if (this.character.frameX === 5) {
-      this.performed = true
-    }
+  getHurtValue (): number {
+    return 2
   }
 }
 

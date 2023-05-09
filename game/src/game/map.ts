@@ -3,6 +3,7 @@ import type Element from './Element'
 import { buildElement } from './Element'
 import { TILE_SIZE } from './config'
 import type Game from '.'
+import tiles from './tiles'
 
 class Map {
   width: number
@@ -51,6 +52,16 @@ class Map {
   hasObstacle (x: number, y: number): boolean {
     if (y < 0 || y % TILE_SIZE === 0 || x % TILE_SIZE === 0) return false
     return !!(this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
+  }
+
+  isUpHill (x: number, y: number): boolean {
+    const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
+    return (!!tileId && tiles[tileId].upHill) ?? false
+  }
+
+  isDownHill (x: number, y: number): boolean {
+    const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
+    return (!!tileId && tiles[tileId].downHill) ?? false
   }
 
   draw = (deltaTime: number): void => {

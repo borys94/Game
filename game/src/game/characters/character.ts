@@ -2,6 +2,7 @@ import type Game from '..'
 import { TILE_SIZE } from '../config'
 import { type State } from '../states/state'
 import { clamp } from '../utils'
+// import Player from './player'
 
 interface Sprite {
   frames: number
@@ -57,6 +58,8 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   loadedAssets = 0
   loaded = false
+
+  paddingLeft = 4
 
   constructor (game: Game, options: CharacterOptions) {
     if (options.maxVy > TILE_SIZE) {
@@ -121,13 +124,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       return
     }
 
-    ctx.save()
-    ctx.strokeStyle = '#000000'
-    ctx.fillStyle = '#00FF00'
-    ctx.lineWidth = 2
-    ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, 5)
-    ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width * (this.health / this.maxHealth), 5)
-    ctx.restore()
+    if (this.isAlive()) {
+      ctx.save()
+      ctx.strokeStyle = '#000000'
+      ctx.fillStyle = '#00FF00'
+      ctx.lineWidth = 2
+      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, 5)
+      ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width * (this.health / this.maxHealth), 5)
+      ctx.restore()
+    }
 
     ctx.save()
     ctx.scale(scaleX, 1)
@@ -162,6 +167,30 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   }
 
   onGround = (): boolean => {
+    const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
+    const isUpHillTileAbove = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height + 0.1)
+
+    const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
+    const isDownHillTileAbove = this.game.map.isDownHill(this.x, this.y + this.height + 0.1)
+
+    if (isDownHill) {
+      const x = 32 - ((this.x + 1) % 32)
+      const y = 32 - ((this.y + this.height - 1) % 32)
+      return x - y > -3
+    }
+    if (isDownHillTileAbove) {
+      return false
+    }
+
+    if (isUpHill) {
+      const x = (this.x + this.width / 2) % 32
+      const y = 32 - ((this.y + this.height - 1) % 32)
+      return x - y >= -1
+    }
+    if (isUpHillTileAbove) {
+      return false
+    }
+
     return (
       this.game.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
       this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
@@ -195,7 +224,18 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.vy = clamp(this.vy, -this.maxVy, this.maxVy)
     } else {
       this.vy = 0
-      this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
+      const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
+      const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
+
+      if (isUpHill) {
+        const right = (this.x + this.width / 2) % 32
+        this.y = Math.floor((this.y + this.height - 1) / 32 + 1) * 32 - right - this.height
+      } else if (isDownHill) {
+        const right = 32 - (this.x) % 32
+        this.y = Math.floor((this.y + this.height - 1) / 32 + 1) * 32 - right - this.height
+      } else {
+        this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
+      }
     }
   }
 
@@ -207,12 +247,25 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
     ) {
-      this.x = Math.floor((this.x) / 32) * 32 + 8
+      const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
+      const isDownHill = this.game.map.isDownHill(this.x + this.width / 2, this.y + this.height - 1)
+
+      if (isDownHill) {
+        return
+      }
+
+      if (!isUpHill) {
+        this.x = Math.floor((this.x) / 32) * 32 + 8
+      }
     } else if (
       this.game.map.hasObstacle(this.x, this.y) ||
       this.game.map.hasObstacle(this.x, this.y + this.height) ||
       this.game.map.hasObstacle(this.x, this.y + this.height / 2)
     ) {
+      const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
+      if (isDownHill) {
+        return
+      }
       this.x = Math.floor((this.x) / 32 + 0.5) * 32
     }
 
@@ -222,6 +275,10 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     if (this.x >= this.game.map.width - this.width) {
       this.x = this.game.map.width - this.width
     }
+  }
+
+  isAlive (): boolean {
+    return this.health > 0
   }
 
   // hurt = (hurtValue: number): void => {

@@ -4,7 +4,6 @@ export interface Sprite {
   frames: number
   asset: string
   img?: HTMLImageElement
-  hill?: true
 }
 
 export type Direction = 'left' | 'right'

@@ -19,7 +19,8 @@ function EditorComponent (): React.ReactElement {
 
   useEffect(() => {
     if (!ed) {
-      ed = new Editor()
+      ed = new Editor();
+      (window as any).ed = ed
       setEditor(ed)
     }
   }, [])

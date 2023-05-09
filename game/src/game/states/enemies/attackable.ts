@@ -21,17 +21,17 @@ export class Standing extends AttackableEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    const { player } = this.character.game
+    // const { player } = this.character.game
 
-    if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
-      return
-    }
+    // if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
+    //   return
+    // }
 
-    if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
-      this.character.setState('attack')
-    } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.x - this.character.x) > 32) {
-      this.character.setState('walking')
-    }
+    // if (Math.abs(player.x - this.character.x) < 60 && this.character.canAttack()) {
+    //   this.character.setState('attack')
+    // } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.x - this.character.x) > 32) {
+    //   this.character.setState('walking')
+    // }
   }
 }
 

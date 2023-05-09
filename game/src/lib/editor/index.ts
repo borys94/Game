@@ -78,27 +78,27 @@ class Editor extends Game {
     return easyMap
   }
 
-  animate = (timestamp: number): void => {
-    super.animate(timestamp)
-    // const deltaTime = timestamp - this.lastTime
-    // this.lastTime = timestamp
+  // animate = (timestamp: number): void => {
+  //   super.animate(timestamp)
+  //   // const deltaTime = timestamp - this.lastTime
+  //   // this.lastTime = timestamp
 
-    if (this.currentAsset) {
-      this.ctx.drawImage(
-        this.currentAsset.img,
-        0,
-        0,
-        this.currentAsset.width,
-        this.currentAsset.height,
-        Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
-        this.currentAsset.width,
-        this.currentAsset.height
-      )
-    }
+  //   if (this.currentAsset) {
+  //     this.ctx.drawImage(
+  //       this.currentAsset.img,
+  //       0,
+  //       0,
+  //       this.currentAsset.width,
+  //       this.currentAsset.height,
+  //       Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
+  //       Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
+  //       this.currentAsset.width,
+  //       this.currentAsset.height
+  //     )
+  //   }
 
-    requestAnimationFrame(this.animate)
-  }
+  //   requestAnimationFrame(this.animate)
+  // }
 
   setCurrentAsset = (asset: AssetType | null): void => {
     this.currentAsset = asset

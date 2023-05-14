@@ -1,31 +1,26 @@
 import type Game from '../..'
-import { Standing, Walking, type CowardlyEnemyState } from '../../states/enemies/cowardly'
+import type SpriteClass from '../../sprites/playerSprites'
+import { Standing, Walking, Hurt, type CowardlyEnemyState } from '../../states/enemies/cowardly'
 import Enemy from '../enemy'
-
-interface Sprite {
-  frames: number
-  asset: string
-  img?: HTMLImageElement
-}
+import { HurtSprite, RunningSprite, StandingSprite } from '../../sprites/enemySprites'
 
 class RatEnemy extends Enemy<CowardlyEnemyState['state']> {
   states: Record<CowardlyEnemyState['state'], CowardlyEnemyState> = {
     standing: new Standing(this),
-    walking: new Walking(this)
+    walking: new Walking(this),
+    hurt: new Hurt(this)
   }
 
   currentState: CowardlyEnemyState = this.states.walking
 
-  sprites: Record<CowardlyEnemyState['state'], Sprite> = {
-    standing: {
-      frames: 4,
-      asset: 'assets/enemies/rat/idle.png'
-    },
-    walking: {
-      frames: 4,
-      asset: 'assets/enemies/rat/walk.png'
-    }
+  sprites: Record<CowardlyEnemyState['state'], SpriteClass> = {
+    standing: new StandingSprite(this, 'assets/enemies/rat'),
+    walking: new RunningSprite(this, 'assets/enemies/rat'),
+    hurt: new HurtSprite(this, 'assets/enemies/rat')
+    // death: new DeathSprite(this, 'assets/enemies/dog')
   }
+
+  currentSprite: SpriteClass = this.sprites.standing
 
   constructor (game: Game, x: number, y: number) {
     super(game, {
@@ -36,8 +31,6 @@ class RatEnemy extends Enemy<CowardlyEnemyState['state']> {
       maxVy: 10,
       maxHealth: 5
     })
-
-    this.loadAllAssets()
   }
 
   // update (keys: InputType[], map: Map): void {

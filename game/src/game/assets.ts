@@ -1,5 +1,5 @@
 
-import tiles, { type TileType } from './tiles'
+import tiles, { type TileType } from '../tiles'
 
 export interface AssetType {
   img: HTMLImageElement
@@ -27,17 +27,17 @@ class Assets {
   loadAllAssets (): void {
     const allTiles = this.getAssetCount()
 
-    for (const sprite of tiles) {
-      if (!sprite) continue
+    tiles.forEach((tile, index) => {
+      if (!tile) return
       const img = new Image()
-      img.src = sprite.asset
-      this.assets[sprite.id] = {
+      img.src = tile.asset
+      this.assets[tile.id] = {
         img,
-        id: sprite.id,
-        width: sprite.width,
-        height: sprite.height,
-        frames: sprite.frames,
-        type: sprite.type
+        id: tile.id,
+        width: tile.width,
+        height: tile.height,
+        frames: tile.frames,
+        type: tile.type
       }
       img.onload = () => {
         this.loadedAssets++
@@ -45,10 +45,13 @@ class Assets {
           this.loaded = true
         }
       }
-    }
+      img.onerror = () => {
+        console.error('error during loading')
+      }
+    })
   }
 
-  getById = (id: number): AssetType => this.assets[id]
+  getById = (id?: number): AssetType | null => id ? this.assets[id] : null
 }
 
 export default Assets

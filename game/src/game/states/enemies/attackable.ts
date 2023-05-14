@@ -83,7 +83,6 @@ export class Attack extends AttackableEnemyState {
     this.time = Date.now()
     this.performed = false
     this.animate = true
-    this.character.frameX = 0
     this.character.speed = 0
     this.hit = false
 
@@ -100,11 +99,11 @@ export class Attack extends AttackableEnemyState {
       this.character.direction = 'left'
     }
 
-    if (this.character.frameX === 3) {
+    if (this.character.currentSprite.frameX === 3) {
       this.animate = false
       this.hit = false
       this.character.setState('standing')
-    } else if (this.character.frameX === 2 && !this.hit && Math.abs(player.y - this.character.y) < 32) {
+    } else if (this.character.currentSprite.frameX === 2 && !this.hit && Math.abs(player.y - this.character.y) < 32) {
       if (
         (this.character.direction === 'left' && this.character.x - player.x < 60 && this.character.x - player.x > 0) ||
         (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)
@@ -130,7 +129,6 @@ export class Hurt extends AttackableEnemyState {
   enter (): void {
     this.time = Date.now()
     this.performed = false
-    this.character.frameX = 1
     this.character.speed = 0
   }
 
@@ -139,14 +137,12 @@ export class Hurt extends AttackableEnemyState {
     if (this.character.health <= 0) {
       this.character.setState('death')
     } else if (this.timestamp - this.time >= this.deltaTime) {
-      this.character.frameX = 0
       this.character.setState('standing')
     }
   }
 }
 
 export class Death extends AttackableEnemyState {
-  performed = false
   constructor (public character: Enemy<StateType>) {
     super(character, 'death')
   }
@@ -157,13 +153,6 @@ export class Death extends AttackableEnemyState {
   }
 
   handleInput (inputs: InputType[]): void {
-    if (this.performed) {
-      this.animate = false
-      return
-      // this.character.setState('standing')
-    }
-    if (this.character.frameX === 3) {
-      this.performed = true
-    }
+
   }
 }

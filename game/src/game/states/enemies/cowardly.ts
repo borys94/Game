@@ -2,7 +2,7 @@ import type Enemy from '../../characters/enemy'
 import { type InputType } from '../../inputHandler'
 import EnemyState from './state'
 
-const STATES = ['standing', 'walking'] as const
+const STATES = ['standing', 'walking', 'hurt'] as const
 type StateType = typeof STATES[number]
 
 export abstract class CowardlyEnemyState extends EnemyState<StateType> {
@@ -57,5 +57,36 @@ export class Walking extends CowardlyEnemyState {
     } else {
       this.character.speed = -this.character.maxSpeed / 3
     }
+  }
+}
+
+export class Hurt extends CowardlyEnemyState {
+  performed = false
+  animate = false
+  time = 0
+  timestamp = 0
+  deltaTime = 300
+
+  constructor (character: Enemy<StateType>) {
+    super(character, 'hurt')
+  }
+
+  enter (): void {
+    this.time = Date.now()
+    this.performed = false
+    this.character.speed = 0
+
+    this.character.game.sounds.hurtSound()
+  }
+
+  handleInput (inputs: InputType[]): void {
+    this.character.setState('standing')
+    // this.timestamp = Date.now()
+    // if (this.character.health <= 0) {
+    //   this.character.setState('death')
+    // } else if (this.timestamp - this.time >= this.deltaTime) {
+    //   this.sprite.frameX = 0
+    //   this.character.setState('standing')
+    // }
   }
 }

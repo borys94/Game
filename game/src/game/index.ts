@@ -7,9 +7,12 @@ import config from './config'
 import Map from './map'
 import Background from './background'
 import Camera from './camera'
+import Sounds from './sounds'
 import { drawDebugInfo } from './debug'
 // import RatEnemy from './characters/enemies/rat/rat'
 import DogEnemy from './characters/enemies/dog'
+import type Enemy from './characters/enemy'
+import RatEnemy from './characters/enemies/rat'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -19,14 +22,16 @@ class Game {
   ctx: CanvasRenderingContext2D
 
   player: Player
-  enemy: DogEnemy
+  enemies: Array<Enemy<any>>
   map: Map
   background: Background
   inputHandler: InputHandler
   camera: Camera
   assets: Assets
+  sounds: Sounds
 
   lastTime = 0
+  active = true
 
   constructor () {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -39,16 +44,35 @@ class Game {
     this.map = new Map(this)
     this.background = new Background(this)
     this.player = new Player(this)
-    this.enemy = new DogEnemy(this, 200, 416 - 100)
+    this.enemies = [
+      new DogEnemy(this, 200, 416 - 100),
+      new RatEnemy(this, 300, 416 - 100)
+    ]
 
     this.inputHandler = new InputHandler()
+    this.sounds = new Sounds()
+    // eslint-disable-next-line
+    // this.sounds.play()
     this.camera = new Camera(this.player, this.map)
     this.animate = this.animate.bind(this)
+    this.draw = this.draw.bind(this)
 
     this.animate(0)
   }
 
   animate (timestamp: number): void {
+    if (!this.active) {
+      return
+    }
+    this.draw(timestamp)
+    requestAnimationFrame(this.animate)
+  }
+
+  destroy (): void {
+    this.active = false
+  }
+
+  draw (timestamp: number): void {
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
 
@@ -56,16 +80,18 @@ class Game {
 
     this.camera.update()
     this.player.update()
-    this.enemy.update()
+    for (const enemy of this.enemies) {
+      enemy.update()
+    }
 
     this.background.draw(this.ctx)
     this.map.draw(deltaTime)
     this.player.draw(deltaTime)
-    this.enemy.draw(deltaTime)
+    for (const enemy of this.enemies) {
+      enemy.draw(deltaTime)
+    }
 
     drawDebugInfo(this.ctx, this.player, this.inputHandler)
-
-    requestAnimationFrame(this.animate)
   }
 }
 

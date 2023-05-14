@@ -3,26 +3,30 @@ import type Element from './Element'
 import { buildElement } from './Element'
 import { TILE_SIZE } from './config'
 import type Game from '.'
-import tiles from './tiles'
+// import tiles from './tiles'
 
 class Map {
-  width: number
-  height: number
-
   images: number[][]
   bgImages: number[][]
+  decorations: number[][]
   interactive: number[][]
-
   elements: Element[][] = []
 
   constructor (private readonly game: Game) {
     this.images = easyMap.tiles
     this.bgImages = easyMap.bgTiles
     this.interactive = easyMap.interactive
+    this.decorations = easyMap.decorations
 
-    this.width = this.images[0].length * TILE_SIZE
-    this.height = this.images.length * TILE_SIZE
     this.initInteractiveElements()
+  }
+
+  get width (): number {
+    return this.images[0].length * TILE_SIZE
+  }
+
+  get height (): number {
+    return this.images.length * TILE_SIZE
   }
 
   initInteractiveElements (): void {
@@ -54,24 +58,25 @@ class Map {
     return !!(this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
   }
 
-  isUpHill (x: number, y: number): boolean {
-    if (x % 32 === 0) {
-      const tile1 = (this.images[Math.floor((y + 2) / TILE_SIZE)][Math.floor((x - 1) / TILE_SIZE)])
-      const tile2 = (this.images[Math.floor((y - 2) / TILE_SIZE)][Math.floor((x + 1) / TILE_SIZE)])
-      return (!!tile1 && !!tile2 && (tiles[tile1].upHill ?? tiles[tile2].upHill)) ?? false
-    }
-    const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
-    return (!!tileId && tiles[tileId].upHill) ?? false
-  }
+  // isUpHill (x: number, y: number): boolean {
+  //   if (x % 32 === 0) {
+  //     const tile1 = (this.images[Math.floor((y + 2) / TILE_SIZE)][Math.floor((x - 1) / TILE_SIZE)])
+  //     const tile2 = (this.images[Math.floor((y - 2) / TILE_SIZE)][Math.floor((x + 1) / TILE_SIZE)])
+  //     return (!!tile1 && !!tile2 && (tiles[tile1].upHill ?? tiles[tile2].upHill)) ?? false
+  //   }
+  //   const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
+  //   return (!!tileId && tiles[tileId].upHill) ?? false
+  // }
 
-  isDownHill (x: number, y: number): boolean {
-    const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
-    return (!!tileId && tiles[tileId].downHill) ?? false
-  }
+  // isDownHill (x: number, y: number): boolean {
+  //   const tileId = (this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)])
+  //   return (!!tileId && tiles[tileId].downHill) ?? false
+  // }
 
   draw = (deltaTime: number): void => {
-    this.drawTiles(this.game.ctx, easyMap.bgTiles)
-    this.drawTiles(this.game.ctx, easyMap.tiles)
+    this.drawTiles(this.game.ctx, this.bgImages)
+    this.drawTiles(this.game.ctx, this.images)
+    this.drawTiles(this.game.ctx, this.decorations)
     this.drawInteractiveElement(this.game.ctx, deltaTime)
   }
 

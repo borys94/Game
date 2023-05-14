@@ -1,14 +1,9 @@
 import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, Hurt, Death, type PlayerState } from '../states/playerStates'
 import { type InputType } from '../inputHandler'
 import Character from './character'
+import type SpriteClass from '../sprites/playerSprites'
+import { DeathSprite, DoubleHitSprite, FallingSprite, HitSprite, HurtSprite, JumpingSprite, RunningSprite, StandingSprite, StrongHitSprite, UseSprite } from '../sprites/playerSprites'
 import type Game from '..'
-
-interface Sprite {
-  frames: number
-  asset: string
-  framesX?: number[]
-  img?: HTMLImageElement
-}
 
 class Player extends Character<PlayerState['state'], PlayerState> {
   states: Record<PlayerState['state'], PlayerState> = {
@@ -24,69 +19,37 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     death: new Death(this)
   }
 
-  paddingLeft: number = 4
-  paddingRight: number = 24
-
   currentState: PlayerState = this.states.standing
 
-  sprites: Record<PlayerState['state'], Sprite> = {
-    standing: {
-      frames: 4,
-      asset: 'assets/heroes/punk/idle.png'
-    },
-    running: {
-      frames: 4,
-      asset: 'assets/heroes/punk/run.png'
-    },
-    jumping: {
-      frames: 4,
-      framesX: [0],
-      asset: 'assets/heroes/punk/jump.png'
-    },
-    falling: {
-      frames: 4,
-      framesX: [3],
-      asset: 'assets/heroes/punk/jump.png'
-    },
-    hit: {
-      frames: 6,
-      asset: 'assets/heroes/punk/attack1.png'
-    },
-    doubleHit: {
-      frames: 8,
-      asset: 'assets/heroes/punk/attack2.png'
-    },
-    strongAttack: {
-      frames: 8,
-      asset: 'assets/heroes/punk/attack3.png'
-    },
-    use: {
-      frames: 6,
-      asset: 'assets/heroes/punk/use.png'
-    },
-    hurt: {
-      frames: 2,
-      asset: 'assets/heroes/punk/hurt.png'
-    },
-    death: {
-      frames: 6,
-      asset: 'assets/heroes/punk/death.png'
-    }
+  sprites: Record<PlayerState['state'], SpriteClass> = {
+    standing: new StandingSprite(this),
+    running: new RunningSprite(this),
+    jumping: new JumpingSprite(this),
+    falling: new FallingSprite(this),
+    hit: new HitSprite(this),
+    doubleHit: new DoubleHitSprite(this),
+    strongAttack: new StrongHitSprite(this),
+    use: new UseSprite(this),
+    hurt: new HurtSprite(this),
+    death: new DeathSprite(this)
   }
+
+  currentSprite = this.sprites.standing
+
+  paddingLeft: number = 4
+  paddingRight: number = 24
 
   cards = 0
 
   constructor (game: Game) {
     super(game, {
       x: 20,
-      y: 400,
+      y: 316,
       width: 48,
       height: 48,
       maxVy: 15,
       maxHealth: 20
     })
-
-    this.loadAllAssets()
   }
 
   update = (): void => {
@@ -99,6 +62,7 @@ class Player extends Character<PlayerState['state'], PlayerState> {
   }
 
   interactObjects = (inputs: InputType[]): void => {
+    // TODO: srodek uzytkownika
     const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
       element.handleInput(this, inputs)
@@ -106,8 +70,12 @@ class Player extends Character<PlayerState['state'], PlayerState> {
   }
 
   collectObjects = (): void => {
+    // TODO: srodek uzytkownika
     const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
+      if (element?.asset?.id === 65 || element?.asset?.id === 66) {
+        this.game.sounds.coinSound()
+      }
       element.enter(this)
     }
   }

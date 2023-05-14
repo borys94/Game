@@ -2,12 +2,8 @@
 import { type AttackableEnemyState, Standing, Walking, Attack, Hurt, Death } from '../../states/enemies/attackable'
 import Enemy from '../enemy'
 import type Game from '../..'
-
-interface Sprite {
-  frames: number
-  asset: string
-  img?: HTMLImageElement
-}
+import type SpriteClass from '../../sprites/playerSprites'
+import { AttackSprite, DeathSprite, HurtSprite, RunningSprite, StandingSprite } from '../../sprites/enemySprites'
 
 class DogEnemy extends Enemy<AttackableEnemyState['state']> {
   states: Record<AttackableEnemyState['state'], AttackableEnemyState> = {
@@ -20,28 +16,15 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
 
   currentState: AttackableEnemyState = this.states.walking
 
-  sprites: Record<AttackableEnemyState['state'], Sprite> = {
-    standing: {
-      frames: 4,
-      asset: 'assets/enemies/dog/idle.png'
-    },
-    walking: {
-      frames: 6,
-      asset: 'assets/enemies/dog/walk.png'
-    },
-    attack: {
-      frames: 4,
-      asset: 'assets/enemies/dog/attack.png'
-    },
-    hurt: {
-      frames: 2,
-      asset: 'assets/enemies/dog/hurt.png'
-    },
-    death: {
-      frames: 4,
-      asset: 'assets/enemies/dog/death.png'
-    }
+  sprites: Record<AttackableEnemyState['state'], SpriteClass> = {
+    standing: new StandingSprite(this, 'assets/enemies/dog'),
+    walking: new RunningSprite(this, 'assets/enemies/dog'),
+    attack: new AttackSprite(this, 'assets/enemies/dog'),
+    hurt: new HurtSprite(this, 'assets/enemies/dog'),
+    death: new DeathSprite(this, 'assets/enemies/dog')
   }
+
+  currentSprite: SpriteClass = this.sprites.standing
 
   paddingLeft: number = 4
   paddingRight: number = 12
@@ -55,8 +38,6 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
       maxVy: 10,
       maxHealth: 10
     })
-
-    this.loadAllAssets()
   }
 
   // update (keys: InputType[], map: Map): void {

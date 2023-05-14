@@ -1,23 +1,30 @@
 /* eslint-disable */
 import React, { useEffect } from 'react'
 import './App.css'
-import Game from './game'
+import GameCmp from './components/Game'
 import EditorComponent from './components/Editor'
 import 'normalize.css'
 
-let game: Game | undefined
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <GameCmp />,
+  }, {
+    path: "/editor",
+    element: <EditorComponent />,
+  },
+]);
+
 
 function App (): JSX.Element {
-  useEffect(() => {
-    if (!game) {
-      game = new Game();
-      (window as any).game = game
-    }
-  }, [])
-
   return (
     <div className="App">
-      <canvas id="canvas" />
+      <RouterProvider router={router} />
     </div>
   )
 }

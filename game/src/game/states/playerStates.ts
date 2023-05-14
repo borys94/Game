@@ -1,9 +1,11 @@
+import type Enemy from '../characters/enemy'
 import type Player from '../characters/player'
 import { type InputType } from '../inputHandler'
+import { DeathSprite, DoubleHitSprite, FallingSprite, HitSprite, HurtSprite, JumpingSprite, RunningSprite, StandingSprite, StrongHitSprite, UseSprite } from '../sprites/playerSprites'
 import { State } from './state'
 
 const STATES = ['standing', 'running', 'jumping', 'falling', 'strongAttack', 'doubleHit', 'hit', 'use', 'hurt', 'death'] as const
-type PlayerStateTypes = typeof STATES[number]
+export type PlayerStateTypes = typeof STATES[number]
 
 export abstract class PlayerState extends State<PlayerStateTypes> {
   constructor (public character: Player, public state: PlayerStateTypes) {
@@ -15,8 +17,11 @@ export abstract class PlayerState extends State<PlayerStateTypes> {
 }
 
 export class Standing extends PlayerState {
+  sprite: StandingSprite
+
   constructor (public character: Player) {
     super(character, 'standing')
+    this.sprite = new StandingSprite(character)
   }
 
   enter (): void {
@@ -36,8 +41,10 @@ export class Standing extends PlayerState {
 }
 
 export class Running extends State<PlayerStateTypes> {
+  sprite: RunningSprite
   constructor (public character: Player) {
     super('running')
+    this.sprite = new RunningSprite(character)
   }
 
   enter (): void {
@@ -62,8 +69,10 @@ export class Running extends State<PlayerStateTypes> {
 }
 
 export class Jumping extends State<PlayerStateTypes> {
+  sprite: JumpingSprite
   constructor (public character: Player) {
     super('jumping')
+    this.sprite = new JumpingSprite(character)
   }
 
   enter (): void {
@@ -88,8 +97,10 @@ export class Jumping extends State<PlayerStateTypes> {
 }
 
 export class Falling extends State<PlayerStateTypes> {
+  sprite: FallingSprite
   constructor (public character: Player) {
     super('falling')
+    this.sprite = new FallingSprite(character)
   }
 
   enter (): void {
@@ -112,9 +123,13 @@ abstract class BaseHit extends State<PlayerStateTypes> {
 
   enter (): void {
     this.performed = false
-    this.character.frameX = 0
 
-    const enemy = this.character.game.enemy
+    for (const enemy of this.character.game.enemies) {
+      this.checkEnemy(enemy)
+    }
+  }
+
+  checkEnemy (enemy: Enemy<any>): void {
     const character = this.character
     if (
       enemy.health > 0 &&
@@ -129,10 +144,10 @@ abstract class BaseHit extends State<PlayerStateTypes> {
 
   handleInput (inputs: InputType[]): void {
     if (this.performed) {
-      this.character.frameX = 0
+      this.character.currentSprite.frameX = 0
       this.character.setState('standing')
     }
-    if (this.character.frameX === this.character.sprites[this.character.currentState.state].frames - 1) {
+    if (this.character.currentSprite.frameX === this.character.currentSprite.frames - 1) {
       this.performed = true
     }
   }
@@ -141,9 +156,11 @@ abstract class BaseHit extends State<PlayerStateTypes> {
 }
 
 export class StrongAttack extends BaseHit {
+  sprite: StrongHitSprite
   performed = false
   constructor (public character: Player) {
     super(character, 'strongAttack')
+    this.sprite = new StrongHitSprite(character)
   }
 
   getHurtValue (): number {
@@ -152,8 +169,10 @@ export class StrongAttack extends BaseHit {
 }
 
 export class DoubleHit extends BaseHit {
+  sprite: DoubleHitSprite
   constructor (public character: Player) {
     super(character, 'doubleHit')
+    this.sprite = new DoubleHitSprite(character)
   }
 
   getHurtValue (): number {
@@ -162,8 +181,10 @@ export class DoubleHit extends BaseHit {
 }
 
 export class Hit extends BaseHit {
+  sprite: HitSprite
   constructor (public character: Player) {
     super(character, 'hit')
+    this.sprite = new HitSprite(character)
   }
 
   getHurtValue (): number {
@@ -172,28 +193,31 @@ export class Hit extends BaseHit {
 }
 
 export class Use extends State<PlayerStateTypes> {
+  sprite: UseSprite
   performed = false
   constructor (public character: Player) {
     super('use')
+    this.sprite = new UseSprite(character)
   }
 
   enter (): void {
     this.performed = false
-    this.character.frameX = 0
+    this.sprite.frameX = 0
   }
 
   handleInput (inputs: InputType[]): void {
     if (this.performed) {
-      this.character.frameX = 0
+      this.sprite.frameX = 0
       this.character.setState('standing')
     }
-    if (this.character.frameX === 5) {
+    if (this.sprite.frameX === this.sprite.frames - 1) {
       this.performed = true
     }
   }
 }
 
 export class Hurt extends State<PlayerStateTypes> {
+  sprite: HurtSprite
   performed = false
   animate = false
   time = 0
@@ -202,13 +226,16 @@ export class Hurt extends State<PlayerStateTypes> {
 
   constructor (public character: Player) {
     super('hurt')
+    this.sprite = new HurtSprite(character)
   }
 
   enter (): void {
     this.time = Date.now()
     this.performed = false
-    this.character.frameX = 1
+    this.sprite.frameX = 1
     this.character.speed = 0
+
+    this.character.game.sounds.hurtSound()
   }
 
   handleInput (inputs: InputType[]): void {
@@ -216,21 +243,23 @@ export class Hurt extends State<PlayerStateTypes> {
     if (this.character.health <= 0) {
       this.character.setState('death')
     } else if (this.timestamp - this.time >= this.deltaTime) {
-      this.character.frameX = 0
+      this.sprite.frameX = 0
       this.character.setState('standing')
     }
   }
 }
 
 export class Death extends State<PlayerStateTypes> {
+  sprite: DeathSprite
   performed = false
   constructor (public character: Player) {
     super('death')
+    this.sprite = new DeathSprite(character)
   }
 
   enter (): void {
     // this.performed = false
-    // this.character.frameX = 0
+    this.character.speed = 0
   }
 
   handleInput (inputs: InputType[]): void {
@@ -239,7 +268,7 @@ export class Death extends State<PlayerStateTypes> {
       return
       // this.character.setState('standing')
     }
-    if (this.character.frameX === 5) {
+    if (this.sprite.frameX === this.sprite.frames - 1) {
       this.performed = true
     }
   }

@@ -4,7 +4,7 @@ import type Player from './characters/player'
 import type Game from '.'
 
 export default class Element {
-  asset: AssetType
+  asset: AssetType | null
   x: number
   y: number
   active: boolean
@@ -81,15 +81,17 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
     return new Element(game, assetId, y, x)
   }
 
-  if (asset.type === 'chest') {
-    return new ChestElement(game, assetId, y, x)
-  } else if (asset.type === 'trap') {
-    return new TrapElement(game, assetId, y, x)
-  } else if (asset.type === 'collectable') {
-    return new CollectableElement(game, assetId, y, x)
-  } else {
-    return new Element(game, assetId, y, x)
-  }
+  return new CollectableElement(game, assetId, y, x)
+
+  // if (asset.type === 'chest') {
+  //   return new ChestElement(game, assetId, y, x)
+  // } else if (asset.type === 'trap') {
+  //   return new TrapElement(game, assetId, y, x)
+  // } else if (asset.type === 'collectable') {
+  //   return new CollectableElement(game, assetId, y, x)
+  // } else {
+  //   return new Element(game, assetId, y, x)
+  // }
 }
 
 export class ChestElement extends Element {

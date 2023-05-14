@@ -2,13 +2,14 @@
 
 .container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  height: 100vh;
+  padding-top: 20px;
 }
 
 .editor {
-  width: 640px;
+  margin-right: 20px;
   height: 640px;
-  border: 1px solid black;
   // transform: translate(-50%, -50%);
 }
 
@@ -39,15 +40,18 @@
   }
 }
 
-
 .elements {
   display: grid;
   grid-gap: 5px;
-  grid-template-rows: repeat(10,32px);
+  grid-template-rows: 32px;
   grid-template-columns: repeat(10,32px);
 }
 
 .activeElement {
   width: 64px;
   height: 64px;
+}
+
+.edit {
+  overflow: auto;
 }

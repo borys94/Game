@@ -1,15 +1,11 @@
 import type Game from '..'
 import { TILE_SIZE } from '../config'
+import type SpriteClass from '../sprites/playerSprites'
 import { type State } from '../states/state'
 import { clamp } from '../utils'
+// eslint-disable-next-line
+import Player from './player'
 // import Player from './player'
-
-interface Sprite {
-  frames: number
-  asset: string
-  framesX?: number[]
-  img?: HTMLImageElement
-}
 
 interface CharacterOptions {
   x: number
@@ -30,10 +26,10 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   abstract states: Record<CharacterState['state'], CharacterState>
   abstract currentState: CharacterState
-  abstract sprites: Record<CharacterState['state'], Sprite>
 
-  // abstract paddingLeft: number
-  // abstract paddingRight: number
+  abstract sprites: Record<CharacterState['state'], SpriteClass>
+  abstract currentSprite: SpriteClass
+
   paddingLeft: number = 4 + 6
   paddingRight: number = 24 - 6
 
@@ -43,8 +39,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
 
   width = 48
   height = 48
-
-  frameX = 0
 
   speed = 0
   maxSpeed = 5
@@ -57,9 +51,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   vy = 0
   maxVy: number
   weight = 1.5
-
-  frameTimer = 0
-  frameInterval = 100
 
   loadedAssets = 0
   loaded = false
@@ -84,48 +75,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     this.y = options.y
   }
 
-  loadAllAssets (): void {
-    const spritesCount = Object.keys(this.sprites).length
-
-    for (const s of Object.keys(this.sprites)) {
-      const state = s as CharacterState['state']
-      const img = new Image()
-      this.sprites[state].img = img
-      img.src = this.sprites[state].asset
-      img.onload = () => {
-        this.loadedAssets++
-
-        if (spritesCount === this.loadedAssets) {
-          this.loaded = true
-        }
-      }
-    }
-  }
-
   draw (deltaTime: number): void {
     const width = this.width
     const height = this.height
-    const image = this.sprites[this.currentState.state].img
-    const scaleX = this.direction === 'left' ? -1 : 1
     const ctx = this.game.ctx
 
-    if (this.frameTimer > this.frameInterval && this.currentState.animate) {
-      if (this.frameX < this.sprites[this.currentState.state].frames - 1) {
-        this.frameX++
-      } else this.frameX = 0
-      this.frameTimer = 0
-    } else {
-      this.frameTimer += deltaTime
-    }
-
-    if ((window as any).debug) {
-      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
-      ctx.strokeRect(this.x + this.paddingLeft - this.game.camera.x, this.y - this.game.camera.y, width - this.paddingRight - this.paddingLeft, height)
-    }
-
-    if (!image) {
-      return
-    }
+    // if ((window as any).debug) {
+    ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
+    ctx.strokeRect(this.x + this.paddingLeft - this.game.camera.x, this.y - this.game.camera.y, width - this.paddingRight - this.paddingLeft, height)
+    // }
 
     if (this.isAlive()) {
       ctx.save()
@@ -137,20 +95,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       ctx.restore()
     }
 
-    ctx.save()
-    ctx.scale(scaleX, 1)
-    ctx.drawImage(
-      image,
-      width * this.frameX,
-      0,
-      width,
-      height,
-      this.x * scaleX - ((this.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft) * (scaleX * -1 + 1) - this.game.camera.x * scaleX,
-      (this.y + 5) - this.game.camera.y,
-      width,
-      height
-    )
-    ctx.restore()
+    this.currentSprite.draw(ctx, deltaTime)
   }
 
   update (): void {
@@ -165,43 +110,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.direction = direction
     }
 
+    this.currentSprite.leave()
+    this.currentSprite = this.sprites[state]
+    this.currentSprite.enter()
+
     this.currentState = this.states[state]
     this.currentState.enter()
   }
 
-  isOnDownHill (): boolean {
-    return this.game.map.isDownHill(this.x, this.y + this.height - 1)
-  }
-
-  isOnUpHill (y = this.y): boolean {
-    return this.game.map.isUpHill(this.x + this.width / 2, y + this.height - 1)
-  }
-
   onGround = (): boolean => {
-    const isUpHill = this.isOnUpHill()
-    const isUpHillTileAbove = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height + 0.1)
-
-    const isDownHill = this.isOnDownHill()
-    const isDownHillTileAbove = this.game.map.isDownHill(this.x, this.y + this.height + 0.1)
-
-    if (isDownHill) {
-      const x = 32 - ((this.x + 1) % 32)
-      const y = 32 - ((this.y + this.height - 1) % 32)
-      return x - y > -3
-    }
-    if (isDownHillTileAbove) {
-      return false
-    }
-
-    if (isUpHill) {
-      const x = (this.x + this.width / 2) % 32
-      const y = 32 - ((this.y + this.height - 1) % 32)
-      return x - y >= -1
-    }
-    if (isUpHillTileAbove) {
-      return false
-    }
-
     return (
       this.game.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
       this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
@@ -233,63 +150,29 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     if (!this.onGround()) {
       this.vy += this.weight
       this.vy = clamp(this.vy, -this.maxVy, this.maxVy)
+      // console.log('in the air')
+
+      // const wasPrevDownUpHill = this.isOnDownHill(this.y - this.weight)
     } else {
       this.vy = 0
-      const isUpHill = this.isOnUpHill()
-      const isDownHill = this.isOnDownHill()
-
-      if (isUpHill) {
-        const right = (this.x + this.width / 2) % 32
-        this.y = Math.floor((this.y + this.height - 1) / 32 + 1) * 32 - right - this.height
-      } else if (isDownHill) {
-        const right = 32 - (this.x) % 32
-        this.y = Math.floor((this.y + this.height - 1) / 32 + 1) * 32 - right - this.height
-      } else {
-        this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
-      }
+      this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
     }
   }
 
   handleHorizontalMovement = (): void => {
-    const wasPrevOnUpHill = this.isOnUpHill()
-    const wasPrevDownUpHill = this.isOnDownHill()
     this.x += this.speed
-
-    if (this.speed && wasPrevOnUpHill) {
-      this.y -= this.speed
-      return
-    }
-
-    if (this.speed && wasPrevDownUpHill) {
-      this.y += this.speed
-      return
-    }
 
     if (
       this.game.map.hasObstacle(this.x + this.width / 2, this.y) ||
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
     ) {
-      const isUpHill = this.game.map.isUpHill(this.x + this.width / 2, this.y + this.height - 1)
-      const isDownHill = this.game.map.isDownHill(this.x + this.width / 2, this.y + this.height - 1)
-
-      if (isDownHill) {
-        return
-      }
-
-      if (!isUpHill) {
-        this.x = Math.floor((this.x) / 32) * 32 + 8
-      }
+      this.x = Math.floor((this.x) / 32) * 32 + 8
     } else if (
       this.game.map.hasObstacle(this.x, this.y) ||
       this.game.map.hasObstacle(this.x, this.y + this.height) ||
       this.game.map.hasObstacle(this.x, this.y + this.height / 2)
     ) {
-      const isDownHill = this.game.map.isDownHill(this.x, this.y + this.height - 1)
-      const isUpHill = this.isOnUpHill()
-      if (isDownHill || isUpHill) {
-        return
-      }
       this.x = Math.floor((this.x) / 32 + 0.5) * 32
     }
 
@@ -306,8 +189,10 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
   }
 
   // hurt = (hurtValue: number): void => {
-  //   this.health = Math.max(this.health - hurtValue, 0)
-  //   // this.setState()
+  //   if ('hurt' in this.states) {
+  //     this.health = Math.max(this.health - hurtValue, 0)
+  //     this.setState('hurt')
+  //   }
   // }
 }
 

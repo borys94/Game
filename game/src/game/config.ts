@@ -1,4 +1,3 @@
-
 export const CANVAS_WIDTH = 576
 export const CANVAS_HEIGHT = 324
 export const SCALE = 1.5

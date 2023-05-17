@@ -1,5 +1,7 @@
 import Game from '../../game'
 import { type AssetType } from '../../game/assets'
+import { type EnemyObject } from '../../game/characters/enemy'
+import { buildEnemy } from '../../game/characters/buildEnemy'
 import config from '../../game/config'
 import { drawDebugInfo } from '../../game/debug'
 import { buildElement } from '../../game/Element'
@@ -20,9 +22,10 @@ interface MapType {
 
 class Editor extends Game {
   currentAsset: AssetType | null = null
-  currentAssetId: number = 0
+  currentAssetId = 0
 
   layer: Layer = 'tiles'
+  activeEnemyType: EnemyObject['type'] | null = null
 
   hoverX = 0
   hoverY = 0
@@ -31,7 +34,7 @@ class Editor extends Game {
     super()
 
     this.camera.update = () => {}
-    this.enemies = []
+    // this.map.enemies = []
     const rect = this.canvas.getBoundingClientRect()
 
     this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
@@ -42,15 +45,23 @@ class Editor extends Game {
     // this.onMouseDown.bind(this)
     this.canvas.addEventListener('mousedown', this.onMouseDown)
 
-    this.canvas.addEventListener('wheel', (e: WheelEvent) => {
-      e.preventDefault()
-      this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width)
-      this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height)
-    }, { passive: false })
+    this.canvas.addEventListener(
+      'wheel',
+      (e: WheelEvent) => {
+        e.preventDefault()
+        this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width)
+        this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height)
+      },
+      { passive: false }
+    )
   }
 
   onMouseDown = (): void => {
-    console.log(this.layer)
+    if (this.activeEnemyType) {
+      this.addEnemy(this.activeEnemyType)
+      return
+    }
+
     if (this.layer === 'tiles') this.fillFgTile()
     if (this.layer === 'bgTiles') this.fillBgTile()
     if (this.layer === 'interactive') this.fillInteractiveTile()
@@ -75,7 +86,23 @@ class Editor extends Game {
     this.background.draw(this.ctx)
     this.map.draw(deltaTime)
 
-    if (this.currentAsset) {
+    if (!!this.currentAsset || !!this.activeEnemyType) {
+      this.ctx.beginPath()
+      this.ctx.rect(
+        Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
+        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y,
+        32,
+        32
+        // Math.ceil(this.currentAsset.width / 32) * 32,
+        // Math.ceil(this.currentAsset.height / 32) * 32
+      )
+      this.ctx.strokeStyle = 'rgb(0, 255, 0)'
+      this.ctx.fillStyle = 'rgba(0,255,0,0.5)'
+      this.ctx.fill()
+      this.ctx.stroke()
+    }
+
+    if (this.currentAsset != null) {
       this.ctx.drawImage(
         this.currentAsset.img,
         0,
@@ -83,7 +110,10 @@ class Editor extends Game {
         this.currentAsset.width,
         this.currentAsset.height,
         Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
+        Math.floor((this.hoverY + this.camera.y) / 32) * 32 -
+          this.camera.y +
+          32 -
+          this.currentAsset.height,
         this.currentAsset.width,
         this.currentAsset.height
       )
@@ -100,7 +130,7 @@ class Editor extends Game {
   fillFgTile = (): void => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset) {
+    if (this.currentAsset != null) {
       this.map.images[b][a] = this.currentAsset.id
     } else {
       this.map.images[b][a] = 0
@@ -110,7 +140,7 @@ class Editor extends Game {
   fillBgTile = (): void => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset) {
+    if (this.currentAsset != null) {
       this.map.bgImages[b][a] = this.currentAsset.id
     } else {
       this.map.bgImages[b][a] = 0
@@ -120,24 +150,42 @@ class Editor extends Game {
   fillDecorationTile = (): void => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset) {
-      this.map.decorations[b][a] = this.currentAsset.id
+    if (this.currentAsset != null) {
+      // this.map.decorations[b][a] = this.currentAsset.id
+      this.map.decorationElements[b][a] = buildElement(this, this.currentAsset.id, b, a)
     } else {
-      this.map.decorations[b][a] = 0
+      // this.map.decorations[b][a] = 0
+      this.map.decorationElements[b][a] = buildElement(this, 0, b, a)
     }
   }
 
   fillInteractiveTile = (): void => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset) {
-      this.map.elements[b][a] = buildElement(this, this.currentAsset.id, b, a)
-    } else {
-      this.map.elements[b][a] = buildElement(this, 0, b, a)
+    this.map.elements[b][a] = buildElement(this, this.currentAsset?.id ?? 0, b, a)
+  }
+
+  addEnemy = (type: EnemyObject['type']): void => {
+    const x = Math.floor((this.hoverX + this.camera.x) / 32) * 32
+    const y = Math.floor((this.hoverY + this.camera.y) / 32) * 32
+    const enemyObj = {
+      type,
+      x,
+      y
     }
+    const enemy = buildEnemy(this, enemyObj)
+    enemy.y -= enemy.height - 32
+    // enemy.setState(enemy.states.standing)
+    this.map.enemies.push(enemy)
+  }
+
+  setEnemy = (type: EnemyObject['type']) => {
+    this.currentAsset = null
+    this.activeEnemyType = type
   }
 
   setLayer (layer: Layer): void {
+    this.activeEnemyType = null
     this.layer = layer
   }
 

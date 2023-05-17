@@ -1,4 +1,3 @@
-
 class Sounds {
   background: HTMLAudioElement
   coin: HTMLAudioElement

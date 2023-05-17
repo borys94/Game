@@ -1,7 +1,15 @@
-
 // const INPUTS = ['PRESS_RIGHT', 'PRESS_LEFT', 'RELEASE_RIGHT', 'RELEASE_LEFT', 'PRESS_UP', 'RELEASE_UP'] as const
-const INPUTS = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'Digit1', 'Digit2', 'Digit3', 'Space', 'Digit4'] as const
-export type InputType = typeof INPUTS[number]
+const INPUTS = [
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowUp',
+  'Digit1',
+  'Digit2',
+  'Digit3',
+  'Space',
+  'Digit4'
+] as const
+export type InputType = (typeof INPUTS)[number]
 
 class InputHandler {
   lastKey?: InputType
@@ -36,7 +44,7 @@ class InputHandler {
         case 'Space':
         case 'Digit4':
           this.lastKey = e.code
-          this.activeKeys = this.activeKeys.filter(key => key !== e.code)
+          this.activeKeys = this.activeKeys.filter((key) => key !== e.code)
           break
       }
     })

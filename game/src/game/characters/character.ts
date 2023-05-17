@@ -80,10 +80,15 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     const height = this.height
     const ctx = this.game.ctx
 
-    // if ((window as any).debug) {
-    ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
-    ctx.strokeRect(this.x + this.paddingLeft - this.game.camera.x, this.y - this.game.camera.y, width - this.paddingRight - this.paddingLeft, height)
-    // }
+    if ((window as any).debug) {
+      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
+      ctx.strokeRect(
+        this.x + this.paddingLeft - this.game.camera.x,
+        this.y - this.game.camera.y,
+        width - this.paddingRight - this.paddingLeft,
+        height
+      )
+    }
 
     if (this.isAlive()) {
       ctx.save()
@@ -91,7 +96,12 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       ctx.fillStyle = '#00FF00'
       ctx.lineWidth = 2
       ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, 5)
-      ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width * (this.health / this.maxHealth), 5)
+      ctx.fillRect(
+        this.x - this.game.camera.x,
+        this.y - this.game.camera.y,
+        width * (this.health / this.maxHealth),
+        5
+      )
       ctx.restore()
     }
 
@@ -118,10 +128,10 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     this.currentState.enter()
   }
 
-  onGround = (): boolean => {
+  onGround = (x: number = this.x): boolean => {
     return (
-      this.game.map.hasObstacle(this.x + 1, this.y + this.height + 0.1) ||
-      this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y + this.height + 0.1)
+      this.game.map.hasObstacle(x + 1, this.y + this.height + 0.1) ||
+      this.game.map.hasObstacle(x + this.width / 2 - 1, this.y + this.height + 0.1)
     )
   }
 
@@ -141,7 +151,7 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.game.map.hasObstacle(this.x + 1, this.y - 1) ||
       this.game.map.hasObstacle(this.x + this.width / 2 - 1, this.y - 1)
     ) {
-      this.y = Math.floor((this.y) / 32 + 1) * 32
+      this.y = Math.floor(this.y / 32 + 1) * 32
       this.vy = 0
     }
   }
@@ -167,13 +177,13 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
       this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
     ) {
-      this.x = Math.floor((this.x) / 32) * 32 + 8
+      this.x = Math.floor(this.x / 32) * 32 + 8
     } else if (
       this.game.map.hasObstacle(this.x, this.y) ||
       this.game.map.hasObstacle(this.x, this.y + this.height) ||
       this.game.map.hasObstacle(this.x, this.y + this.height / 2)
     ) {
-      this.x = Math.floor((this.x) / 32 + 0.5) * 32
+      this.x = Math.floor(this.x / 32 + 0.5) * 32
     }
 
     if (this.x < 0) {

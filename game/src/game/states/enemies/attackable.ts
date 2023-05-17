@@ -1,9 +1,10 @@
 import type Enemy from '../../characters/enemy'
 import { type InputType } from '../../inputHandler'
+import { shouldChangeDirection } from './helpers'
 import EnemyState from './state'
 
 const STATES = ['standing', 'walking', 'attack', 'hurt', 'death'] as const
-type StateType = typeof STATES[number]
+type StateType = (typeof STATES)[number]
 
 export abstract class AttackableEnemyState extends EnemyState<StateType> {
   constructor (public character: Enemy<StateType>, public state: StateType) {
@@ -27,9 +28,13 @@ export class Standing extends AttackableEnemyState {
       return
     }
 
-    if (Math.abs(player.x - this.character.x) < 64 && Math.abs(player.y - this.character.y) < 64 && this.character.canAttack()) {
+    if (
+      Math.abs(player.x - this.character.x) < 64 &&
+      Math.abs(player.y - this.character.y) < 64 &&
+      this.character.canAttack()
+    ) {
       this.character.setState('attack')
-    } else if (Math.abs(player.x - this.character.x) < this.sightArea && Math.abs(player.y - this.character.y) < 64 && Math.abs(player.x - this.character.x) > 32) {
+    } else {
       this.character.setState('walking')
     }
   }
@@ -41,28 +46,45 @@ export class Walking extends AttackableEnemyState {
   }
 
   enter (): void {
-    this.updateSpeed()
+    this.character.speed = this.character.maxSpeed
+    if (this.character.direction === 'left') {
+      this.character.speed *= -1
+    }
   }
 
   handleInput (inputs: InputType[]): void {
     const player = this.character.game.player
-    this.updateSpeed()
 
-    if (Math.abs(player.x - this.character.x) < 60 && Math.abs(player.y - this.character.y) < 32 && this.character.canAttack()) {
-      this.character.setState('attack')
-    } else if (Math.abs(player.x - this.character.x) > this.sightArea || Math.abs(player.x - this.character.x) < 32) {
-      this.character.setState('standing')
+    // if (
+    //   !this.character.game.map.hasObstacle(
+    //     this.character.x + this.character.paddingLeft + this.character.speed + 0.1,
+    //     this.character.y + this.character.height + 16.5
+    //   ) ||
+    //   !this.character.game.map.hasObstacle(
+    //     this.character.x +
+    //       this.character.width -
+    //       this.character.paddingRight +
+    //       this.character.speed +
+    //       0.1,
+    //     this.character.y + this.character.height + 16.5
+    //   ) ||
+    //   this.character.game.map.hasObstacle(
+    //     this.character.x + this.character.speed * 2,
+    //     this.character.y + this.character.height / 2
+    //   ) ||
+    //   this.character.x <= 0
+    // ) {
+    if (shouldChangeDirection(this.character)) {
+      this.character.speed *= -1
+      this.character.direction = this.character.direction === 'right' ? 'left' : 'right'
     }
-  }
 
-  private updateSpeed (): void {
-    const player = this.character.game.player
-    this.character.direction = player.x - this.character.x < 0 ? 'left' : 'right'
-
-    if (this.character.direction === 'right') {
-      this.character.speed = this.character.maxSpeed / 1.5
-    } else {
-      this.character.speed = -this.character.maxSpeed / 1.5
+    if (
+      Math.abs(player.x - this.character.x) < 60 &&
+      Math.abs(player.y - this.character.y) < 32 &&
+      this.character.canAttack()
+    ) {
+      this.character.setState('attack')
     }
   }
 }
@@ -103,10 +125,18 @@ export class Attack extends AttackableEnemyState {
       this.animate = false
       this.hit = false
       this.character.setState('standing')
-    } else if (this.character.currentSprite.frameX === 2 && !this.hit && Math.abs(player.y - this.character.y) < 32) {
+    } else if (
+      this.character.currentSprite.frameX === 2 &&
+      !this.hit &&
+      Math.abs(player.y - this.character.y) < 32
+    ) {
       if (
-        (this.character.direction === 'left' && this.character.x - player.x < 60 && this.character.x - player.x > 0) ||
-        (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)
+        (this.character.direction === 'left' &&
+          this.character.x - player.x < 60 &&
+          this.character.x - player.x > 0) ||
+        (this.character.direction === 'right' &&
+          player.x - this.character.x < 60 &&
+          player.x - this.character.x > 0)
       ) {
         this.hit = true
         player.hurt(2)
@@ -152,7 +182,5 @@ export class Death extends AttackableEnemyState {
     // this.character.frameX = 0
   }
 
-  handleInput (inputs: InputType[]): void {
-
-  }
+  handleInput (inputs: InputType[]): void {}
 }

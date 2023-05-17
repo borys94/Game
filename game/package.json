@@ -4,22 +4,13 @@
   "private": true,
   "homepage": "https://borys94.github.io",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.25",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.1",
-    "gh-pages": "^5.0.0",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
     "sass": "^1.62.1",
-    "tiny-ui": "^0.0.95",
-    "typescript": "*",
+    "tiny-ui": "0.0.95",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -28,7 +19,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "lint": "eslint src --fix",
+    "lint": "eslint ./src --fix",
+    "format": "prettier --write './src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "deploy": "gh-pages -d build",
     "update-tiles": "node scripts/tiles.js && eslint src/tiles.ts --fix"
   },
@@ -51,13 +43,26 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.25",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.1",
+    "gh-pages": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.5",
+    "@typescript-eslint/parser": "^5.59.5",
     "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
-    "gm": "^1.25.0"
+    "gm": "^1.25.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
   }
 }

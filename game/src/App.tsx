@@ -1,27 +1,22 @@
-/* eslint-disable */
-import React, { useEffect } from 'react'
+import React from 'react'
 import './App.css'
 import GameCmp from './components/Game'
-import EditorComponent from './components/Editor'
-import 'normalize.css'
+import EditorComponent from './components/Editor/Editor'
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/",
-    element: <GameCmp />,
-  }, {
-    path: "/editor",
-    element: <EditorComponent />,
+    path: '/',
+    element: <GameCmp />
   },
-]);
+  {
+    path: '/editor',
+    element: <EditorComponent />
+  }
+])
 
-
-function App (): JSX.Element {
+function App (): React.ReactElement {
   return (
     <div className="App">
       <RouterProvider router={router} />
@@ -29,13 +24,4 @@ function App (): JSX.Element {
   )
 }
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <EditorComponent />
-//     </div>
-//   );
-// }
-
 export default App
-/* eslint-enable */

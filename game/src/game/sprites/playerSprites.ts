@@ -4,18 +4,18 @@ import type Player from '../characters/player'
 export abstract class SpriteClass {
   asset: string
   frames: number
-  frameX: number = 0
+  frameX = 0
   frameTimer = 0
   frameInterval = 100 // TODO: in Sprite class
   player: Character<any, any>
 
   img?: HTMLImageElement
-  loaded: boolean = false
+  loaded = false
 
   oneTimeAction: boolean
   performed?: boolean
 
-  constructor (player: Character<any, any>, asset: string, frames: number, oneTimeAction: boolean = false) {
+  constructor (player: Character<any, any>, asset: string, frames: number, oneTimeAction = false) {
     this.player = player
     this.asset = asset
     this.frames = frames
@@ -43,9 +43,7 @@ export abstract class SpriteClass {
     this.frameX = 0
   }
 
-  leave (): void {
-
-  }
+  leave (): void {}
 
   loadAllAsset (): void {
     const img = new Image()
@@ -57,7 +55,7 @@ export abstract class SpriteClass {
   }
 
   draw (ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    if (!this.img || !this.loaded) {
+    if (this.img == null || !this.loaded) {
       return
     }
 
@@ -72,8 +70,12 @@ export abstract class SpriteClass {
       0,
       this.player.width,
       this.player.height,
-      this.player.x * scaleX - ((this.player.width - this.player.paddingLeft - this.player.paddingRight) / 2 + this.player.paddingLeft) * (scaleX * -1 + 1) - this.player.game.camera.x * scaleX,
-      (this.player.y + 5) - this.player.game.camera.y,
+      this.player.x * scaleX -
+        ((this.player.width - this.player.paddingLeft - this.player.paddingRight) / 2 +
+          this.player.paddingLeft) *
+          (scaleX * -1 + 1) -
+        this.player.game.camera.x * scaleX,
+      this.player.y + 5 - this.player.game.camera.y,
       this.player.width,
       this.player.height
     )

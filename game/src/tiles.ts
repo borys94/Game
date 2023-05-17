@@ -1,9 +1,15 @@
-
 import { type Sprite } from './game/types'
 
 export type TileType = 'interactive' | 'decoration' | 'obstacle' | 'backgroundTile'
 export type MapSet = 'powerStation' | 'greenZone' | 'industrialZone' | 'none'
-export type Tile = Sprite & { id: number, upHill?: true, downHill?: true, interactive?: true, type?: TileType, set: MapSet }
+export type Tile = Sprite & {
+  id: number
+  upHill?: true
+  downHill?: true
+  interactive?: true
+  type?: TileType
+  set: MapSet
+}
 
 const tiles: Array<Tile | null> = [
   null,

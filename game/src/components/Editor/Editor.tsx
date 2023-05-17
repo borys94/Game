@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Editor from '../lib/editor'
-import tileList, { type TileType, type Tile, type MapSet } from '../tiles'
+import Editor from '../../lib/editor'
+import tileList, { type TileType, type Tile, type MapSet } from '../../tiles'
 import styles from './Editor.module.scss'
 import { NativeSelect, InputNumber, Typography, Button } from 'tiny-ui'
+import EnemyTiles from './EnemyTiles'
+import { type EnemyObject } from '../../game/characters/enemy'
 // import config from '../game/config'
 
 // const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
@@ -14,15 +16,16 @@ function EditorComponent (): React.ReactElement {
   const [editor, setEditor] = useState<Editor>()
   const [mapSet, setMapSet] = useState<MapSet>('powerStation')
   const [activeTile, setActiveTile] = useState<Tile | null>()
+  const [activeEnemy, setActiveEnemy] = useState<EnemyObject['type'] | null>(null)
   const [columns, setColumns] = useState(0)
   const [rows, setRows] = useState(0)
 
   useEffect(() => {
-    if (ed) {
+    if (ed != null) {
       return
     }
-    ed = new Editor();
-    (window as any).ed = ed
+    ed = new Editor()
+    ;(window as any).ed = ed
     setEditor(ed)
     setColumns(ed.map.images[0].length)
     setRows(ed.map.images.length)
@@ -47,9 +50,14 @@ function EditorComponent (): React.ReactElement {
   const save = async (): Promise<void> => {
     const map = JSON.stringify({
       tiles: editor?.map.images,
-      decorations: editor?.map.decorations,
+      decorations: editor?.map.decorationElements.map((el) => el.map((e) => e.asset?.id ?? 0)),
       bgTiles: editor?.map.bgImages,
-      interactive: editor?.map.elements.map(el => el.map(e => e.asset?.id ?? 0))
+      enemies: editor?.map.enemies.map((enemy) => ({
+        type: enemy.type,
+        x: enemy.x,
+        y: enemy.y
+      })),
+      interactive: editor?.map.elements.map((el) => el.map((e) => e.asset?.id ?? 0))
     })
 
     try {
@@ -74,6 +82,11 @@ function EditorComponent (): React.ReactElement {
     setRows(value)
   }
 
+  const setEnemy = (type: EnemyObject['type']) => {
+    setActiveEnemy(type)
+    editor?.setEnemy(type)
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.editor}>
@@ -81,7 +94,6 @@ function EditorComponent (): React.ReactElement {
       </div>
 
       <div className={styles.edit}>
-
         <Button onClick={save}>Save</Button>
 
         <div>
@@ -107,11 +119,23 @@ function EditorComponent (): React.ReactElement {
           <Button onClick={() => editor?.clearMap()}>Clear</Button>
         </div>
 
-        <Tiles mapSet={mapSet} editor={editor} tileType='obstacle' setActiveTile={setActiveTile} />
-        <Tiles mapSet={mapSet} editor={editor} tileType='backgroundTile' setActiveTile={setActiveTile} />
-        <Tiles mapSet={mapSet} editor={editor} tileType='decoration' setActiveTile={setActiveTile} />
-        <Tiles mapSet="none" editor={editor} tileType='interactive' setActiveTile={setActiveTile} />
-        <Tiles mapSet="none" editor={editor} tileType='decoration' setActiveTile={setActiveTile} />
+        <EnemyTiles setEnemy={setEnemy} enemy={activeEnemy} />
+
+        <Tiles mapSet={mapSet} editor={editor} tileType="obstacle" setActiveTile={setActiveTile} />
+        <Tiles
+          mapSet={mapSet}
+          editor={editor}
+          tileType="backgroundTile"
+          setActiveTile={setActiveTile}
+        />
+        <Tiles
+          mapSet={mapSet}
+          editor={editor}
+          tileType="decoration"
+          setActiveTile={setActiveTile}
+        />
+        <Tiles mapSet="none" editor={editor} tileType="interactive" setActiveTile={setActiveTile} />
+        <Tiles mapSet="none" editor={editor} tileType="decoration" setActiveTile={setActiveTile} />
 
         <hr />
         <Typography.Heading level={3}>Current tile</Typography.Heading>
@@ -130,39 +154,37 @@ interface TilesProps {
   setActiveTile: (tile: Tile | null) => void
 }
 
-const Tiles = ({
-  mapSet,
-  editor,
-  tileType,
-  setActiveTile
-}: TilesProps): React.ReactElement => (
+const Tiles = ({ mapSet, editor, tileType, setActiveTile }: TilesProps): React.ReactElement => (
   <>
-  <hr />
+    <hr />
     <Typography.Heading level={3}>{tileType}</Typography.Heading>
     <div className={styles.elements}>
-      {tileList.filter(tile => tile?.set === mapSet).filter(tile => tile?.type === tileType).map((tile) => (
-        <div className={styles.imgContainer} key={tile?.asset}>
-          <img
-            src={tile?.asset}
-            alt='tile'
-            onClick={() => {
-              setActiveTile(tile)
-              if (tileType === 'backgroundTile') {
-                editor?.setLayer('bgTiles')
-              } else if (tileType === 'decoration') {
-                editor?.setLayer('decorations')
-              } else if (tileType === 'obstacle') {
-                editor?.setLayer('tiles')
-              } else if (tileType === 'interactive') {
-                editor?.setLayer('interactive')
-              } else {
-                console.error('no layer!!!')
-              }
-              editor?.setCurrentAsset(editor.assets.getById(tile?.id))
-            }}
-          />
-        </div>
-      ))}
+      {tileList
+        .filter((tile) => tile?.set === mapSet)
+        .filter((tile) => tile?.type === tileType)
+        .map((tile) => (
+          <div className={styles.imgContainer} key={tile?.asset}>
+            <img
+              src={tile?.asset}
+              alt="tile"
+              onClick={() => {
+                setActiveTile(tile)
+                if (tileType === 'backgroundTile') {
+                  editor?.setLayer('bgTiles')
+                } else if (tileType === 'decoration') {
+                  editor?.setLayer('decorations')
+                } else if (tileType === 'obstacle') {
+                  editor?.setLayer('tiles')
+                } else if (tileType === 'interactive') {
+                  editor?.setLayer('interactive')
+                } else {
+                  console.error('no layer!!!')
+                }
+                editor?.setCurrentAsset(editor.assets.getById(tile?.id))
+              }}
+            />
+          </div>
+        ))}
       <div
         onClick={() => {
           setActiveTile(null)

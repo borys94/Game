@@ -1,4 +1,3 @@
-
 import tiles, { type TileType } from '../tiles'
 
 export interface AssetType {
@@ -22,13 +21,13 @@ class Assets {
 
   isLoaded = (): boolean => this.loaded
 
-  getAssetCount = (): number => tiles.filter(tile => tile).length
+  getAssetCount = (): number => tiles.filter((tile) => tile).length
 
   loadAllAssets (): void {
     const allTiles = this.getAssetCount()
 
     tiles.forEach((tile, index) => {
-      if (!tile) return
+      if (tile == null) return
       const img = new Image()
       img.src = tile.asset
       this.assets[tile.id] = {
@@ -51,7 +50,7 @@ class Assets {
     })
   }
 
-  getById = (id?: number): AssetType | null => id ? this.assets[id] : null
+  getById = (id?: number): AssetType | null => (id ? this.assets[id] : null)
 }
 
 export default Assets

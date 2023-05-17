@@ -7,9 +7,7 @@ abstract class EnemyState<T extends string> extends State<T> {
     super(state)
   }
 
-  enter (): void {
-
-  }
+  enter (): void {}
 }
 
 export default EnemyState

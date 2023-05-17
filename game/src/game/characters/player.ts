@@ -1,8 +1,31 @@
-import { Standing, Running, Jumping, Falling, StrongAttack, DoubleHit, Hit, Use, Hurt, Death, type PlayerState } from '../states/playerStates'
+import {
+  Standing,
+  Running,
+  Jumping,
+  Falling,
+  StrongAttack,
+  DoubleHit,
+  Hit,
+  Use,
+  Hurt,
+  Death,
+  type PlayerState
+} from '../states/playerStates'
 import { type InputType } from '../inputHandler'
 import Character from './character'
 import type SpriteClass from '../sprites/playerSprites'
-import { DeathSprite, DoubleHitSprite, FallingSprite, HitSprite, HurtSprite, JumpingSprite, RunningSprite, StandingSprite, StrongHitSprite, UseSprite } from '../sprites/playerSprites'
+import {
+  DeathSprite,
+  DoubleHitSprite,
+  FallingSprite,
+  HitSprite,
+  HurtSprite,
+  JumpingSprite,
+  RunningSprite,
+  StandingSprite,
+  StrongHitSprite,
+  UseSprite
+} from '../sprites/playerSprites'
 import type Game from '..'
 
 class Player extends Character<PlayerState['state'], PlayerState> {
@@ -36,8 +59,8 @@ class Player extends Character<PlayerState['state'], PlayerState> {
 
   currentSprite = this.sprites.standing
 
-  paddingLeft: number = 4
-  paddingRight: number = 24
+  paddingLeft = 4
+  paddingRight = 24
 
   cards = 0
 

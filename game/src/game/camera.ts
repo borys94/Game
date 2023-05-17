@@ -6,10 +6,10 @@ const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
 
 class Camera {
-  x: number = 0
-  y: number = 0
+  x = 0
+  y = 0
 
-  constructor (private readonly player: Player, private readonly map: Map) { }
+  constructor (private readonly player: Player, private readonly map: Map) {}
 
   update (): void {
     this.x = this.player.x > CANVAS_WIDTH / 2 ? this.player.x - CANVAS_WIDTH / 2 : 0

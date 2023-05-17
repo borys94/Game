@@ -54,8 +54,8 @@ class Background {
 
     for (const asset of this.assets) {
       const img = asset.img
-      const moved = Math.floor(index++ * this.speed * this.game.camera.x % this.width)
-      if (img) {
+      const moved = Math.floor((index++ * this.speed * this.game.camera.x) % this.width)
+      if (img != null) {
         ctx.drawImage(
           img,
           moved,
@@ -65,7 +65,8 @@ class Background {
           0,
           0,
           this.width * config.SCALE,
-          this.height * config.SCALE)
+          this.height * config.SCALE
+        )
 
         ctx.drawImage(
           img,
@@ -76,7 +77,8 @@ class Background {
           (this.width - moved) * config.SCALE,
           0,
           this.width * config.SCALE,
-          this.height * config.SCALE)
+          this.height * config.SCALE
+        )
       }
     }
     this.trainFrame++

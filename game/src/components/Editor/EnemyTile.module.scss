@@ -1,0 +1,15 @@
+.canvas {
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid black;
+  }
+}
+
+.container {
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+}

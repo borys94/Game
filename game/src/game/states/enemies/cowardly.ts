@@ -1,9 +1,10 @@
 import type Enemy from '../../characters/enemy'
 import { type InputType } from '../../inputHandler'
+import { shouldChangeDirection } from './helpers'
 import EnemyState from './state'
 
-const STATES = ['standing', 'walking', 'hurt'] as const
-type StateType = typeof STATES[number]
+const STATES = ['standing', 'walking', 'hurt', 'death'] as const
+type StateType = (typeof STATES)[number]
 
 export abstract class CowardlyEnemyState extends EnemyState<StateType> {
   constructor (public character: Enemy<StateType>, public state: StateType) {
@@ -34,28 +35,16 @@ export class Walking extends CowardlyEnemyState {
   }
 
   enter (): void {
-    this.updateSpeed()
-  }
-
-  handleInput (inputs: InputType[]): void {
-    this.updateSpeed()
-
-    if (
-      Math.abs(this.character.game.player.x - this.character.x) > 150 ||
-      Math.abs(this.character.game.player.x - this.character.x) < 32
-    ) {
-      this.character.setState('standing')
+    this.character.speed = this.character.maxSpeed
+    if (this.character.direction === 'left') {
+      this.character.speed *= -1
     }
   }
 
-  private updateSpeed (): void {
-    const { player } = this.character.game
-    this.character.direction = player.x - this.character.x < 0 ? 'left' : 'right'
-
-    if (this.character.direction === 'right') {
-      this.character.speed = this.character.maxSpeed / 3
-    } else {
-      this.character.speed = -this.character.maxSpeed / 3
+  handleInput (inputs: InputType[]): void {
+    if (shouldChangeDirection(this.character)) {
+      this.character.speed *= -1
+      this.character.direction = this.character.direction === 'right' ? 'left' : 'right'
     }
   }
 }
@@ -67,7 +56,7 @@ export class Hurt extends CowardlyEnemyState {
   timestamp = 0
   deltaTime = 300
 
-  constructor (character: Enemy<StateType>) {
+  constructor (public character: Enemy<StateType>) {
     super(character, 'hurt')
   }
 
@@ -75,18 +64,27 @@ export class Hurt extends CowardlyEnemyState {
     this.time = Date.now()
     this.performed = false
     this.character.speed = 0
-
-    this.character.game.sounds.hurtSound()
   }
 
   handleInput (inputs: InputType[]): void {
-    this.character.setState('standing')
-    // this.timestamp = Date.now()
-    // if (this.character.health <= 0) {
-    //   this.character.setState('death')
-    // } else if (this.timestamp - this.time >= this.deltaTime) {
-    //   this.sprite.frameX = 0
-    //   this.character.setState('standing')
-    // }
+    this.timestamp = Date.now()
+    if (this.character.health <= 0) {
+      this.character.setState('death')
+    } else if (this.timestamp - this.time >= this.deltaTime) {
+      this.character.setState('standing')
+    }
   }
+}
+
+export class Death extends CowardlyEnemyState {
+  constructor (public character: Enemy<StateType>) {
+    super(character, 'death')
+  }
+
+  enter (): void {
+    // this.performed = false
+    // this.character.frameX = 0
+  }
+
+  handleInput (inputs: InputType[]): void {}
 }

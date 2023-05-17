@@ -1,11 +1,25 @@
 // import type Assets from './assets'
-import { type AttackableEnemyState, Standing, Walking, Attack, Hurt, Death } from '../../states/enemies/attackable'
+import {
+  type AttackableEnemyState,
+  Standing,
+  Walking,
+  Attack,
+  Hurt,
+  Death
+} from '../../states/enemies/attackable'
 import Enemy from '../enemy'
 import type Game from '../..'
 import type SpriteClass from '../../sprites/playerSprites'
-import { AttackSprite, DeathSprite, HurtSprite, RunningSprite, StandingSprite } from '../../sprites/enemySprites'
+import {
+  AttackSprite,
+  DeathSprite,
+  HurtSprite,
+  RunningSprite,
+  StandingSprite
+} from '../../sprites/enemySprites'
 
 class DogEnemy extends Enemy<AttackableEnemyState['state']> {
+  type = 'dog' as const
   states: Record<AttackableEnemyState['state'], AttackableEnemyState> = {
     standing: new Standing(this),
     walking: new Walking(this),
@@ -24,10 +38,10 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
     death: new DeathSprite(this, 'assets/enemies/dog')
   }
 
-  currentSprite: SpriteClass = this.sprites.standing
+  currentSprite: SpriteClass = this.sprites.walking
 
-  paddingLeft: number = 4
-  paddingRight: number = 12
+  paddingLeft = 4
+  paddingRight = 12
 
   constructor (game: Game, x: number, y: number) {
     super(game, {

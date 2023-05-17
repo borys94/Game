@@ -10,9 +10,9 @@ import Camera from './camera'
 import Sounds from './sounds'
 import { drawDebugInfo } from './debug'
 // import RatEnemy from './characters/enemies/rat/rat'
-import DogEnemy from './characters/enemies/dog'
-import type Enemy from './characters/enemy'
-import RatEnemy from './characters/enemies/rat'
+// import DogEnemy from './characters/enemies/dog'
+// import type Enemy from './characters/enemy'
+// import RatEnemy from './characters/enemies/rat'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -22,7 +22,7 @@ class Game {
   ctx: CanvasRenderingContext2D
 
   player: Player
-  enemies: Array<Enemy<any>>
+  // enemies: Array<Enemy<any>>
   map: Map
   background: Background
   inputHandler: InputHandler
@@ -44,16 +44,14 @@ class Game {
     this.map = new Map(this)
     this.background = new Background(this)
     this.player = new Player(this)
-    this.enemies = [
-      new DogEnemy(this, 200, 416 - 100),
-      new RatEnemy(this, 300, 416 - 100)
-    ]
+    // this.enemies = [new DogEnemy(this, 200, 416 - 100), new RatEnemy(this, 300, 416 - 100)]
 
     this.inputHandler = new InputHandler()
     this.sounds = new Sounds()
     // eslint-disable-next-line
     // this.sounds.play()
     this.camera = new Camera(this.player, this.map)
+    this.map.loadEnemies()
     this.animate = this.animate.bind(this)
     this.draw = this.draw.bind(this)
 
@@ -80,16 +78,14 @@ class Game {
 
     this.camera.update()
     this.player.update()
-    for (const enemy of this.enemies) {
-      enemy.update()
-    }
+    this.map.update()
 
     this.background.draw(this.ctx)
     this.map.draw(deltaTime)
     this.player.draw(deltaTime)
-    for (const enemy of this.enemies) {
-      enemy.draw(deltaTime)
-    }
+    // for (const enemy of this.enemies) {
+    //   enemy.draw(deltaTime)
+    // }
 
     drawDebugInfo(this.ctx, this.player, this.inputHandler)
   }

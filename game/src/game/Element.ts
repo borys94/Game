@@ -8,7 +8,7 @@ export default class Element {
   x: number
   y: number
   active: boolean
-  frames: number = 0
+  frames = 0
   frameX = 0
 
   game: Game
@@ -24,22 +24,18 @@ export default class Element {
     this.x = x
     this.y = y
 
-    this.active = !!this.asset
-    if (this.asset) {
+    this.active = !(this.asset == null)
+    if (this.asset != null) {
       this.frames = this.asset.frames
     }
   }
 
-  public enter (player: Player): void {
+  public enter (player: Player): void {}
 
-  }
-
-  public handleInput (player: Player, inputs: InputType[]): void {
-
-  }
+  public handleInput (player: Player, inputs: InputType[]): void {}
 
   draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
-    if (!this.asset || !this.active) {
+    if (this.asset == null || !this.active) {
       return
     }
     this.updateFrameIfNeeded(deltaTime)
@@ -77,7 +73,7 @@ export default class Element {
 export const buildElement = (game: Game, assetId: number, y: number, x: number): Element => {
   const asset = game.assets.getById(assetId)
 
-  if (!asset) {
+  if (asset == null) {
     return new Element(game, assetId, y, x)
   }
 
@@ -96,9 +92,7 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
 
 export class ChestElement extends Element {
   animate = false
-  enter (player: Player): void {
-
-  }
+  enter (player: Player): void {}
 
   handleInput (player: Player, inputs: InputType[]): void {
     if (inputs.includes('Space')) {
@@ -121,9 +115,7 @@ export class TrapElement extends Element {
     else player.speed = -1
   }
 
-  handleInput (player: Player, inputs: InputType[]): void {
-
-  }
+  handleInput (player: Player, inputs: InputType[]): void {}
 }
 
 export class CollectableElement extends Element {
@@ -132,7 +124,5 @@ export class CollectableElement extends Element {
     this.active = false
   }
 
-  handleInput (player: Player, inputs: InputType[]): void {
-
-  }
+  handleInput (player: Player, inputs: InputType[]): void {}
 }

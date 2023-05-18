@@ -55,25 +55,6 @@ export class Walking extends AttackableEnemyState {
   handleInput (inputs: InputType[]): void {
     const player = this.character.game.player
 
-    // if (
-    //   !this.character.game.map.hasObstacle(
-    //     this.character.x + this.character.paddingLeft + this.character.speed + 0.1,
-    //     this.character.y + this.character.height + 16.5
-    //   ) ||
-    //   !this.character.game.map.hasObstacle(
-    //     this.character.x +
-    //       this.character.width -
-    //       this.character.paddingRight +
-    //       this.character.speed +
-    //       0.1,
-    //     this.character.y + this.character.height + 16.5
-    //   ) ||
-    //   this.character.game.map.hasObstacle(
-    //     this.character.x + this.character.speed * 2,
-    //     this.character.y + this.character.height / 2
-    //   ) ||
-    //   this.character.x <= 0
-    // ) {
     if (shouldChangeDirection(this.character)) {
       this.character.speed *= -1
       this.character.direction = this.character.direction === 'right' ? 'left' : 'right'

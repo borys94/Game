@@ -1,4 +1,6 @@
-import tiles, { type TileType } from '../tiles'
+import store from '../store'
+import { setLoadedAssets } from '../store/game'
+import tiles, { type TileType, type InteractiveType } from '../tiles'
 
 export interface AssetType {
   img: HTMLImageElement
@@ -6,6 +8,7 @@ export interface AssetType {
   height: number
   frames: number
   type?: TileType
+  interactiveType?: InteractiveType
   id: number
 }
 
@@ -36,11 +39,13 @@ class Assets {
         width: tile.width,
         height: tile.height,
         frames: tile.frames,
-        type: tile.type
+        type: tile.type,
+        interactiveType: tile.interactiveType,
       }
       img.onload = () => {
         this.loadedAssets++
         if (this.loadedAssets === allTiles) {
+          store.dispatch(setLoadedAssets())
           this.loaded = true
         }
       }

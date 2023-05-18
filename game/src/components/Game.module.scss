@@ -1,0 +1,56 @@
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cyberpunk Is Not Dead', sans-serif;
+  color: #ddd;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  gap: 25px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.overlay {
+  backdrop-filter: blur(10px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.loadingLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+}
+
+.soundIcon {
+  margin-top: 30px;
+  cursor: pointer;
+
+  &:hover {
+
+  }
+}
+
+.fullscreenWrapper {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}

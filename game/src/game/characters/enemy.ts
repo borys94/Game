@@ -24,6 +24,27 @@ abstract class Enemy<T extends string> extends Character<T, State<T>> {
       this.game.player.health > 0
     )
   }
+
+  draw (deltaTime: number): void {
+    super.draw(deltaTime)
+
+    const ctx = this.game.ctx
+
+    if (this.isAlive()) {
+      ctx.save()
+      ctx.strokeStyle = '#000000'
+      ctx.fillStyle = '#B03A2E'
+      ctx.lineWidth = 2
+      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.width, 5)
+      ctx.fillRect(
+        this.x - this.game.camera.x,
+        this.y - this.game.camera.y,
+        this.width * (this.health / this.maxHealth),
+        5
+      )
+      ctx.restore()
+    }
+  }
 }
 
 export default Enemy

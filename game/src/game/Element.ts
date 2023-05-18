@@ -77,17 +77,17 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
     return new Element(game, assetId, y, x)
   }
 
-  return new CollectableElement(game, assetId, y, x)
+  if (asset.type === 'interactive') {
+    if (asset.interactiveType === 'chest') {
+      return new ChestElement(game, assetId, y, x)
+    } else if (asset.interactiveType === 'trap') {
+      return new TrapElement(game, assetId, y, x)
+    } else if (asset.interactiveType === 'money' || asset.interactiveType === 'card') {
+      return new CollectableElement(game, assetId, y, x)
+    }
+  }
 
-  // if (asset.type === 'chest') {
-  //   return new ChestElement(game, assetId, y, x)
-  // } else if (asset.type === 'trap') {
-  //   return new TrapElement(game, assetId, y, x)
-  // } else if (asset.type === 'collectable') {
-  //   return new CollectableElement(game, assetId, y, x)
-  // } else {
-  //   return new Element(game, assetId, y, x)
-  // }
+  return new Element(game, assetId, y, x)
 }
 
 export class ChestElement extends Element {
@@ -110,7 +110,6 @@ export class TrapElement extends Element {
       return
     }
     player.hurt(2)
-    console.log('enter trap')
     if (player.direction === 'left') player.speed = 1
     else player.speed = -1
   }

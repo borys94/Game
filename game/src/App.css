@@ -1,7 +1,12 @@
+
 * {
   box-sizing: border-box;
 }
 
 canvas {
   border: 1px solid black;
+}
+
+html {
+  font-family: 'Games', sans-serif;
 }

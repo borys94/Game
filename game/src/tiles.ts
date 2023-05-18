@@ -1,14 +1,13 @@
 import { type Sprite } from './game/types'
 
 export type TileType = 'interactive' | 'decoration' | 'obstacle' | 'backgroundTile'
+export type InteractiveType = 'chest' | 'money' | 'trap' | 'card'
 export type MapSet = 'powerStation' | 'greenZone' | 'industrialZone' | 'none'
 export type Tile = Sprite & {
   id: number
-  upHill?: true
-  downHill?: true
-  interactive?: true
-  type?: TileType
+  type: TileType
   set: MapSet
+  interactiveType?: InteractiveType
 }
 
 const tiles: Array<Tile | null> = [
@@ -3729,7 +3728,8 @@ const tiles: Array<Tile | null> = [
     id: 413,
     asset: 'assets/map/interactive/Card.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'card',
   },
   {
     width: 24,
@@ -3747,7 +3747,8 @@ const tiles: Array<Tile | null> = [
     id: 415,
     asset: 'assets/map/interactive/Chest.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'chest'
   },
   {
     width: 32,
@@ -3756,7 +3757,8 @@ const tiles: Array<Tile | null> = [
     id: 416,
     asset: 'assets/map/interactive/Chest_2.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'chest'
   },
   {
     width: 222 / 7,
@@ -3765,7 +3767,8 @@ const tiles: Array<Tile | null> = [
     id: 417,
     asset: 'assets/map/interactive/Chest_open.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'chest'
   },
   {
     width: 32,
@@ -3783,7 +3786,8 @@ const tiles: Array<Tile | null> = [
     id: 419,
     asset: 'assets/map/interactive/Money.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'money',
   },
   {
     width: 32,
@@ -3792,7 +3796,8 @@ const tiles: Array<Tile | null> = [
     id: 420,
     asset: 'assets/map/interactive/Trap.png',
     set: 'none',
-    type: 'interactive'
+    type: 'interactive',
+    interactiveType: 'trap',
   },
   {
     width: 48,

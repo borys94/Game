@@ -236,11 +236,12 @@ export class Use extends State<PlayerStateTypes> {
 
   handleInput (): void {
     if (this.performed) {
-      this.sprite.frameX = 0
+      this.character.currentSprite.frameX = 0
       this.character.setState('standing')
     }
-    if (this.sprite.frameX === this.sprite.frames - 1) {
+    if (this.character.currentSprite.frameX === this.character.currentSprite.frames - 1) {
       this.performed = true
+      this.character.setState('standing')
     }
   }
 }

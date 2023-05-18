@@ -17,7 +17,6 @@ class InputHandler {
 
   constructor () {
     window.addEventListener('keydown', (e) => {
-      console.log(e.code)
       switch (e.code) {
         case 'ArrowRight':
         case 'ArrowLeft':

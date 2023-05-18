@@ -2,9 +2,8 @@ class Sounds {
   background: HTMLAudioElement
   coin: HTMLAudioElement
   hurt: HTMLAudioElement
-  active = false
 
-  constructor () {
+  constructor (public active = false) {
     this.background = new Audio('assets/sounds/background.mp3')
     this.coin = new Audio('assets/sounds/coins.mp3')
     this.hurt = new Audio('assets/sounds/hurt.ogg')
@@ -12,6 +11,12 @@ class Sounds {
 
   toogle (): void {
     this.active = !this.active
+
+    if (!this.active) {
+      this.background.pause()
+      this.coin.pause()
+      this.hurt.pause()
+    }
   }
 
   private playSound (sound: HTMLAudioElement): void {
@@ -26,6 +31,7 @@ class Sounds {
 
   play (): void {
     this.playSound(this.background)
+    this.background.loop = true
   }
 
   coinSound (): void {

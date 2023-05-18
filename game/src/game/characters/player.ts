@@ -109,6 +109,25 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     }
     this.health = Math.max(this.health - hurtValue, 0)
   }
+
+  draw (deltaTime: number): void {
+    super.draw(deltaTime)
+
+    const ctx = this.game.ctx
+
+    ctx.save()
+    ctx.strokeStyle = '#000000'
+    ctx.fillStyle = '#1E8449'
+    ctx.lineWidth = 2
+    ctx.strokeRect(20, 20, 100, 10)
+    ctx.fillRect(
+      20,
+      20,
+      100 * (this.health / this.maxHealth),
+      10
+    )
+    ctx.restore()
+  }
 }
 
 export default Player

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Editor from '../../lib/editor'
 import tileList, { type TileType, type Tile, type MapSet } from '../../tiles'
 import styles from './Editor.module.scss'
-import { NativeSelect, InputNumber, Typography, Button } from 'tiny-ui'
+// import { NativeSelect, InputNumber, Typography, Button } from 'tiny-ui'
 import EnemyTiles from './EnemyTiles'
 import { type EnemyObject } from '../../game/characters/enemy'
+import { EditorButton } from '../common/EditorButton'
+import Sounds from '../../game/sounds'
 // import config from '../game/config'
 
 // const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
@@ -24,7 +26,7 @@ function EditorComponent (): React.ReactElement {
     if (ed != null) {
       return
     }
-    ed = new Editor()
+    ed = new Editor(new Sounds())
     ;(window as any).ed = ed
     setEditor(ed)
     setColumns(ed.map.images[0].length)
@@ -72,14 +74,14 @@ function EditorComponent (): React.ReactElement {
     editor?.setLayer(e.target.value as any)
   }
 
-  const onSetColumns = (value: number): void => {
-    editor?.setColumns(value)
-    setColumns(value)
+  const onSetColumns = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    editor?.setColumns(+e.target.value)
+    setColumns(+e.target.value)
   }
 
-  const onSetRows = (value: number): void => {
-    editor?.setRows(value)
-    setRows(value)
+  const onSetRows = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    editor?.setRows(+e.target.value)
+    setRows(+e.target.value)
   }
 
   const setEnemy = (type: EnemyObject['type']) => {
@@ -94,29 +96,29 @@ function EditorComponent (): React.ReactElement {
       </div>
 
       <div className={styles.edit}>
-        <Button onClick={save}>Save</Button>
+        <EditorButton onClick={save}>Save</EditorButton>
 
         <div>
-          <NativeSelect value={mapSet} onChange={onMapSetChange}>
+          <select value={mapSet} onChange={onMapSetChange}>
             <>
-              <NativeSelect.Option value="powerStation">Power Station</NativeSelect.Option>
-              <NativeSelect.Option value="greenZone">Green zone</NativeSelect.Option>
-              <NativeSelect.Option value="industrialZone">Industrial zone</NativeSelect.Option>
+              <option value="powerStation">Power Station</option>
+              <option value="greenZone">Green zone</option>
+              <option value="industrialZone">Industrial zone</option>
             </>
-          </NativeSelect>
+          </select>
         </div>
 
         <div>
-          <Typography.Text>Columns</Typography.Text>
-          <InputNumber min={1} max={200} value={columns} onChange={onSetColumns} />
+          <p>Columns</p>
+          <input type='number' min={1} max={200} value={columns} onChange={onSetColumns} />
         </div>
 
         <div>
-          <Typography.Text>Rows</Typography.Text>
-          <InputNumber min={1} max={200} value={rows} onChange={onSetRows} />
+          <p>Rows</p>
+          <input type='number' min={1} max={200} value={rows} onChange={onSetRows} />
         </div>
         <div>
-          <Button onClick={() => editor?.clearMap()}>Clear</Button>
+          <EditorButton onClick={() => editor?.clearMap()}>Clear</EditorButton>
         </div>
 
         <EnemyTiles setEnemy={setEnemy} enemy={activeEnemy} />
@@ -138,7 +140,7 @@ function EditorComponent (): React.ReactElement {
         <Tiles mapSet="none" editor={editor} tileType="decoration" setActiveTile={setActiveTile} />
 
         <hr />
-        <Typography.Heading level={3}>Current tile</Typography.Heading>
+        <h3>Current tile</h3>
         <div className={styles.activeElement}>
           <img src={activeTile?.asset} alt={activeTile?.asset} width="100%" />
         </div>
@@ -157,7 +159,7 @@ interface TilesProps {
 const Tiles = ({ mapSet, editor, tileType, setActiveTile }: TilesProps): React.ReactElement => (
   <>
     <hr />
-    <Typography.Heading level={3}>{tileType}</Typography.Heading>
+    <h3>{tileType}</h3>
     <div className={styles.elements}>
       {tileList
         .filter((tile) => tile?.set === mapSet)

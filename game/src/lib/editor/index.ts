@@ -8,6 +8,7 @@ import { buildElement } from '../../game/Element'
 import { clamp } from '../../game/utils'
 import easyMap from '../../maps/easy'
 import mediumMap from '../../maps/medium'
+import Sounds from '../../game/sounds'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -30,8 +31,8 @@ class Editor extends Game {
   hoverX = 0
   hoverY = 0
 
-  constructor () {
-    super()
+  constructor (public sounds: Sounds) {
+    super(sounds)
 
     this.camera.update = () => {}
     // this.map.enemies = []
@@ -75,6 +76,10 @@ class Editor extends Game {
       return mediumMap
     }
     return easyMap
+  }
+
+  update () {
+
   }
 
   draw (timestamp: number): void {
@@ -150,13 +155,7 @@ class Editor extends Game {
   fillDecorationTile = (): void => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset != null) {
-      // this.map.decorations[b][a] = this.currentAsset.id
-      this.map.decorationElements[b][a] = buildElement(this, this.currentAsset.id, b, a)
-    } else {
-      // this.map.decorations[b][a] = 0
-      this.map.decorationElements[b][a] = buildElement(this, 0, b, a)
-    }
+    this.map.decorationElements[b][a] = buildElement(this, this.currentAsset?.id ?? 0, b, a)
   }
 
   fillInteractiveTile = (): void => {
@@ -211,17 +210,18 @@ class Editor extends Game {
         this.map.bgImages[i] = this.map.bgImages[i].slice(0, diff)
         this.map.interactive[i] = this.map.interactive[i].slice(0, diff)
         this.map.images[i] = this.map.images[i].slice(0, diff)
+        this.map.decorations[i] = this.map.decorations[i].slice(0, diff)
       }
     }
 
     for (let i = 0; i < this.map.interactive.length; i++) {
       for (let j = 0; j < diff; j++) {
         const x = this.map.interactive[0].length + j - 1
-        console.log(x)
         this.map.elements[i].push(buildElement(this, 0, i, x))
         this.map.bgImages[i].push(0)
         this.map.interactive[i].push(0)
         this.map.images[i].push(0)
+        this.map.decorations[i].push(0)
       }
     }
   }
@@ -234,6 +234,7 @@ class Editor extends Game {
       this.map.bgImages = this.map.bgImages.slice(0, diff)
       this.map.interactive = this.map.interactive.slice(0, diff)
       this.map.images = this.map.images.slice(0, diff)
+      this.map.decorations = this.map.decorations.slice(0, diff)
     }
 
     for (let i = 0; i < diff; i++) {
@@ -243,6 +244,7 @@ class Editor extends Game {
       this.map.bgImages[row] = new Array(size).fill(0)
       this.map.interactive[row] = new Array(size).fill(0)
       this.map.images[row] = new Array(size).fill(0)
+      this.map.decorations[row] = new Array(size).fill(0)
 
       for (let j = 0; j < this.map.interactive[0].length; j++) {
         this.map.elements[row][j] = buildElement(this, 0, i, j)

@@ -90,21 +90,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       )
     }
 
-    if (this.isAlive()) {
-      ctx.save()
-      ctx.strokeStyle = '#000000'
-      ctx.fillStyle = '#00FF00'
-      ctx.lineWidth = 2
-      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, 5)
-      ctx.fillRect(
-        this.x - this.game.camera.x,
-        this.y - this.game.camera.y,
-        width * (this.health / this.maxHealth),
-        5
-      )
-      ctx.restore()
-    }
-
     this.currentSprite.draw(ctx, deltaTime)
   }
 

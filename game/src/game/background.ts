@@ -64,8 +64,8 @@ class Background {
           this.height,
           0,
           0,
-          this.width * config.SCALE,
-          this.height * config.SCALE
+          config.CANVAS_WIDTH,
+          config.CANVAS_HEIGHT
         )
 
         ctx.drawImage(
@@ -76,8 +76,8 @@ class Background {
           this.height,
           (this.width - moved) * config.SCALE,
           0,
-          this.width * config.SCALE,
-          this.height * config.SCALE
+          config.CANVAS_WIDTH,
+          config.CANVAS_HEIGHT
         )
       }
     }

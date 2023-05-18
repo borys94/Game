@@ -5,6 +5,7 @@ import { TILE_SIZE } from './config'
 import type Game from '.'
 import type Enemy from './characters/enemy'
 import { buildEnemy } from './characters/buildEnemy'
+import { getTileSize } from './utils'
 
 class Map {
   images: number[][]
@@ -25,6 +26,8 @@ class Map {
     this.decorations = easyMap.decorations
 
     this.initInteractiveElements()
+
+    this.update = this.update.bind(this)
   }
 
   get width (): number {
@@ -86,7 +89,7 @@ class Map {
     }
   }
 
-  update = () => {
+  update () {
     for (const enemy of this.enemies) {
       enemy.update()
     }
@@ -108,6 +111,7 @@ class Map {
     if (!this.game.assets.isLoaded()) {
       return
     }
+    const tileSize = getTileSize()
     for (let i = 0; i < tiles.length; i++) {
       for (let j = 0; j < tiles[0].length; j++) {
         const asset = this.game.assets.getById(tiles[i][j])
@@ -120,10 +124,10 @@ class Map {
               0,
               width,
               height,
-              j * TILE_SIZE - this.game.camera.x,
-              i * TILE_SIZE - this.game.camera.y + TILE_SIZE - height,
-              width,
-              height
+              j * tileSize - this.game.camera.x,
+              i * tileSize - this.game.camera.y + tileSize - height,
+              tileSize,
+              tileSize
             )
           }
         }

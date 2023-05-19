@@ -1,4 +1,3 @@
-import { type State } from '../states/state'
 import Character, { type Direction } from './character'
 
 export type EnemyType = 'dog' | 'rat'
@@ -9,7 +8,7 @@ export interface EnemyObject {
   y: number
 }
 
-abstract class Enemy<T extends string> extends Character<T, State<T>> {
+abstract class Enemy extends Character {
   abstract type: EnemyType
   maxSpeed = 2
   direction: Direction = 'right'
@@ -27,7 +26,10 @@ abstract class Enemy<T extends string> extends Character<T, State<T>> {
 
   draw (deltaTime: number): void {
     super.draw(deltaTime)
+    this.drawHealthBar()
+  }
 
+  drawHealthBar () {
     const ctx = this.game.ctx
 
     if (this.isAlive()) {

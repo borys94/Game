@@ -15,7 +15,7 @@ export function drawDebugInfo (
   ctx.fillRect(0, 0, 100, 60)
   ctx.fillStyle = 'black'
   drawText(ctx, `Last key: ${inputHandler.lastKey ?? 'none'}`, 10, 10)
-  drawText(ctx, `State: ${player.currentState.state}`, 10, 20)
+  drawText(ctx, `State: ${player.stateManager.currentState.state}`, 10, 20)
   drawText(ctx, `Player x, y: ${player.x} ${player.y}`, 10, 30)
   drawText(ctx, `cards: ${player.cards}`, 10, 40)
   drawText(

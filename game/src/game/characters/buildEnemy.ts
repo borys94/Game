@@ -4,7 +4,7 @@ import RatEnemy from './enemies/rat'
 import { type EnemyObject } from './enemy'
 import type Enemy from './enemy'
 
-export const buildEnemy = (game: Game, enemy: EnemyObject): Enemy<any> => {
+export const buildEnemy = (game: Game, enemy: EnemyObject): Enemy => {
   if (enemy.type === 'dog') {
     return new DogEnemy(game, enemy.x, enemy.y)
   } else if (enemy.type === 'rat') {

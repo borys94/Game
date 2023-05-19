@@ -1,22 +1,22 @@
-import type Enemy from '../characters/enemy'
-import { SpriteClass } from './playerSprites'
+import type Enemy from '../../characters/enemy'
+import SpriteClass from '../sprite'
 
 export class StandingSprite extends SpriteClass {
   frameInterval = 200
-  constructor (player: Enemy<any>, path: string) {
+  constructor (player: Enemy, path: string) {
     super(player, `${path}/idle.png`, 4)
   }
 }
 
 export class RunningSprite extends SpriteClass {
   frameInterval = 150
-  constructor (player: Enemy<any>, path: string) {
+  constructor (player: Enemy, path: string) {
     super(player, `${path}/walk.png`, 4) // TODO
   }
 }
 
 export class HurtSprite extends SpriteClass {
-  constructor (player: Enemy<any>, path: string) {
+  constructor (player: Enemy, path: string) {
     super(player, `${path}/hurt.png`, 2)
   }
 
@@ -33,13 +33,13 @@ export class HurtSprite extends SpriteClass {
 }
 
 export class DeathSprite extends SpriteClass {
-  constructor (player: Enemy<any>, path: string) {
+  constructor (player: Enemy, path: string) {
     super(player, `${path}/death.png`, 4, true)
   }
 }
 
 export class AttackSprite extends SpriteClass {
-  constructor (player: Enemy<any>, path: string) {
+  constructor (player: Enemy, path: string) {
     super(player, `${path}/attack.png`, 4)
   }
 }

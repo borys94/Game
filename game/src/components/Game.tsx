@@ -42,25 +42,21 @@ function GameCmp (): React.ReactElement {
   return (
     <>
       <div className={styles.canvas}>
-        <canvas id="canvas" />
+        <canvas id="canvas" width="400" height="400" />
         {game && !loadedAssets && <span className={styles.loadingLabel}>Loading</span>}
-        {paused && (
-          <>
-            <div className={styles.overlay} />
-            <div className={styles.menu}>
-              <Button onClick={play}>Play</Button>
-              <Button onClick={goToEditor}>Map Editor</Button>
-              
-              {/* TODO */}
-              {/* <Button>Help</Button> */}
-              <div className={styles.soundIcon}>
-                <img src={`assets/volume${sound ? '' : '-slash'}.svg`} width="32" onClick={handleToogleSound} />
-              </div>
-
-              
+        <div className={paused ? styles.menuWrapper : styles.hiddenMenu}>
+          <div className={styles.overlay} />
+          <div className={styles.menu}>
+            <Button onClick={play}>Play</Button>
+            <Button onClick={goToEditor}>Map Editor</Button>
+            
+            {/* TODO */}
+            {/* <Button>Help</Button> */}
+            <div className={styles.soundIcon}>
+              <img src={`assets/volume${sound ? '' : '-slash'}.svg`} width="32" onClick={handleToogleSound} />
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
       {paused && (
         <div className={styles.fullscreenWrapper}>

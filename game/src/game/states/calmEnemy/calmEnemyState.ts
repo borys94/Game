@@ -1,14 +1,10 @@
 import type Enemy from '../../characters/enemy'
-import { type InputType } from '../../inputHandler'
-import { shouldChangeDirection } from './helpers'
-import EnemyState from './state'
+import { shouldChangeDirection } from '../helpers'
+import { State } from '../state'
 
-const STATES = ['standing', 'walking', 'hurt', 'death'] as const
-type StateType = (typeof STATES)[number]
-
-export abstract class CowardlyEnemyState extends EnemyState<StateType> {
-  constructor (public character: Enemy<StateType>, public state: StateType) {
-    super(character, state)
+export abstract class CowardlyEnemyState extends State {
+  constructor (public character: Enemy, public state: string) {
+    super(state)
   }
 }
 
@@ -21,7 +17,7 @@ export class Standing extends CowardlyEnemyState {
     this.character.speed = 0
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (): void {
     const { player } = this.character.game
     if (Math.abs(player.x - this.character.x) < 150 && Math.abs(player.x - this.character.x) > 32) {
       this.character.setState('walking')
@@ -30,7 +26,7 @@ export class Standing extends CowardlyEnemyState {
 }
 
 export class Walking extends CowardlyEnemyState {
-  constructor (character: Enemy<StateType>) {
+  constructor (character: Enemy) {
     super(character, 'walking')
   }
 
@@ -41,7 +37,7 @@ export class Walking extends CowardlyEnemyState {
     }
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (): void {
     if (shouldChangeDirection(this.character)) {
       this.character.speed *= -1
       this.character.direction = this.character.direction === 'right' ? 'left' : 'right'
@@ -56,7 +52,7 @@ export class Hurt extends CowardlyEnemyState {
   timestamp = 0
   deltaTime = 300
 
-  constructor (public character: Enemy<StateType>) {
+  constructor (public character: Enemy) {
     super(character, 'hurt')
   }
 
@@ -66,7 +62,7 @@ export class Hurt extends CowardlyEnemyState {
     this.character.speed = 0
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (): void {
     this.timestamp = Date.now()
     if (this.character.health <= 0) {
       this.character.setState('death')
@@ -77,14 +73,15 @@ export class Hurt extends CowardlyEnemyState {
 }
 
 export class Death extends CowardlyEnemyState {
-  constructor (public character: Enemy<StateType>) {
+  constructor (public character: Enemy) {
     super(character, 'death')
   }
 
   enter (): void {
+    this.character.speed = 0
     // this.performed = false
     // this.character.frameX = 0
   }
 
-  handleInput (inputs: InputType[]): void {}
+  handle (): void {}
 }

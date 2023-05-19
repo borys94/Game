@@ -1,63 +1,13 @@
-import {
-  Standing,
-  Running,
-  Jumping,
-  Falling,
-  StrongAttack,
-  DoubleHit,
-  Hit,
-  Use,
-  Hurt,
-  Death,
-  type PlayerState
-} from '../states/playerStates'
 import { type InputType } from '../inputHandler'
 import Character from './character'
-import type SpriteClass from '../sprites/playerSprites'
-import {
-  DeathSprite,
-  DoubleHitSprite,
-  FallingSprite,
-  HitSprite,
-  HurtSprite,
-  JumpingSprite,
-  RunningSprite,
-  StandingSprite,
-  StrongHitSprite,
-  UseSprite
-} from '../sprites/playerSprites'
 import type Game from '..'
+import PlayerStateManager from '../states/player/playerStateManager'
+import SpriteManager from '../sprites/spriteManager'
+import PlayerSpriteManager from '../sprites/player/playerSpritesManager'
 
-class Player extends Character<PlayerState['state'], PlayerState> {
-  states: Record<PlayerState['state'], PlayerState> = {
-    standing: new Standing(this),
-    running: new Running(this),
-    jumping: new Jumping(this),
-    falling: new Falling(this),
-    hit: new Hit(this),
-    doubleHit: new DoubleHit(this),
-    strongAttack: new StrongAttack(this),
-    use: new Use(this),
-    hurt: new Hurt(this),
-    death: new Death(this)
-  }
-
-  currentState: PlayerState = this.states.standing
-
-  sprites: Record<PlayerState['state'], SpriteClass> = {
-    standing: new StandingSprite(this),
-    running: new RunningSprite(this),
-    jumping: new JumpingSprite(this),
-    falling: new FallingSprite(this),
-    hit: new HitSprite(this),
-    doubleHit: new DoubleHitSprite(this),
-    strongAttack: new StrongHitSprite(this),
-    use: new UseSprite(this),
-    hurt: new HurtSprite(this),
-    death: new DeathSprite(this)
-  }
-
-  currentSprite = this.sprites.standing
+class Player extends Character {
+  stateManager: PlayerStateManager = new PlayerStateManager(this)
+  spriteManager: SpriteManager = new PlayerSpriteManager(this)
 
   paddingLeft = 4
   paddingRight = 24
@@ -78,8 +28,6 @@ class Player extends Character<PlayerState['state'], PlayerState> {
   update = (): void => {
     super.update()
 
-    this.currentState.handleInput(this.game.inputHandler.activeKeys)
-
     this.collectObjects()
     this.interactObjects(this.game.inputHandler.activeKeys)
   }
@@ -88,7 +36,7 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     // TODO: srodek uzytkownika
     const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
-      element.handleInput(this, inputs)
+      element.handle(this, inputs)
     }
   }
 
@@ -96,23 +44,19 @@ class Player extends Character<PlayerState['state'], PlayerState> {
     // TODO: srodek uzytkownika
     const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
-      if (element?.asset?.id === 65 || element?.asset?.id === 66) {
-        this.game.sounds.coinSound()
-      }
+      // if (element?.asset?.id === 65 || element?.asset?.id === 66) {
+      //   this.game.sounds.coinSound()
+      // }
       element.enter(this)
     }
   }
 
-  hurt (hurtValue: number): void {
-    if (this.health > 0) {
-      this.setState('hurt')
-    }
-    this.health = Math.max(this.health - hurtValue, 0)
-  }
-
   draw (deltaTime: number): void {
     super.draw(deltaTime)
+    this.drawHealthBar()
+  }
 
+  drawHealthBar () {
     const ctx = this.game.ctx
 
     ctx.save()

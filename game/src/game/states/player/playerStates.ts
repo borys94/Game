@@ -1,56 +1,18 @@
-import type Enemy from '../characters/enemy'
-import type Player from '../characters/player'
-import { type InputType } from '../inputHandler'
-import {
-  DeathSprite,
-  DoubleHitSprite,
-  FallingSprite,
-  HitSprite,
-  HurtSprite,
-  JumpingSprite,
-  RunningSprite,
-  StandingSprite,
-  StrongHitSprite,
-  UseSprite
-} from '../sprites/playerSprites'
-import { State } from './state'
+import type Enemy from '../../characters/enemy'
+import type Player from '../../characters/player'
+import { type InputType } from '../../inputHandler'
+import { State } from '../state'
 
-const STATES = [
-  'standing',
-  'running',
-  'jumping',
-  'falling',
-  'strongAttack',
-  'doubleHit',
-  'hit',
-  'use',
-  'hurt',
-  'death'
-] as const
-export type PlayerStateTypes = (typeof STATES)[number]
-
-export abstract class PlayerState extends State<PlayerStateTypes> {
-  // eslint-disable-next-line
-  constructor(public readonly character: Player, public state: PlayerStateTypes) {
-    super(state)
-  }
-
-  enter (): void {}
-}
-
-export class Standing extends PlayerState {
-  sprite: StandingSprite
-
+export class Standing extends State {
   constructor (public character: Player) {
-    super(character, 'standing')
-    this.sprite = new StandingSprite(character)
+    super('standing')
   }
 
   enter (): void {
     this.character.speed = 0
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (inputs: InputType[]): void {
     if (inputs.includes('ArrowRight')) this.character.setState('running', 'right')
     else if (inputs.includes('ArrowLeft')) this.character.setState('running', 'left')
     else if (inputs.includes('ArrowUp')) this.character.setState('jumping')
@@ -62,11 +24,9 @@ export class Standing extends PlayerState {
   }
 }
 
-export class Running extends State<PlayerStateTypes> {
-  sprite: RunningSprite
+export class Running extends State {
   constructor (public character: Player) {
     super('running')
-    this.sprite = new RunningSprite(character)
   }
 
   enter (): void {
@@ -77,7 +37,7 @@ export class Running extends State<PlayerStateTypes> {
     }
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (inputs: InputType[]): void {
     if (this.character.direction === 'right' && inputs.includes('ArrowLeft')) {
       this.character.setState('standing', 'left')
     } else if (this.character.direction === 'left' && inputs.includes('ArrowRight')) {
@@ -88,14 +48,13 @@ export class Running extends State<PlayerStateTypes> {
     ) {
       this.character.setState('standing')
     } else if (inputs.includes('ArrowUp')) this.character.setState('jumping')
+    else if (inputs.includes('Space')) this.character.setState('doubleJump')
   }
 }
 
-export class Jumping extends State<PlayerStateTypes> {
-  sprite: JumpingSprite
+export class Jumping extends State {
   constructor (public character: Player) {
     super('jumping')
-    this.sprite = new JumpingSprite(character)
   }
 
   enter (): void {
@@ -104,7 +63,7 @@ export class Jumping extends State<PlayerStateTypes> {
     }
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (inputs: InputType[]): void {
     if (inputs.includes('ArrowRight')) {
       this.character.speed = this.character.maxSpeed
       this.character.direction = 'right'
@@ -116,19 +75,18 @@ export class Jumping extends State<PlayerStateTypes> {
     }
     if (this.character.onGround()) this.character.setState('standing')
     if (this.character.vy > 0) this.character.setState('falling')
+    else if (inputs.includes('Space')) this.character.setState('doubleJump')
   }
 }
 
-export class Falling extends State<PlayerStateTypes> {
-  sprite: FallingSprite
+export class Falling extends State {
   constructor (public character: Player) {
     super('falling')
-    this.sprite = new FallingSprite(character)
   }
 
   enter (): void {}
 
-  handleInput (inputs: InputType[]): void {
+  handle (inputs: InputType[]): void {
     if (this.character.direction === 'left' && inputs.includes('ArrowRight')) {
       this.character.direction = 'right'
     }
@@ -141,43 +99,48 @@ export class Falling extends State<PlayerStateTypes> {
   }
 }
 
-abstract class BaseHit extends State<PlayerStateTypes> {
+abstract class BaseHit extends State {
   performed = false
+  hit: Enemy[] = []
+  abstract hitFrame: number
 
   // eslint-disable-next-line
-  constructor(public character: Player, state: PlayerStateTypes) {
+  constructor(public character: Player, state: string) {
     super(state)
   }
 
   enter (): void {
     this.performed = false
-
-    for (const enemy of this.character.game.map.enemies) {
-      this.checkEnemy(enemy)
-    }
+    this.hit = []
   }
 
-  checkEnemy (enemy: Enemy<any>): void {
+  checkEnemy (enemy: Enemy): void {
     const character = this.character
     if (
       enemy.health > 0 &&
       enemy.y < character.y + character.height / 2 &&
       enemy.y + enemy.height > character.y + character.height / 2 &&
       enemy.x > character.x - 32 &&
-      enemy.x < character.x + 32
+      enemy.x < character.x + 32 &&
+      character.spriteManager.currentSprite.frameX === this.hitFrame &&
+      !this.hit.includes(enemy)
     ) {
-      enemy.health = Math.max(enemy.health - this.getHurtValue(), 0)
-      enemy.setState('hurt')
+      this.hit.push(enemy)
+      enemy.hurt(this.getHurtValue())
     }
   }
 
-  handleInput (): void {
+  handle (): void {
     if (this.performed) {
-      this.character.currentSprite.frameX = 0
+      this.character.spriteManager.currentSprite.frameX = 0
       this.character.setState('standing')
     }
-    if (this.character.currentSprite.frameX === this.character.currentSprite.frames - 1) {
+    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
       this.performed = true
+    }
+
+    for (const enemy of this.character.game.map.enemies) {
+      this.checkEnemy(enemy)
     }
   }
 
@@ -185,11 +148,10 @@ abstract class BaseHit extends State<PlayerStateTypes> {
 }
 
 export class StrongAttack extends BaseHit {
-  sprite: StrongHitSprite
   performed = false
+  hitFrame = 5
   constructor (public character: Player) {
     super(character, 'strongAttack')
-    this.sprite = new StrongHitSprite(character)
   }
 
   getHurtValue (): number {
@@ -198,10 +160,9 @@ export class StrongAttack extends BaseHit {
 }
 
 export class DoubleHit extends BaseHit {
-  sprite: DoubleHitSprite
+  hitFrame = 4
   constructor (public character: Player) {
     super(character, 'doubleHit')
-    this.sprite = new DoubleHitSprite(character)
   }
 
   getHurtValue (): number {
@@ -210,10 +171,9 @@ export class DoubleHit extends BaseHit {
 }
 
 export class Hit extends BaseHit {
-  sprite: HitSprite
+  hitFrame = 4
   constructor (public character: Player) {
     super(character, 'hit')
-    this.sprite = new HitSprite(character)
   }
 
   getHurtValue (): number {
@@ -221,33 +181,29 @@ export class Hit extends BaseHit {
   }
 }
 
-export class Use extends State<PlayerStateTypes> {
-  sprite: UseSprite
+export class Use extends State {
   performed = false
   constructor (public character: Player) {
     super('use')
-    this.sprite = new UseSprite(character)
   }
 
   enter (): void {
     this.performed = false
-    this.sprite.frameX = 0
   }
 
-  handleInput (): void {
+  handle (): void {
     if (this.performed) {
-      this.character.currentSprite.frameX = 0
+      this.character.spriteManager.currentSprite.frameX = 0
       this.character.setState('standing')
     }
-    if (this.character.currentSprite.frameX === this.character.currentSprite.frames - 1) {
+    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
       this.performed = true
       this.character.setState('standing')
     }
   }
 }
 
-export class Hurt extends State<PlayerStateTypes> {
-  sprite: HurtSprite
+export class Hurt extends State {
   performed = false
   animate = false
   time = 0
@@ -256,35 +212,30 @@ export class Hurt extends State<PlayerStateTypes> {
 
   constructor (public character: Player) {
     super('hurt')
-    this.sprite = new HurtSprite(character)
   }
 
   enter (): void {
     this.time = Date.now()
     this.performed = false
-    this.sprite.frameX = 1
     this.character.speed = 0
 
     this.character.game.sounds.hurtSound()
   }
 
-  handleInput (): void {
+  handle (): void {
     this.timestamp = Date.now()
     if (this.character.health <= 0) {
       this.character.setState('death')
     } else if (this.timestamp - this.time >= this.deltaTime) {
-      this.sprite.frameX = 0
       this.character.setState('standing')
     }
   }
 }
 
-export class Death extends State<PlayerStateTypes> {
-  sprite: DeathSprite
+export class Death extends State {
   performed = false
   constructor (public character: Player) {
     super('death')
-    this.sprite = new DeathSprite(character)
   }
 
   enter (): void {
@@ -292,14 +243,67 @@ export class Death extends State<PlayerStateTypes> {
     this.character.speed = 0
   }
 
-  handleInput (): void {
+  handle (): void {
     if (this.performed) {
       this.animate = false
       return
       // this.character.setState('standing')
     }
-    if (this.sprite.frameX === this.sprite.frames - 1) {
+    // if (this.character.frameX === this.sprite.frames - 1) {
+    //   this.performed = true
+    // }
+  }
+}
+
+export class DoubleJump extends State {
+  performed = false
+  hit: Enemy[] = []
+  constructor (public character: Player) {
+    super('doubleJump')
+  }
+
+  enter (): void {
+    this.hit = []
+    this.character.vy = 0
+    this.performed = false
+    // this.character.speed = this.character.maxSpeed * 1.5
+  }
+
+  handle (): void {
+    if (this.character.spriteManager.currentSprite.frameX < 5 && !this.performed) {
+      this.character.vy = 2
+      this.character.speed = this.character.maxSpeed * 2
+      if (this.character.direction === 'left') {
+        this.character.speed *= -1
+      }
+    }
+    
+    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
+      this.character.setState('standing')
+    }
+
+    for (const enemy of this.character.game.map.enemies) {
+      this.checkEnemy(enemy)
+    }
+  }
+
+  checkEnemy (enemy: Enemy): void {
+    const character = this.character
+    if (
+      enemy.health > 0 &&
+      enemy.y < character.y + character.height / 2 &&
+      enemy.y + enemy.height > character.y + character.height / 2 &&
+      enemy.x > character.x - 32 &&
+      enemy.x < character.x + 32 &&
+      character.spriteManager.currentSprite.frameX < 5 &&
+      !this.hit.includes(enemy)
+    ) {
+      this.hit.push(enemy)
       this.performed = true
+      enemy.hurt(2)
+      enemy.speed = 2
+      this.character.speed = 0
+      // enemy
     }
   }
 }

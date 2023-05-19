@@ -1,11 +1,8 @@
 import type Game from '..'
 import { TILE_SIZE } from '../config'
-import type SpriteClass from '../sprites/playerSprites'
-import { type State } from '../states/state'
+import SpriteManager from '../sprites/spriteManager'
+import StateManager from '../states/stateManager'
 import { clamp } from '../utils'
-// eslint-disable-next-line
-import Player from './player'
-// import Player from './player'
 
 interface CharacterOptions {
   x: number
@@ -18,17 +15,11 @@ interface CharacterOptions {
 
 export type Direction = 'left' | 'right'
 
-abstract class Character<T extends string, CharacterState extends State<T>> {
-  mapWidth: number
-  mapHeight: number
-
+abstract class Character {
   game: Game
 
-  abstract states: Record<CharacterState['state'], CharacterState>
-  abstract currentState: CharacterState
-
-  abstract sprites: Record<CharacterState['state'], SpriteClass>
-  abstract currentSprite: SpriteClass
+  abstract stateManager: StateManager
+  abstract spriteManager: SpriteManager
 
   paddingLeft: number = 4 + 6
   paddingRight: number = 24 - 6
@@ -61,8 +52,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     }
 
     this.game = game
-    this.mapWidth = this.game.map.width
-    this.mapHeight = this.game.map.height
 
     this.width = options.width
     this.height = options.height
@@ -90,27 +79,23 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
       )
     }
 
-    this.currentSprite.draw(ctx, deltaTime)
+    this.spriteManager.currentSprite.draw(ctx, deltaTime)
   }
 
   update (): void {
-    this.currentState.handleInput(this.game.inputHandler.activeKeys)
+    this.stateManager.handle(this.game.inputHandler.activeKeys)
 
     this.handleHorizontalMovement()
     this.handleVerticalMovement()
   }
 
-  setState = (state: CharacterState['state'], direction?: Direction): void => {
+  setState = (state: string, direction?: Direction): void => {
     if (direction) {
       this.direction = direction
     }
 
-    this.currentSprite.leave()
-    this.currentSprite = this.sprites[state]
-    this.currentSprite.enter()
-
-    this.currentState = this.states[state]
-    this.currentState.enter()
+    this.spriteManager.setSprite(state)
+    this.stateManager.setState(state)
   }
 
   onGround = (x: number = this.x): boolean => {
@@ -145,9 +130,6 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     if (!this.onGround()) {
       this.vy += this.weight
       this.vy = clamp(this.vy, -this.maxVy, this.maxVy)
-      // console.log('in the air')
-
-      // const wasPrevDownUpHill = this.isOnDownHill(this.y - this.weight)
     } else {
       this.vy = 0
       this.y = Math.floor((this.y + this.height) / 32) * 32 - this.height
@@ -183,12 +165,12 @@ abstract class Character<T extends string, CharacterState extends State<T>> {
     return this.health > 0
   }
 
-  // hurt = (hurtValue: number): void => {
-  //   if ('hurt' in this.states) {
-  //     this.health = Math.max(this.health - hurtValue, 0)
-  //     this.setState('hurt')
-  //   }
-  // }
+  hurt = (hurtValue: number): void => {
+    if (this.health > 0) {
+      this.setState('hurt')
+    }
+    this.health = Math.max(this.health - hurtValue, 0)
+  }
 }
 
 export default Character

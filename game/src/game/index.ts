@@ -41,7 +41,6 @@ class Game {
     this.map = new Map(this)
     this.background = new Background(this)
     this.player = new Player(this)
-    // this.enemies = [new DogEnemy(this, 200, 416 - 100), new RatEnemy(this, 300, 416 - 100)]
 
     this.inputHandler = new InputHandler()
     this.camera = new Camera(this.player, this.map)
@@ -84,6 +83,7 @@ class Game {
     requestAnimationFrame(this.animate)
   }
 
+  // TODO: ogarnac to
   destroy (): void {
     this.active = false
     window.removeEventListener('resize', this.onResize)
@@ -99,6 +99,7 @@ class Game {
     if (this.paused || !this.assets.loaded) {
       return
     }
+
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
 
@@ -115,12 +116,9 @@ class Game {
 
     this.ctx.restore()
 
-    // this.resizeTo()
-    // for (const enemy of this.enemies) {
-    //   enemy.draw(deltaTime)
-    // }
-
-    // drawDebugInfo(this.ctx, this.player, this.inputHandler)
+    if ((window as any).debug) {
+      drawDebugInfo(this.ctx, this.player, this.inputHandler)
+    }
   }
 }
 

@@ -1,44 +1,13 @@
-// import type Assets from './assets'
-import {
-  type AttackableEnemyState,
-  Standing,
-  Walking,
-  Attack,
-  Hurt,
-  Death
-} from '../../states/enemies/attackable'
 import Enemy from '../enemy'
 import type Game from '../..'
-import type SpriteClass from '../../sprites/playerSprites'
-import {
-  AttackSprite,
-  DeathSprite,
-  HurtSprite,
-  RunningSprite,
-  StandingSprite
-} from '../../sprites/enemySprites'
+import EnemyStateManager from '../../states/enemy/enemyStateManager'
+import EnemySpriteManager from '../../sprites/enemy/enemySpriteManager'
 
-class DogEnemy extends Enemy<AttackableEnemyState['state']> {
+class DogEnemy extends Enemy {
   type = 'dog' as const
-  states: Record<AttackableEnemyState['state'], AttackableEnemyState> = {
-    standing: new Standing(this),
-    walking: new Walking(this),
-    attack: new Attack(this),
-    hurt: new Hurt(this),
-    death: new Death(this)
-  }
 
-  currentState: AttackableEnemyState = this.states.walking
-
-  sprites: Record<AttackableEnemyState['state'], SpriteClass> = {
-    standing: new StandingSprite(this, 'assets/enemies/dog'),
-    walking: new RunningSprite(this, 'assets/enemies/dog'),
-    attack: new AttackSprite(this, 'assets/enemies/dog'),
-    hurt: new HurtSprite(this, 'assets/enemies/dog'),
-    death: new DeathSprite(this, 'assets/enemies/dog')
-  }
-
-  currentSprite: SpriteClass = this.sprites.walking
+  stateManager: EnemyStateManager = new EnemyStateManager(this)
+  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'dog')
 
   paddingLeft = 4
   paddingRight = 12
@@ -53,11 +22,6 @@ class DogEnemy extends Enemy<AttackableEnemyState['state']> {
       maxHealth: 10
     })
   }
-
-  // update (keys: InputType[], map: Map): void {
-  //   super.update([], map)
-  //   // this.currentState.handleInput()
-  // }
 }
 
 export default DogEnemy

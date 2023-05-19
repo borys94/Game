@@ -1,27 +1,17 @@
 import type Enemy from '../../characters/enemy'
-import { type InputType } from '../../inputHandler'
-import { shouldChangeDirection } from './helpers'
-import EnemyState from './state'
+import { shouldChangeDirection } from '../helpers'
+import { State } from '../state'
 
-const STATES = ['standing', 'walking', 'attack', 'hurt', 'death'] as const
-type StateType = (typeof STATES)[number]
-
-export abstract class AttackableEnemyState extends EnemyState<StateType> {
-  constructor (public character: Enemy<StateType>, public state: StateType) {
-    super(character, state)
-  }
-}
-
-export class Standing extends AttackableEnemyState {
-  constructor (character: AttackableEnemyState['character']) {
-    super(character, 'standing')
+export class Standing extends State {
+  constructor (public character: Enemy) {
+    super('standing')
   }
 
   enter (): void {
     this.character.speed = 0
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (): void {
     const { player } = this.character.game
 
     if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
@@ -40,9 +30,9 @@ export class Standing extends AttackableEnemyState {
   }
 }
 
-export class Walking extends AttackableEnemyState {
-  constructor (character: Enemy<StateType>) {
-    super(character, 'walking')
+export class Walking extends State {
+  constructor (public character: Enemy) {
+    super('walking')
   }
 
   enter (): void {
@@ -52,8 +42,8 @@ export class Walking extends AttackableEnemyState {
     }
   }
 
-  handleInput (inputs: InputType[]): void {
-    const player = this.character.game.player
+  handle (): void {
+    const player = this.getPlayer()
 
     if (shouldChangeDirection(this.character)) {
       this.character.speed *= -1
@@ -70,7 +60,7 @@ export class Walking extends AttackableEnemyState {
   }
 }
 
-export class Attack extends AttackableEnemyState {
+export class Attack extends State {
   performed = false
   animate = false
   time = 0
@@ -78,8 +68,8 @@ export class Attack extends AttackableEnemyState {
   deltaTime = 200
   hit = false
 
-  constructor (character: Enemy<StateType>) {
-    super(character, 'attack')
+  constructor (public character: Enemy) {
+    super('attack')
   }
 
   enter (): void {
@@ -91,23 +81,24 @@ export class Attack extends AttackableEnemyState {
 
     this.character.lastAttackTimestamp = Date.now()
     this.character.lastInteractionInterval = Date.now()
-  }
-
-  handleInput (inputs: InputType[]): void {
-    const { player } = this.character.game
+    const player = this.getPlayer()
 
     if (player.x - this.character.x > 0) {
       this.character.direction = 'right'
     } else {
       this.character.direction = 'left'
     }
+  }
 
-    if (this.character.currentSprite.frameX === 3) {
+  handle (): void {
+    const player = this.getPlayer()
+
+    if (this.character.spriteManager.currentSprite.frameX === 3) {
       this.animate = false
       this.hit = false
       this.character.setState('standing')
     } else if (
-      this.character.currentSprite.frameX === 2 &&
+      this.character.spriteManager.currentSprite.frameX === 2 &&
       !this.hit &&
       Math.abs(player.y - this.character.y) < 32
     ) {
@@ -126,15 +117,15 @@ export class Attack extends AttackableEnemyState {
   }
 }
 
-export class Hurt extends AttackableEnemyState {
+export class Hurt extends State {
   performed = false
   animate = false
   time = 0
   timestamp = 0
   deltaTime = 300
 
-  constructor (public character: Enemy<StateType>) {
-    super(character, 'hurt')
+  constructor (public character: Enemy) {
+    super('hurt')
   }
 
   enter (): void {
@@ -143,7 +134,7 @@ export class Hurt extends AttackableEnemyState {
     this.character.speed = 0
   }
 
-  handleInput (inputs: InputType[]): void {
+  handle (): void {
     this.timestamp = Date.now()
     if (this.character.health <= 0) {
       this.character.setState('death')
@@ -153,15 +144,16 @@ export class Hurt extends AttackableEnemyState {
   }
 }
 
-export class Death extends AttackableEnemyState {
-  constructor (public character: Enemy<StateType>) {
-    super(character, 'death')
+export class Death extends State {
+  constructor (public character: Enemy) {
+    super('death')
   }
 
   enter (): void {
+    this.character.speed = 0
     // this.performed = false
     // this.character.frameX = 0
   }
 
-  handleInput (inputs: InputType[]): void {}
+  handle (): void {}
 }

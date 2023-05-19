@@ -5,7 +5,7 @@ import { TILE_SIZE } from './config'
 import type Game from '.'
 import type Enemy from './characters/enemy'
 import { buildEnemy } from './characters/buildEnemy'
-import { getTileSize } from './utils'
+import { AssetType } from './assets'
 
 class Map {
   images: number[][]
@@ -16,7 +16,7 @@ class Map {
   decorationElements: Element[][] = []
   elements: Element[][] = []
 
-  enemies: Array<Enemy<any>> = []
+  enemies: Array<Enemy> = []
 
   // eslint-disable-next-line
   constructor(private readonly game: Game) {
@@ -55,7 +55,7 @@ class Map {
         }
 
         this.decorationElements[i][j] = buildElement(this.game, this.decorations[i][j], i, j)
-        this.elements[i][j] = buildElement(this.game, this.interactive[i][j], i, j) //  new Element(this.assets, this.interactive[i][j], i, j)
+        this.elements[i][j] = buildElement(this.game, this.interactive[i][j], i, j)
       }
     }
   }
@@ -80,7 +80,6 @@ class Map {
   draw = (deltaTime: number): void => {
     this.drawTiles(this.game.ctx, this.bgImages)
     this.drawTiles(this.game.ctx, this.images)
-    // this.drawTiles(this.game.ctx, this.decorations)
     this.drawDecorations(this.game.ctx, deltaTime)
     this.drawInteractiveElement(this.game.ctx, deltaTime)
 
@@ -111,28 +110,33 @@ class Map {
     if (!this.game.assets.isLoaded()) {
       return
     }
-    const tileSize = getTileSize()
     for (let i = 0; i < tiles.length; i++) {
       for (let j = 0; j < tiles[0].length; j++) {
         const asset = this.game.assets.getById(tiles[i][j])
-        if (asset != null) {
-          const { img, width, height } = asset
-          if (img) {
-            ctx.drawImage(
-              img,
-              0,
-              0,
-              width,
-              height,
-              j * tileSize - this.game.camera.x,
-              i * tileSize - this.game.camera.y + tileSize - height,
-              tileSize,
-              tileSize
-            )
-          }
-        }
+        this.drawAsset(ctx, asset, i, j)
       }
     }
+  }
+
+  drawAsset (ctx: CanvasRenderingContext2D, asset: AssetType | null, i: number, j: number) {
+    if (!asset) {
+      return
+    }
+    const { img, width, height } = asset
+    if (img) {
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        width,
+        height,
+        j * TILE_SIZE - this.game.camera.x,
+        i * TILE_SIZE - this.game.camera.y + TILE_SIZE - height,
+        TILE_SIZE,
+        TILE_SIZE
+      )
+    }
+
   }
 }
 

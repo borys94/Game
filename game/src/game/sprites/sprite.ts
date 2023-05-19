@@ -1,13 +1,12 @@
 import type Character from '../characters/character'
-import type Player from '../characters/player'
 
-export abstract class SpriteClass {
+abstract class SpriteClass {
   asset: string
   frames: number
   frameX = 0
   frameTimer = 0
   frameInterval = 100 // TODO: in Sprite class
-  player: Character<any, any>
+  player: Character
 
   img?: HTMLImageElement
   loaded = false
@@ -15,7 +14,7 @@ export abstract class SpriteClass {
   oneTimeAction: boolean
   performed?: boolean
 
-  constructor (player: Character<any, any>, asset: string, frames: number, oneTimeAction = false) {
+  constructor (player: Character, asset: string, frames: number, oneTimeAction = false) {
     this.player = player
     this.asset = asset
     this.frames = frames
@@ -80,67 +79,6 @@ export abstract class SpriteClass {
       this.player.height
     )
     ctx.restore()
-  }
-}
-
-export class StandingSprite extends SpriteClass {
-  frameInterval = 200
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/idle.png', 4)
-  }
-}
-
-export class RunningSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/run.png', 4)
-  }
-}
-
-export class JumpingSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/jump.png', 4)
-  }
-}
-
-export class FallingSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/jump.png', 4)
-  }
-}
-
-export class HitSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/attack1.png', 6, true)
-  }
-}
-
-export class DoubleHitSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/attack2.png', 8, true)
-  }
-}
-
-export class StrongHitSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/attack3.png', 8, true)
-  }
-}
-
-export class UseSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/use.png', 6, true)
-  }
-}
-
-export class HurtSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/hurt.png', 2)
-  }
-}
-
-export class DeathSprite extends SpriteClass {
-  constructor (player: Player) {
-    super(player, 'assets/heroes/punk/death.png', 6, true)
   }
 }
 

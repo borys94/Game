@@ -32,7 +32,10 @@ export default class Element {
 
   public enter (player: Player): void {}
 
-  public handleInput (player: Player, inputs: InputType[]): void {}
+  public handle (player: Player, inputs: InputType[]): void {}
+
+  // TODO
+  public leave (player: Player): void {}
 
   draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
     if (this.asset == null || !this.active) {
@@ -94,7 +97,7 @@ export class ChestElement extends Element {
   animate = false
   enter (player: Player): void {}
 
-  handleInput (player: Player, inputs: InputType[]): void {
+  handle (player: Player, inputs: InputType[]): void {
     if (inputs.includes('Space')) {
       this.animate = true
     }
@@ -114,7 +117,7 @@ export class TrapElement extends Element {
     else player.speed = -1
   }
 
-  handleInput (player: Player, inputs: InputType[]): void {}
+  handle (player: Player, inputs: InputType[]): void {}
 }
 
 export class CollectableElement extends Element {
@@ -123,5 +126,5 @@ export class CollectableElement extends Element {
     this.active = false
   }
 
-  handleInput (player: Player, inputs: InputType[]): void {}
+  handle (player: Player, inputs: InputType[]): void {}
 }

@@ -29,7 +29,7 @@ class Assets {
   loadAllAssets (): void {
     const allTiles = this.getAssetCount()
 
-    tiles.forEach((tile, index) => {
+    tiles.forEach((tile) => {
       if (tile == null) return
       const img = new Image()
       img.src = tile.asset

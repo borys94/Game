@@ -64,4 +64,4 @@ class Sounds {
   }
 }
 
-export default new Sounds
+export default new Sounds()

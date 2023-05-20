@@ -10,8 +10,8 @@ export class StandingSprite extends SpriteClass {
 
 export class RunningSprite extends SpriteClass {
   frameInterval = 150
-  constructor (player: Enemy, path: string) {
-    super(player, `${path}/walk.png`, 4) // TODO
+  constructor (player: Enemy, path: string, frames: number) {
+    super(player, `${path}/walk.png`, frames) // TODO
   }
 }
 

@@ -4,13 +4,15 @@ import type Game from '..'
 import PlayerStateManager from '../states/player/playerStateManager'
 import SpriteManager from '../sprites/spriteManager'
 import PlayerSpriteManager from '../sprites/player/playerSpritesManager'
+import GunManager from '../guns/gun'
 
 class Player extends Character {
   stateManager: PlayerStateManager = new PlayerStateManager(this)
   spriteManager: SpriteManager = new PlayerSpriteManager(this)
+  gunManager: GunManager = new GunManager(this)
 
   paddingLeft = 4
-  paddingRight = 24
+  paddingRight = 25
 
   cards = 0
 
@@ -23,6 +25,8 @@ class Player extends Character {
       maxVy: 15,
       maxHealth: 20
     })
+
+    this.gunManager.setGun(9)
   }
 
   update = (): void => {
@@ -30,6 +34,8 @@ class Player extends Character {
 
     this.collectObjects()
     this.interactObjects(this.game.inputHandler.activeKeys)
+
+    this.gunManager.update()
   }
 
   interactObjects = (inputs: InputType[]): void => {
@@ -51,9 +57,16 @@ class Player extends Character {
     }
   }
 
+  shot = () => {
+    this.gunManager.shot()
+  }
+
   draw (deltaTime: number): void {
+    this.gunManager.draw(deltaTime)
     super.draw(deltaTime)
     this.drawHealthBar()
+    this.drawEnduranceBar()
+    this.drawWeapon()
   }
 
   drawHealthBar () {
@@ -69,6 +82,40 @@ class Player extends Character {
       20,
       100 * (this.health / this.maxHealth),
       10
+    )
+    ctx.restore()
+  }
+
+  drawEnduranceBar () {
+    const ctx = this.game.ctx
+
+    ctx.save()
+    ctx.strokeStyle = '#000000'
+    ctx.fillStyle = '#5DADE2'
+    ctx.lineWidth = 2
+    ctx.strokeRect(20, 35, 100, 10)
+    ctx.fillRect(
+      20,
+      35,
+      100 * (this.health / this.maxHealth),
+      10
+    )
+    ctx.restore()
+  }
+
+  drawWeapon () {
+    const ctx = this.game.ctx
+
+    ctx.save()
+    ctx.strokeStyle = '#000000'
+    ctx.fillStyle = '#1E8449'
+    ctx.lineWidth = 2
+    ctx.strokeRect(20, 50, 30, 30)
+    ctx.fillRect(
+      20,
+      50,
+      30,
+      30
     )
     ctx.restore()
   }

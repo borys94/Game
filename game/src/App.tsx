@@ -4,6 +4,7 @@ import GameCmp from './components/Game'
 import EditorComponent from './components/Editor/Editor'
 
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import Sprites from './components/Sprites'
 
 const router = createHashRouter([
   {
@@ -13,6 +14,10 @@ const router = createHashRouter([
   {
     path: '/editor',
     element: <EditorComponent />
+  },
+  {
+    path: '/sprites',
+    element: <Sprites />
   }
 ])
 

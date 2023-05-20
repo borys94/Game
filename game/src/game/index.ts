@@ -5,7 +5,6 @@ import config from './config'
 import Map from './map'
 import Background from './background'
 import Camera from './camera'
-import Sounds from './sounds'
 import { drawDebugInfo } from './debug'
 import store from '../store'
 import { pause, unpause } from '../store/game'
@@ -30,7 +29,7 @@ class Game {
 
   scale: number = CANVAS_WIDTH
 
-  constructor (public sounds: Sounds) {
+  constructor () {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.canvas.width = CANVAS_WIDTH
@@ -116,8 +115,8 @@ class Game {
 
     this.ctx.restore()
 
-    if ((window as any).debug) {
-      drawDebugInfo(this.ctx, this.player, this.inputHandler)
+    if ((window as any).debug || true) {
+      // drawDebugInfo(this.ctx, this.player, this.inputHandler)
     }
   }
 }

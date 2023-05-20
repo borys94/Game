@@ -2,11 +2,17 @@ class Sounds {
   background: HTMLAudioElement
   coin: HTMLAudioElement
   hurt: HTMLAudioElement
+  collect: HTMLAudioElement
+  jump: HTMLAudioElement
+  unlock: HTMLAudioElement
 
   constructor (public active = false) {
     this.background = new Audio('assets/sounds/background.mp3')
     this.coin = new Audio('assets/sounds/coins.mp3')
     this.hurt = new Audio('assets/sounds/hurt.ogg')
+    this.collect = new Audio('assets/sounds/collect.wav')
+    this.jump = new Audio('assets/sounds/jump.wav')
+    this.unlock = new Audio('assets/sounds/unlock.wav')
   }
 
   toogle (): void {
@@ -38,6 +44,18 @@ class Sounds {
     this.playSound(this.coin)
   }
 
+  collectSound (): void {
+    this.playSound(this.collect)
+  }
+
+  jumpSound (): void {
+    this.playSound(this.jump)
+  }
+
+  unlockSound (): void {
+    this.playSound(this.unlock)
+  }
+
   hurtSound (): void {
     this.playSound(this.hurt)
     setTimeout(() => {
@@ -46,4 +64,4 @@ class Sounds {
   }
 }
 
-export default Sounds
+export default new Sounds

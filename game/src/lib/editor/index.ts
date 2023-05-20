@@ -8,7 +8,6 @@ import { buildElement } from '../../game/Element'
 import { clamp } from '../../game/utils'
 import easyMap from '../../maps/easy'
 import mediumMap from '../../maps/medium'
-import Sounds from '../../game/sounds'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
@@ -31,8 +30,8 @@ class Editor extends Game {
   hoverX = 0
   hoverY = 0
 
-  constructor (public sounds: Sounds) {
-    super(sounds)
+  constructor () {
+    super()
 
     this.camera.update = () => {}
     // this.map.enemies = []

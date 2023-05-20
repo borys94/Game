@@ -26,7 +26,7 @@ function EditorComponent (): React.ReactElement {
     if (ed != null) {
       return
     }
-    ed = new Editor(new Sounds())
+    ed = new Editor()
     ;(window as any).ed = ed
     setEditor(ed)
     setColumns(ed.map.images[0].length)

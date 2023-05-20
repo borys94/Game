@@ -2,7 +2,7 @@ import Character from '../characters/character'
 import { type InputType } from '../inputHandler'
 import { State } from './state'
 
-abstract class StateManager{
+abstract class StateManager {
   states: Record<string, State>
   currentState: State
 

@@ -2,6 +2,7 @@ import { type AssetType } from './assets'
 import { type InputType } from './inputHandler'
 import type Player from './characters/player'
 import type Game from '.'
+import sounds from './sounds'
 
 export default class Element {
   asset: AssetType | null
@@ -124,6 +125,7 @@ export class CollectableElement extends Element {
   enter (player: Player): void {
     player.cards++
     this.active = false
+    sounds.unlockSound()
   }
 
   handle (player: Player, inputs: InputType[]): void {}

@@ -64,6 +64,10 @@ abstract class Character {
     this.y = options.y
   }
 
+  getPlayerCenter() {
+    return this.x + ((this.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft)
+  }
+
   draw (deltaTime: number): void {
     const width = this.width
     const height = this.height

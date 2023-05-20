@@ -1,6 +1,6 @@
 import type Character from '../characters/character'
 
-abstract class SpriteClass {
+class SpriteClass {
   asset: string
   frames: number
   frameX = 0
@@ -10,6 +10,9 @@ abstract class SpriteClass {
 
   img?: HTMLImageElement
   loaded = false
+
+  width: number = 0
+  height: number = 0
 
   oneTimeAction: boolean
   performed?: boolean
@@ -49,6 +52,8 @@ abstract class SpriteClass {
     this.img = img
     img.src = this.asset
     img.onload = () => {
+      this.width = img.width / this.frames
+      this.height = img.height
       this.loaded = true
     }
   }
@@ -65,18 +70,18 @@ abstract class SpriteClass {
     ctx.scale(scaleX, 1)
     ctx.drawImage(
       this.img,
-      this.player.width * this.frameX,
+      this.width * this.frameX,
       0,
-      this.player.width,
-      this.player.height,
+      this.width,
+      this.height,
       this.player.x * scaleX -
-        ((this.player.width - this.player.paddingLeft - this.player.paddingRight) / 2 +
+        ((this.width - this.player.paddingLeft - this.player.paddingRight) / 2 +
           this.player.paddingLeft) *
           (scaleX * -1 + 1) -
         this.player.game.camera.x * scaleX,
-      this.player.y + 5 - this.player.game.camera.y,
-      this.player.width,
-      this.player.height
+      this.player.y - this.player.game.camera.y,
+      this.width,
+      this.height
     )
     ctx.restore()
   }

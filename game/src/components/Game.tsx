@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import styles from './Game.module.scss'
 import { Button } from './common/Button'
 import { useSelector, useDispatch } from 'react-redux'
@@ -13,21 +13,20 @@ function GameCmp (): React.ReactElement {
   const game = useSelector((state: RootState) => state.game.instance)
   const loadedAssets = useSelector((state: RootState) => state.game.loadedAssets)
   const sound = useSelector((state: RootState) => state.game.sound)
-  const sounds = useRef(new Sounds())
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
   const play = () => {
     if (!game) {
-      dispatch(initGame({ game: new Game(sounds.current) }))
+      dispatch(initGame({ game: new Game() }))
     } else {
       dispatch(unpause())
     }
   }
 
   const handleToogleSound = () => {
-    sounds.current.toogle()
-    sounds.current.play()
+    Sounds.toogle()
+    Sounds.play()
     dispatch(toggleSound())
   }
 

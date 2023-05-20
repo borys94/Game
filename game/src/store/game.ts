@@ -24,9 +24,9 @@ export const gameStore = createSlice({
     initGame: (state: GameStore, action: PayloadAction<InitGameAction>) => {
       state.instance = action.payload.game
       state.instance.setupListeners()
-      state.instance.sounds.active = state.sound
-
       state.paused = state.instance.paused
+
+      ;(window as any).game = state.instance
     },
     unpause: (state: GameStore, action: PayloadAction<void>) => {
       if (!state.instance) {

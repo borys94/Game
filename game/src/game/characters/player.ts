@@ -16,7 +16,7 @@ class Player extends Character {
 
   cards = 0
 
-  constructor (game: Game) {
+  constructor(game: Game) {
     super(game, {
       x: 20,
       y: 316,
@@ -61,7 +61,7 @@ class Player extends Character {
     this.gunManager.shot()
   }
 
-  draw (deltaTime: number): void {
+  draw(deltaTime: number): void {
     this.gunManager.draw(deltaTime)
     super.draw(deltaTime)
     this.drawHealthBar()
@@ -69,7 +69,7 @@ class Player extends Character {
     this.drawWeapon()
   }
 
-  drawHealthBar () {
+  drawHealthBar() {
     const ctx = this.game.ctx
 
     ctx.save()
@@ -77,16 +77,11 @@ class Player extends Character {
     ctx.fillStyle = '#1E8449'
     ctx.lineWidth = 2
     ctx.strokeRect(20, 20, 100, 10)
-    ctx.fillRect(
-      20,
-      20,
-      100 * (this.health / this.maxHealth),
-      10
-    )
+    ctx.fillRect(20, 20, 100 * (this.health / this.maxHealth), 10)
     ctx.restore()
   }
 
-  drawEnduranceBar () {
+  drawEnduranceBar() {
     const ctx = this.game.ctx
 
     ctx.save()
@@ -94,16 +89,11 @@ class Player extends Character {
     ctx.fillStyle = '#5DADE2'
     ctx.lineWidth = 2
     ctx.strokeRect(20, 35, 100, 10)
-    ctx.fillRect(
-      20,
-      35,
-      100 * (this.health / this.maxHealth),
-      10
-    )
+    ctx.fillRect(20, 35, 100 * (this.health / this.maxHealth), 10)
     ctx.restore()
   }
 
-  drawWeapon () {
+  drawWeapon() {
     const ctx = this.game.ctx
 
     ctx.save()
@@ -111,12 +101,7 @@ class Player extends Character {
     ctx.fillStyle = '#1E8449'
     ctx.lineWidth = 2
     ctx.strokeRect(20, 50, 30, 30)
-    ctx.fillRect(
-      20,
-      50,
-      30,
-      30
-    )
+    ctx.fillRect(20, 50, 30, 30)
     ctx.restore()
   }
 }

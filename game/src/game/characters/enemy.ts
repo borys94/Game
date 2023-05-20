@@ -17,19 +17,16 @@ abstract class Enemy extends Character {
   lastInteractionInterval = 0
   speed = this.maxSpeed
 
-  canAttack (): boolean {
-    return (
-      this.lastAttackTimestamp + this.interactionInterval < Date.now() &&
-      this.game.player.health > 0
-    )
+  canAttack(): boolean {
+    return this.lastAttackTimestamp + this.interactionInterval < Date.now() && this.game.player.health > 0
   }
 
-  draw (deltaTime: number): void {
+  draw(deltaTime: number): void {
     super.draw(deltaTime)
     this.drawHealthBar()
   }
 
-  drawHealthBar () {
+  drawHealthBar() {
     const ctx = this.game.ctx
 
     if (this.isAlive()) {

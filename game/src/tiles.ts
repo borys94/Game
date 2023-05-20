@@ -3729,7 +3729,7 @@ const tiles: Array<Tile | null> = [
     asset: 'assets/map/interactive/Card.png',
     set: 'none',
     type: 'interactive',
-    interactiveType: 'card',
+    interactiveType: 'card'
   },
   {
     width: 24,
@@ -3787,7 +3787,7 @@ const tiles: Array<Tile | null> = [
     asset: 'assets/map/interactive/Money.png',
     set: 'none',
     type: 'interactive',
-    interactiveType: 'money',
+    interactiveType: 'money'
   },
   {
     width: 32,
@@ -3797,7 +3797,7 @@ const tiles: Array<Tile | null> = [
     asset: 'assets/map/interactive/Trap.png',
     set: 'none',
     type: 'interactive',
-    interactiveType: 'trap',
+    interactiveType: 'trap'
   },
   {
     width: 48,

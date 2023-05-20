@@ -17,7 +17,7 @@ class SpriteClass {
   oneTimeAction: boolean
   performed?: boolean
 
-  constructor (player: Character, asset: string, frames: number, oneTimeAction = false) {
+  constructor(player: Character, asset: string, frames: number, oneTimeAction = false) {
     this.player = player
     this.asset = asset
     this.frames = frames
@@ -26,7 +26,7 @@ class SpriteClass {
     this.loadAllAsset()
   }
 
-  animate (deltaTime: number): void {
+  animate(deltaTime: number): void {
     if (this.oneTimeAction && this.frameX === this.frames - 1) {
       return
     }
@@ -41,13 +41,13 @@ class SpriteClass {
     }
   }
 
-  enter (): void {
+  enter(): void {
     this.frameX = 0
   }
 
-  leave (): void {}
+  leave(): void {}
 
-  loadAllAsset (): void {
+  loadAllAsset(): void {
     const img = new Image()
     this.img = img
     img.src = this.asset
@@ -58,7 +58,7 @@ class SpriteClass {
     }
   }
 
-  draw (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     if (this.img == null || !this.loaded) {
       return
     }
@@ -75,8 +75,7 @@ class SpriteClass {
       this.width,
       this.height,
       this.player.x * scaleX -
-        ((this.width - this.player.paddingLeft - this.player.paddingRight) / 2 +
-          this.player.paddingLeft) *
+        ((this.width - this.player.paddingLeft - this.player.paddingRight) / 2 + this.player.paddingLeft) *
           (scaleX * -1 + 1) -
         this.player.game.camera.x * scaleX,
       this.player.y - this.player.game.camera.y,

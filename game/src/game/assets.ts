@@ -18,7 +18,7 @@ class Assets {
   loadedAssets = 0
   loaded = false
 
-  constructor () {
+  constructor() {
     this.loadAllAssets()
   }
 
@@ -26,7 +26,7 @@ class Assets {
 
   getAssetCount = (): number => tiles.filter((tile) => tile).length
 
-  loadAllAssets (): void {
+  loadAllAssets(): void {
     const allTiles = this.getAssetCount()
 
     tiles.forEach((tile) => {
@@ -40,7 +40,7 @@ class Assets {
         height: tile.height,
         frames: tile.frames,
         type: tile.type,
-        interactiveType: tile.interactiveType,
+        interactiveType: tile.interactiveType
       }
       img.onload = () => {
         this.loadedAssets++

@@ -1,4 +1,4 @@
-import Player from "../characters/player"
+import Player from '../characters/player'
 
 enum GunType {
   Gun1 = '1',
@@ -10,7 +10,7 @@ enum GunType {
   Gun7 = '7',
   Gun8 = '8',
   Gun9 = '9',
-  Gun10 = '10',
+  Gun10 = '10'
 }
 
 class GunManager {
@@ -18,7 +18,7 @@ class GunManager {
   currentGun: Gun | null = null
   guns: Gun[]
 
-  constructor (player: Player) {
+  constructor(player: Player) {
     this.player = player
     this.guns = [
       new Gun(player, GunType.Gun1, 1000),
@@ -30,7 +30,7 @@ class GunManager {
       new Gun(player, GunType.Gun7, 100),
       new Gun(player, GunType.Gun8, 100),
       new Gun(player, GunType.Gun9, 100),
-      new Gun(player, GunType.Gun10, 100),
+      new Gun(player, GunType.Gun10, 100)
     ]
   }
 
@@ -45,8 +45,6 @@ class GunManager {
   setGun(level: number) {
     this.currentGun = this.guns[level]
   }
-
-  
 
   draw(deltaTime: number) {
     if (!this.currentGun || ['hurt', 'death'].includes(this.player.stateManager.currentState.state)) {
@@ -67,7 +65,7 @@ class Gun {
 
   lastShotTimestamp = 0
 
-  constructor (player: Player, type: GunType, public shotInterval: number) {
+  constructor(player: Player, type: GunType, public shotInterval: number) {
     this.player = player
     this.asset = `assets/heroes/guns/${type}_1.png`
     this.bulletAsset = new BulletAsset(player, type)
@@ -84,10 +82,10 @@ class Gun {
 
   deleteBullets() {
     this.bullets
-      .filter(({x}) => x < 0 || x > this.player.game.map.width)
+      .filter(({ x }) => x < 0 || x > this.player.game.map.width)
       .map((b, i) => i)
       .sort((a, b) => b - a)
-      .forEach(index => this.bullets.splice(index, 1))
+      .forEach((index) => this.bullets.splice(index, 1))
   }
 
   getSwayShiftX(): number {
@@ -95,7 +93,10 @@ class Gun {
       return +(Math.abs(1.5 - this.player.spriteManager.currentSprite.frameX) === 0.5) * this.getScaleX()
     } else if (this.player.stateManager.currentState.state === 'running') {
       return this.getScaleX() * -1
-    } else if (this.player.stateManager.currentState.state === 'jumping' || this.player.stateManager.currentState.state === 'falling') {
+    } else if (
+      this.player.stateManager.currentState.state === 'jumping' ||
+      this.player.stateManager.currentState.state === 'falling'
+    ) {
       return -2 * this.getScaleX()
     }
 
@@ -107,7 +108,10 @@ class Gun {
       return 0
     } else if (this.player.stateManager.currentState.state === 'running') {
       return +(Math.abs(2.5 - this.player.spriteManager.currentSprite.frameX) === 1.5) + 1
-    } else if (this.player.stateManager.currentState.state === 'jumping' || this.player.stateManager.currentState.state === 'falling') {
+    } else if (
+      this.player.stateManager.currentState.state === 'jumping' ||
+      this.player.stateManager.currentState.state === 'falling'
+    ) {
       return [-1, -4, -6, -1][this.player.spriteManager.currentSprite.frameX]
     }
 
@@ -154,7 +158,7 @@ class Gun {
     }
   }
 
-  loadAsset (): void {
+  loadAsset(): void {
     const img = new Image()
     this.img = img
     img.src = this.asset
@@ -171,7 +175,11 @@ class Gun {
 
     const halBulletSize = this.bulletAsset.img.width / 2
     const scaleX = this.player.direction === 'left' ? -1 : 1
-    const x = (this.player.getPlayerCenter() - this.getSwayShiftX() - halBulletSize) + scaleX * (this.img.width + 11 + halBulletSize)
+    const x =
+      this.player.getPlayerCenter() -
+      this.getSwayShiftX() -
+      halBulletSize +
+      scaleX * (this.img.width + 11 + halBulletSize)
     // TODO: tak samo jak bron
     const y = this.player.y + this.getSwayShiftY() - this.img.height + 16 + 11 + 1
     this.bullets.push(new Bullet(this.bulletAsset, this.player, 10 * scaleX, x, y))
@@ -179,9 +187,13 @@ class Gun {
 }
 
 class Bullet {
-  constructor(public asset: BulletAsset, public player: Player, public speed: number, public x: number, public y: number) {
-
-  }
+  constructor(
+    public asset: BulletAsset,
+    public player: Player,
+    public speed: number,
+    public x: number,
+    public y: number
+  ) {}
 
   update() {
     this.x += this.speed
@@ -212,14 +224,14 @@ class BulletAsset {
   img!: HTMLImageElement
   loaded = false
 
-  constructor (player: Player, level: string) {
+  constructor(player: Player, level: string) {
     this.player = player
     this.asset = `assets/heroes/bullets/${level}.png`
 
     this.loadAsset()
   }
 
-  loadAsset (): void {
+  loadAsset(): void {
     const img = new Image()
     this.img = img
     img.src = this.asset

@@ -19,7 +19,7 @@ abstract class StateManager {
     this.currentState.enter()
   }
 
-  handle (inputs: InputType[]): void {
+  handle(inputs: InputType[]): void {
     this.currentState.handle(inputs)
   }
 }

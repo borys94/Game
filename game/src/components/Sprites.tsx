@@ -29,8 +29,8 @@ const Sprites = () => {
 
   return (
     <div style={{ backgroundColor: 'white', position: 'absolute', top: '50%', left: '50%' }}>
-      <input type='number' onChange={e => setFrame(+e.target.value)} />
-      <canvas id='canvas' ref={canvasRef} width={48} height={48} />
+      <input type="number" onChange={(e) => setFrame(+e.target.value)} />
+      <canvas id="canvas" ref={canvasRef} width={48} height={48} />
     </div>
   )
 }

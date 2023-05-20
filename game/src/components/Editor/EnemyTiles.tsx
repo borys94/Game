@@ -55,13 +55,7 @@ const Tile = ({ enemy, onClick }: TileProps): React.ReactElement => {
   }, [])
 
   return (
-    <canvas
-      onClick={onClick}
-      className={styles.canvas}
-      ref={canvasRef}
-      width={enemy.width}
-      height={enemy.height}
-    />
+    <canvas onClick={onClick} className={styles.canvas} ref={canvasRef} width={enemy.width} height={enemy.height} />
   )
 }
 

@@ -46,7 +46,7 @@ abstract class Character {
   loadedAssets = 0
   loaded = false
 
-  constructor (game: Game, options: CharacterOptions) {
+  constructor(game: Game, options: CharacterOptions) {
     if (options.maxVy > TILE_SIZE) {
       throw new Error(`maxVy cannot be larger than TILE_SIZE=${TILE_SIZE}`)
     }
@@ -68,7 +68,7 @@ abstract class Character {
     return this.x + ((this.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft)
   }
 
-  draw (deltaTime: number): void {
+  draw(deltaTime: number): void {
     const width = this.width
     const height = this.height
     const ctx = this.game.ctx
@@ -86,7 +86,7 @@ abstract class Character {
     this.spriteManager.currentSprite.draw(ctx, deltaTime)
   }
 
-  update (): void {
+  update(): void {
     this.stateManager.handle(this.game.inputHandler.activeKeys)
 
     this.handleHorizontalMovement()
@@ -165,7 +165,7 @@ abstract class Character {
     }
   }
 
-  isAlive (): boolean {
+  isAlive(): boolean {
     return this.health > 0
   }
 

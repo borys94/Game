@@ -3,15 +3,15 @@ import { shouldChangeDirection } from '../helpers'
 import { State } from '../state'
 
 export class Standing extends State {
-  constructor (public character: Enemy) {
+  constructor(public character: Enemy) {
     super('standing')
   }
 
-  enter (): void {
+  enter(): void {
     this.character.speed = 0
   }
 
-  handle (): void {
+  handle(): void {
     const { player } = this.character.game
 
     if (this.character.lastInteractionInterval + this.character.interactionInterval > Date.now()) {
@@ -31,18 +31,18 @@ export class Standing extends State {
 }
 
 export class Walking extends State {
-  constructor (public character: Enemy) {
+  constructor(public character: Enemy) {
     super('walking')
   }
 
-  enter (): void {
+  enter(): void {
     this.character.speed = this.character.maxSpeed
     if (this.character.direction === 'left') {
       this.character.speed *= -1
     }
   }
 
-  handle (): void {
+  handle(): void {
     const player = this.getPlayer()
 
     if (shouldChangeDirection(this.character)) {
@@ -68,11 +68,11 @@ export class Attack extends State {
   deltaTime = 200
   hit = false
 
-  constructor (public character: Enemy) {
+  constructor(public character: Enemy) {
     super('attack')
   }
 
-  enter (): void {
+  enter(): void {
     this.time = Date.now()
     this.performed = false
     this.animate = true
@@ -90,7 +90,7 @@ export class Attack extends State {
     }
   }
 
-  handle (): void {
+  handle(): void {
     const player = this.getPlayer()
 
     if (this.character.spriteManager.currentSprite.frameX === 3) {
@@ -103,12 +103,8 @@ export class Attack extends State {
       Math.abs(player.y - this.character.y) < 32
     ) {
       if (
-        (this.character.direction === 'left' &&
-          this.character.x - player.x < 60 &&
-          this.character.x - player.x > 0) ||
-        (this.character.direction === 'right' &&
-          player.x - this.character.x < 60 &&
-          player.x - this.character.x > 0)
+        (this.character.direction === 'left' && this.character.x - player.x < 60 && this.character.x - player.x > 0) ||
+        (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)
       ) {
         this.hit = true
         player.hurt(2)
@@ -124,17 +120,17 @@ export class Hurt extends State {
   timestamp = 0
   deltaTime = 300
 
-  constructor (public character: Enemy) {
+  constructor(public character: Enemy) {
     super('hurt')
   }
 
-  enter (): void {
+  enter(): void {
     this.time = Date.now()
     this.performed = false
     this.character.speed = 0
   }
 
-  handle (): void {
+  handle(): void {
     this.timestamp = Date.now()
     if (this.character.health <= 0) {
       this.character.setState('death')
@@ -145,15 +141,15 @@ export class Hurt extends State {
 }
 
 export class Death extends State {
-  constructor (public character: Enemy) {
+  constructor(public character: Enemy) {
     super('death')
   }
 
-  enter (): void {
+  enter(): void {
     this.character.speed = 0
     // this.performed = false
     // this.character.frameX = 0
   }
 
-  handle (): void {}
+  handle(): void {}
 }

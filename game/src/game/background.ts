@@ -27,11 +27,11 @@ class Background {
   trainFrameIndex = 3
   trainFrame = 0
 
-  constructor (private readonly game: Game) {
+  constructor(private readonly game: Game) {
     this.loadAllAssets()
   }
 
-  loadAllAssets (): void {
+  loadAllAssets(): void {
     for (const asset of this.assets) {
       const img = new Image()
       asset.img = img
@@ -45,7 +45,7 @@ class Background {
     }
   }
 
-  draw (ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D): void {
     if (!this.loaded) {
       return
     }
@@ -56,17 +56,7 @@ class Background {
       const img = asset.img
       const moved = Math.floor((index++ * this.speed * this.game.camera.x) % this.width)
       if (img != null) {
-        ctx.drawImage(
-          img,
-          moved,
-          0,
-          this.width,
-          this.height,
-          0,
-          0,
-          config.CANVAS_WIDTH,
-          config.CANVAS_HEIGHT
-        )
+        ctx.drawImage(img, moved, 0, this.width, this.height, 0, 0, config.CANVAS_WIDTH, config.CANVAS_HEIGHT)
 
         ctx.drawImage(
           img,

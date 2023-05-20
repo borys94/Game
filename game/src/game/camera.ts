@@ -9,9 +9,9 @@ class Camera {
   x = 0
   y = 0
 
-  constructor (private readonly player: Player, private readonly map: Map) {}
+  constructor(private readonly player: Player, private readonly map: Map) {}
 
-  update (): void {
+  update(): void {
     this.x = this.player.x > CANVAS_WIDTH / 2 ? this.player.x - CANVAS_WIDTH / 2 : 0
     this.y = this.player.y > CANVAS_HEIGHT / 2 ? this.player.y - CANVAS_HEIGHT / 2 : 0
 

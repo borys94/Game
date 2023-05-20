@@ -1,11 +1,5 @@
 import Enemy from '../../characters/enemy'
-import {
-  Standing,
-  Walking,
-  Attack,
-  Hurt,
-  Death
-} from './enemyState'
+import { Standing, Walking, Attack, Hurt, Death } from './enemyState'
 import StateManager from '../stateManager'
 
 class EnemyStateManager extends StateManager {

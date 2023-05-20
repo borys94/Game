@@ -11,7 +11,7 @@ class RatEnemy extends Enemy {
   stateManager: CalmEnemyStateManager = new CalmEnemyStateManager(this)
   spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'rat')
 
-  constructor (game: Game, x: number, y: number) {
+  constructor(game: Game, x: number, y: number) {
     super(game, {
       x,
       y,

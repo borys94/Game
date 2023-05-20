@@ -6,12 +6,12 @@ export abstract class State {
   animate = true
   abstract character: Character
 
-  constructor (state: string) {
+  constructor(state: string) {
     this.state = state
   }
 
-  abstract enter (): void
-  abstract handle (inputs: InputType[]): void
+  abstract enter(): void
+  abstract handle(inputs: InputType[]): void
 
   getPlayer() {
     return this.character.game.player

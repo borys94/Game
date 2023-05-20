@@ -7,9 +7,10 @@ const store = configureStore({
   reducer: {
     game
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: false
-  })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    })
 })
 
 setupListeners(store.dispatch)

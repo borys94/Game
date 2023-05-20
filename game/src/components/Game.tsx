@@ -8,12 +8,12 @@ import Game from '../game'
 import Sounds from '../game/sounds'
 import { useNavigate } from 'react-router-dom'
 
-function GameCmp (): React.ReactElement {
+function GameCmp(): React.ReactElement {
   const paused = useSelector((state: RootState) => state.game.paused)
   const game = useSelector((state: RootState) => state.game.instance)
   const loadedAssets = useSelector((state: RootState) => state.game.loadedAssets)
   const sound = useSelector((state: RootState) => state.game.sound)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const play = () => {
@@ -48,7 +48,7 @@ function GameCmp (): React.ReactElement {
           <div className={styles.menu}>
             <Button onClick={play}>Play</Button>
             <Button onClick={goToEditor}>Map Editor</Button>
-            
+
             {/* TODO */}
             {/* <Button>Help</Button> */}
             <div className={styles.soundIcon}>

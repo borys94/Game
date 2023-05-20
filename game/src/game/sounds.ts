@@ -6,7 +6,7 @@ class Sounds {
   jump: HTMLAudioElement
   unlock: HTMLAudioElement
 
-  constructor (public active = false) {
+  constructor(public active = false) {
     this.background = new Audio('assets/sounds/background.mp3')
     this.coin = new Audio('assets/sounds/coins.mp3')
     this.hurt = new Audio('assets/sounds/hurt.ogg')
@@ -15,7 +15,7 @@ class Sounds {
     this.unlock = new Audio('assets/sounds/unlock.wav')
   }
 
-  toogle (): void {
+  toogle(): void {
     this.active = !this.active
 
     if (!this.active) {
@@ -25,7 +25,7 @@ class Sounds {
     }
   }
 
-  private playSound (sound: HTMLAudioElement): void {
+  private playSound(sound: HTMLAudioElement): void {
     if (!this.active) {
       return
     }
@@ -35,28 +35,28 @@ class Sounds {
     sound.play()
   }
 
-  play (): void {
+  play(): void {
     this.playSound(this.background)
     this.background.loop = true
   }
 
-  coinSound (): void {
+  coinSound(): void {
     this.playSound(this.coin)
   }
 
-  collectSound (): void {
+  collectSound(): void {
     this.playSound(this.collect)
   }
 
-  jumpSound (): void {
+  jumpSound(): void {
     this.playSound(this.jump)
   }
 
-  unlockSound (): void {
+  unlockSound(): void {
     this.playSound(this.unlock)
   }
 
-  hurtSound (): void {
+  hurtSound(): void {
     this.playSound(this.hurt)
     setTimeout(() => {
       this.hurt.pause()

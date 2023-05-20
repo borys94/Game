@@ -1,12 +1,10 @@
-
 import type Player from '../../characters/player'
 import SpriteClass from '../sprite'
-
 
 abstract class PlayerSprite extends SpriteClass {
   arm: SpriteClass
 
-  constructor (player: Player, asset: string, frames: number) {
+  constructor(player: Player, asset: string, frames: number) {
     super(player, asset, frames)
     this.arm = new SpriteClass(player, 'assets/heroes/punk/arms/arm.png', 1)
   }
@@ -18,7 +16,7 @@ abstract class PlayerSprite extends SpriteClass {
     return this.player.direction === 'left' ? -1 : 1
   }
 
-  draw (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     if (!this.arm.img) {
       return
     }
@@ -58,13 +56,13 @@ export class StandingSprite extends PlayerSprite {
     return 0
   }
 
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/withoutArm/idle.png', 4)
   }
 }
 
 export class RunningSprite extends PlayerSprite {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/withoutArm/run.png', 6)
   }
 
@@ -78,7 +76,7 @@ export class RunningSprite extends PlayerSprite {
 }
 
 export class JumpingSprite extends PlayerSprite {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/withoutArm/jump.png', 4)
   }
 
@@ -98,49 +96,47 @@ export class JumpingSprite extends PlayerSprite {
   }
 }
 
-export class FallingSprite extends JumpingSprite {
-
-}
+export class FallingSprite extends JumpingSprite {}
 
 export class HitSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/attack1.png', 6, true)
   }
 }
 
 export class DoubleHitSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/attack2.png', 8, true)
   }
 }
 
 export class StrongHitSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/attack3.png', 8, true)
   }
 }
 
 export class UseSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/use.png', 6, true)
   }
 }
 
 export class HurtSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/hurt.png', 2)
   }
 }
 
 export class DeathSprite extends SpriteClass {
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/death.png', 6, true)
   }
 }
 
 export class DoubleJump extends SpriteClass {
   frameInterval = 50
-  constructor (player: Player) {
+  constructor(player: Player) {
     super(player, 'assets/heroes/punk/doublejump.png', 6, true)
   }
 }

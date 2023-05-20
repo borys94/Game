@@ -30,21 +30,21 @@ class Map {
     this.update = this.update.bind(this)
   }
 
-  get width (): number {
+  get width(): number {
     return this.images[0].length * TILE_SIZE
   }
 
-  get height (): number {
+  get height(): number {
     return this.images.length * TILE_SIZE
   }
 
-  loadEnemies (): void {
+  loadEnemies(): void {
     for (const enemy of easyMap.enemies) {
       this.enemies.push(buildEnemy(this.game, enemy))
     }
   }
 
-  initInteractiveElements (): void {
+  initInteractiveElements(): void {
     for (let i = 0; i < this.interactive.length; i++) {
       for (let j = 0; j < this.interactive[0].length; j++) {
         if (!this.elements[i]) {
@@ -72,7 +72,7 @@ class Map {
     return null
   }
 
-  hasObstacle (x: number, y: number): boolean {
+  hasObstacle(x: number, y: number): boolean {
     if (y < 0 || y % TILE_SIZE === 0 || x % TILE_SIZE === 0) return false
     return !!this.images[Math.floor(y / TILE_SIZE)][Math.floor(x / TILE_SIZE)]
   }
@@ -88,25 +88,25 @@ class Map {
     }
   }
 
-  update () {
+  update() {
     for (const enemy of this.enemies) {
       enemy.update()
     }
   }
 
-  drawInteractiveElement (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  drawInteractiveElement(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     for (const row of this.elements) {
       for (const element of row) element.draw(ctx, deltaTime)
     }
   }
 
-  drawDecorations (ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  drawDecorations(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     for (const row of this.decorationElements) {
       for (const element of row) element.draw(ctx, deltaTime)
     }
   }
 
-  drawTiles (ctx: CanvasRenderingContext2D, tiles: number[][]): void {
+  drawTiles(ctx: CanvasRenderingContext2D, tiles: number[][]): void {
     if (!this.game.assets.isLoaded()) {
       return
     }
@@ -118,7 +118,7 @@ class Map {
     }
   }
 
-  drawAsset (ctx: CanvasRenderingContext2D, asset: AssetType | null, i: number, j: number) {
+  drawAsset(ctx: CanvasRenderingContext2D, asset: AssetType | null, i: number, j: number) {
     if (!asset) {
       return
     }
@@ -136,7 +136,6 @@ class Map {
         TILE_SIZE
       )
     }
-
   }
 }
 

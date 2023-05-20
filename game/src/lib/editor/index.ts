@@ -30,7 +30,7 @@ class Editor extends Game {
   hoverX = 0
   hoverY = 0
 
-  constructor () {
+  constructor() {
     super()
 
     this.camera.update = () => {}
@@ -77,11 +77,9 @@ class Editor extends Game {
     return easyMap
   }
 
-  update () {
+  update() {}
 
-  }
-
-  draw (timestamp: number): void {
+  draw(timestamp: number): void {
     // super.draw(timestamp)
 
     const deltaTime = timestamp - this.lastTime
@@ -114,10 +112,7 @@ class Editor extends Game {
         this.currentAsset.width,
         this.currentAsset.height,
         Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 -
-          this.camera.y +
-          32 -
-          this.currentAsset.height,
+        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
         this.currentAsset.width,
         this.currentAsset.height
       )
@@ -182,12 +177,12 @@ class Editor extends Game {
     this.activeEnemyType = type
   }
 
-  setLayer (layer: Layer): void {
+  setLayer(layer: Layer): void {
     this.activeEnemyType = null
     this.layer = layer
   }
 
-  clearMap (): void {
+  clearMap(): void {
     for (let i = 0; i < this.map.interactive.length; i++) {
       for (let j = 0; j < this.map.interactive[0].length; j++) {
         this.map.elements[i][j] = buildElement(this, 0, i, j)
@@ -199,7 +194,7 @@ class Editor extends Game {
     }
   }
 
-  setColumns (columns: number): void {
+  setColumns(columns: number): void {
     const diff = columns - this.map.interactive[0].length
     // console.log(columns, this.map.interactive.length)
 
@@ -225,7 +220,7 @@ class Editor extends Game {
     }
   }
 
-  setRows (rows: number): void {
+  setRows(rows: number): void {
     const diff = rows - this.map.interactive.length
 
     if (diff < 0) {

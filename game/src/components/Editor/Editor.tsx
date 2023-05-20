@@ -14,7 +14,7 @@ import Sounds from '../../game/sounds'
 
 let ed: Editor | undefined
 
-function EditorComponent (): React.ReactElement {
+function EditorComponent(): React.ReactElement {
   const [editor, setEditor] = useState<Editor>()
   const [mapSet, setMapSet] = useState<MapSet>('powerStation')
   const [activeTile, setActiveTile] = useState<Tile | null>()
@@ -110,12 +110,12 @@ function EditorComponent (): React.ReactElement {
 
         <div>
           <p>Columns</p>
-          <input type='number' min={1} max={200} value={columns} onChange={onSetColumns} />
+          <input type="number" min={1} max={200} value={columns} onChange={onSetColumns} />
         </div>
 
         <div>
           <p>Rows</p>
-          <input type='number' min={1} max={200} value={rows} onChange={onSetRows} />
+          <input type="number" min={1} max={200} value={rows} onChange={onSetRows} />
         </div>
         <div>
           <EditorButton onClick={() => editor?.clearMap()}>Clear</EditorButton>
@@ -124,18 +124,8 @@ function EditorComponent (): React.ReactElement {
         <EnemyTiles setEnemy={setEnemy} enemy={activeEnemy} />
 
         <Tiles mapSet={mapSet} editor={editor} tileType="obstacle" setActiveTile={setActiveTile} />
-        <Tiles
-          mapSet={mapSet}
-          editor={editor}
-          tileType="backgroundTile"
-          setActiveTile={setActiveTile}
-        />
-        <Tiles
-          mapSet={mapSet}
-          editor={editor}
-          tileType="decoration"
-          setActiveTile={setActiveTile}
-        />
+        <Tiles mapSet={mapSet} editor={editor} tileType="backgroundTile" setActiveTile={setActiveTile} />
+        <Tiles mapSet={mapSet} editor={editor} tileType="decoration" setActiveTile={setActiveTile} />
         <Tiles mapSet="none" editor={editor} tileType="interactive" setActiveTile={setActiveTile} />
         <Tiles mapSet="none" editor={editor} tileType="decoration" setActiveTile={setActiveTile} />
 

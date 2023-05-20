@@ -29,7 +29,7 @@ class Game {
 
   scale: number = CANVAS_WIDTH
 
-  constructor () {
+  constructor() {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.canvas.width = CANVAS_WIDTH
@@ -74,7 +74,7 @@ class Game {
     this.canvas.height = CANVAS_HEIGHT * this.scale
   }
 
-  animate (timestamp: number): void {
+  animate(timestamp: number): void {
     if (!this.active) {
       return
     }
@@ -83,18 +83,18 @@ class Game {
   }
 
   // TODO: ogarnac to
-  destroy (): void {
+  destroy(): void {
     this.active = false
     window.removeEventListener('resize', this.onResize)
   }
 
-  update () {
+  update() {
     this.camera.update()
     this.player.update()
     this.map.update()
   }
 
-  draw (timestamp: number): void {
+  draw(timestamp: number): void {
     if (this.paused || !this.assets.loaded) {
       return
     }

@@ -19,7 +19,7 @@ export default class Element {
 
   animate = true
 
-  constructor (game: Game, assetId: number, y: number, x: number) {
+  constructor(game: Game, assetId: number, y: number, x: number) {
     this.game = game
     this.asset = game.assets.getById(assetId)
     this.x = x
@@ -31,12 +31,12 @@ export default class Element {
     }
   }
 
-  public enter (player: Player): void {}
+  public enter(player: Player): void {}
 
-  public handle (player: Player, inputs: InputType[]): void {}
+  public handle(player: Player, inputs: InputType[]): void {}
 
   // TODO
-  public leave (player: Player): void {}
+  public leave(player: Player): void {}
 
   draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
     if (this.asset == null || !this.active) {
@@ -60,7 +60,7 @@ export default class Element {
     }
   }
 
-  updateFrameIfNeeded (deltaTime: number): void {
+  updateFrameIfNeeded(deltaTime: number): void {
     if (!this.animate) {
       return
     }
@@ -96,9 +96,9 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
 
 export class ChestElement extends Element {
   animate = false
-  enter (player: Player): void {}
+  enter(player: Player): void {}
 
-  handle (player: Player, inputs: InputType[]): void {
+  handle(player: Player, inputs: InputType[]): void {
     if (inputs.includes('Space')) {
       this.animate = true
     }
@@ -109,7 +109,7 @@ export class ChestElement extends Element {
 }
 
 export class TrapElement extends Element {
-  enter (player: Player): void {
+  enter(player: Player): void {
     if (!player.isAlive()) {
       return
     }
@@ -118,15 +118,15 @@ export class TrapElement extends Element {
     else player.speed = -1
   }
 
-  handle (player: Player, inputs: InputType[]): void {}
+  handle(player: Player, inputs: InputType[]): void {}
 }
 
 export class CollectableElement extends Element {
-  enter (player: Player): void {
+  enter(player: Player): void {
     player.cards++
     this.active = false
     sounds.unlockSound()
   }
 
-  handle (player: Player, inputs: InputType[]): void {}
+  handle(player: Player, inputs: InputType[]): void {}
 }

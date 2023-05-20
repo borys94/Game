@@ -12,7 +12,7 @@ class DogEnemy extends Enemy {
   paddingLeft = 4
   paddingRight = 12
 
-  constructor (game: Game, x: number, y: number) {
+  constructor(game: Game, x: number, y: number) {
     super(game, {
       x,
       y,

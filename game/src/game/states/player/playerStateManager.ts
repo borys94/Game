@@ -10,10 +10,9 @@ import {
   Use,
   Hurt,
   Death,
-  DoubleJump,
+  DoubleJump
 } from './playerStates'
 import StateManager from '../stateManager'
-
 
 class PlayerStateManager extends StateManager {
   constructor(public player: Player) {

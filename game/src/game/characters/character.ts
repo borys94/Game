@@ -68,6 +68,10 @@ abstract class Character {
     return this.x + ((this.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft)
   }
 
+  getScaleX() {
+    return this.direction === 'left' ? -1 : 1
+  }
+
   draw(deltaTime: number): void {
     const width = this.width
     const height = this.height
@@ -144,10 +148,11 @@ abstract class Character {
     this.x += this.speed
 
     if (
-      this.game.map.hasObstacle(this.x + this.width / 2, this.y) ||
-      this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height) ||
-      this.game.map.hasObstacle(this.x + this.width / 2, this.y + this.height / 2)
+      this.game.map.hasObstacle(this.x + this.width - this.paddingRight - 0.01, this.y) ||
+      this.game.map.hasObstacle(this.x + this.width - this.paddingRight - 0.01, this.y + this.height) ||
+      this.game.map.hasObstacle(this.x + this.width - this.paddingRight - 0.01, this.y + this.height / 2)
     ) {
+      // console.log('0000', Math.floor(this.x / 32) * 32 + 8)
       this.x = Math.floor(this.x / 32) * 32 + 8
     } else if (
       this.game.map.hasObstacle(this.x, this.y) ||

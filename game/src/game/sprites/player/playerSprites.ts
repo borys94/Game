@@ -1,6 +1,8 @@
 import type Player from '../../characters/player'
 import SpriteClass from '../sprite'
 
+const ARM_WIDTH = 11
+
 abstract class PlayerSprite extends SpriteClass {
   arm: SpriteClass
 
@@ -12,16 +14,12 @@ abstract class PlayerSprite extends SpriteClass {
   abstract getSwayShiftX(): number
   abstract getSwayShiftY(): number
 
-  getScaleX() {
-    return this.player.direction === 'left' ? -1 : 1
-  }
-
   draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     if (!this.arm.img) {
       return
     }
 
-    const scaleX = this.player.direction === 'left' ? -1 : 1
+    const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
     const swayShiftY = this.getSwayShiftY()
 
@@ -34,7 +32,7 @@ abstract class PlayerSprite extends SpriteClass {
       0,
       this.arm.width,
       this.arm.height,
-      (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - 11,
+      (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH,
       this.player.y - this.player.game.camera.y + 11 + swayShiftY,
       this.arm.width,
       this.arm.height
@@ -49,7 +47,7 @@ export class StandingSprite extends PlayerSprite {
   frameInterval = 200
 
   getSwayShiftX(): number {
-    return +(Math.abs(1.5 - this.frameX) === 0.5) * this.getScaleX()
+    return +(Math.abs(1.5 - this.frameX) === 0.5) * this.player.getScaleX()
   }
 
   getSwayShiftY(): number {
@@ -67,7 +65,7 @@ export class RunningSprite extends PlayerSprite {
   }
 
   getSwayShiftX(): number {
-    return this.getScaleX() * -1
+    return this.player.getScaleX() * -1
   }
 
   getSwayShiftY(): number {
@@ -81,7 +79,7 @@ export class JumpingSprite extends PlayerSprite {
   }
 
   getSwayShiftX(): number {
-    return -2 * this.getScaleX()
+    return -2 * this.player.getScaleX()
   }
 
   getSwayShiftY(): number {

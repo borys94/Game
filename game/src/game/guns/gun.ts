@@ -23,14 +23,14 @@ class GunManager {
     this.guns = [
       new Gun(player, GunType.Gun1, 1000),
       new Gun(player, GunType.Gun2, 1000),
-      new Gun(player, GunType.Gun3, 1000),
-      new Gun(player, GunType.Gun4, 100),
-      new Gun(player, GunType.Gun5, 100),
-      new Gun(player, GunType.Gun6, 100),
-      new Gun(player, GunType.Gun7, 100),
-      new Gun(player, GunType.Gun8, 100),
-      new Gun(player, GunType.Gun9, 100),
-      new Gun(player, GunType.Gun10, 100)
+      new Gun(player, GunType.Gun3, 750),
+      new Gun(player, GunType.Gun4, 500),
+      new Gun(player, GunType.Gun5, 500),
+      new Gun(player, GunType.Gun6, 500),
+      new Gun(player, GunType.Gun7, 400),
+      new Gun(player, GunType.Gun8, 300),
+      new Gun(player, GunType.Gun9, 200),
+      new Gun(player, GunType.Gun10, 150)
     ]
   }
 
@@ -68,7 +68,7 @@ class Gun {
   constructor(player: Player, type: GunType, public shotInterval: number) {
     this.player = player
     this.asset = `assets/heroes/guns/${type}_1.png`
-    this.bulletAsset = new BulletAsset(player, type)
+    this.bulletAsset = new BulletAsset(type)
 
     this.loadAsset()
   }
@@ -81,23 +81,23 @@ class Gun {
   }
 
   deleteBullets() {
-    this.bullets
-      .filter(({ x }) => x < 0 || x > this.player.game.map.width)
-      .map((b, i) => i)
-      .sort((a, b) => b - a)
-      .forEach((index) => this.bullets.splice(index, 1))
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      if (!this.bullets[i].active) {
+        this.bullets.splice(i, 1)
+      }
+    }
   }
 
   getSwayShiftX(): number {
     if (this.player.stateManager.currentState.state === 'standing') {
-      return +(Math.abs(1.5 - this.player.spriteManager.currentSprite.frameX) === 0.5) * this.getScaleX()
+      return +(Math.abs(1.5 - this.player.spriteManager.currentSprite.frameX) === 0.5) * this.player.getScaleX()
     } else if (this.player.stateManager.currentState.state === 'running') {
-      return this.getScaleX() * -1
+      return this.player.getScaleX() * -1
     } else if (
       this.player.stateManager.currentState.state === 'jumping' ||
       this.player.stateManager.currentState.state === 'falling'
     ) {
-      return -2 * this.getScaleX()
+      return -2 * this.player.getScaleX()
     }
 
     return 0
@@ -118,10 +118,6 @@ class Gun {
     return 0
   }
 
-  getScaleX() {
-    return this.player.direction === 'left' ? -1 : 1
-  }
-
   draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
     this.drawGun(ctx, deltaTime)
     this.drawBullets(ctx, deltaTime)
@@ -132,7 +128,7 @@ class Gun {
       return
     }
 
-    const scaleX = this.player.direction === 'left' ? -1 : 1
+    const scaleX = this.player.getScaleX()
     ctx.save()
     ctx.scale(scaleX, 1)
 
@@ -173,8 +169,17 @@ class Gun {
     }
     this.lastShotTimestamp = Date.now()
 
+    const [x, y] = this.calculateStartBulletPoint()
+    this.bullets.push(new Bullet(this.bulletAsset, this.player, this.getBulletSpeed(), x, y))
+  }
+
+  getBulletSpeed() {
+    return 10 * this.player.getScaleX()
+  }
+
+  calculateStartBulletPoint() {
+    const scaleX = this.player.getScaleX()
     const halBulletSize = this.bulletAsset.img.width / 2
-    const scaleX = this.player.direction === 'left' ? -1 : 1
     const x =
       this.player.getPlayerCenter() -
       this.getSwayShiftX() -
@@ -182,11 +187,13 @@ class Gun {
       scaleX * (this.img.width + 11 + halBulletSize)
     // TODO: tak samo jak bron
     const y = this.player.y + this.getSwayShiftY() - this.img.height + 16 + 11 + 1
-    this.bullets.push(new Bullet(this.bulletAsset, this.player, 10 * scaleX, x, y))
+    return [x, y]
   }
 }
 
 class Bullet {
+  active = true
+
   constructor(
     public asset: BulletAsset,
     public player: Player,
@@ -197,6 +204,33 @@ class Bullet {
 
   update() {
     this.x += this.speed
+    const map = this.player.game.map
+
+    if (
+      this.x < 0 ||
+      this.x > map.width ||
+      map.hasObstacle(this.x, this.y) ||
+      map.hasObstacle(this.x, this.y + this.asset.img.height)
+    ) {
+      this.active = false
+    }
+
+    if (!this.active) {
+      return
+    }
+
+    for (let enemy of map.enemies) {
+      if (
+        enemy.isAlive() &&
+        enemy.x + enemy.width > this.x &&
+        enemy.x < this.x &&
+        enemy.y + enemy.height > this.y &&
+        enemy.y < this.y
+      ) {
+        enemy.hurt(1)
+        this.active = false
+      }
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
@@ -219,13 +253,11 @@ class Bullet {
 }
 
 class BulletAsset {
-  player: Player
   asset: string
   img!: HTMLImageElement
   loaded = false
 
-  constructor(player: Player, level: string) {
-    this.player = player
+  constructor(level: string) {
     this.asset = `assets/heroes/bullets/${level}.png`
 
     this.loadAsset()

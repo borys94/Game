@@ -38,7 +38,7 @@ export default class Element {
   // TODO
   public leave(player: Player): void {}
 
-  draw = (ctx: CanvasRenderingContext2D, deltaTime: number): void => {
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     if (this.asset == null || !this.active) {
       return
     }
@@ -96,15 +96,53 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
 
 export class ChestElement extends Element {
   animate = false
+  opened = false
+
   enter(player: Player): void {}
 
   handle(player: Player, inputs: InputType[]): void {
     if (inputs.includes('Space')) {
       this.animate = true
+      this.opened = true
     }
     if (this.frameX === this.frames - 1) {
       this.animate = false
     }
+  }
+
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
+    if (!this.asset) {
+      return
+    }
+    if (!this.opened) {
+      this.ligthenGradient(
+        ctx,
+        this.x * 32 - this.game.camera.x + this.asset.width / 2,
+        this.y * 32 - this.game.camera.y + 32 - this.asset.height,
+        8
+      )
+    }
+
+    super.draw(ctx, deltaTime)
+  }
+
+  ligthenGradient(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+    ctx.save()
+    ctx.globalCompositeOperation = 'lighter'
+    var rnd = 0.1 * Math.sin((1.1 * Date.now()) / 300)
+    const shiftY = Math.sin((1.1 * Date.now()) / 300) * 5
+    radius = radius * (1 + rnd)
+    var radialGradient = ctx.createRadialGradient(x, y + shiftY, 0, x, y + shiftY, radius)
+    radialGradient.addColorStop(0.0, '#BB9')
+    radialGradient.addColorStop(0.2 + rnd, '#AA8')
+    radialGradient.addColorStop(0.7 + rnd, '#330')
+    radialGradient.addColorStop(0.9, '#110')
+    radialGradient.addColorStop(1, '#000')
+    ctx.fillStyle = radialGradient
+    ctx.beginPath()
+    ctx.arc(x, y + shiftY, radius, 0, 2 * Math.PI)
+    ctx.fill()
+    ctx.restore()
   }
 }
 

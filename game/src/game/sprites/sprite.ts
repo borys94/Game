@@ -65,7 +65,7 @@ class SpriteClass {
 
     this.animate(deltaTime)
 
-    const scaleX = this.player.direction === 'left' ? -1 : 1
+    const scaleX = this.player.getScaleX()
     ctx.save()
     ctx.scale(scaleX, 1)
     ctx.drawImage(
@@ -74,10 +74,8 @@ class SpriteClass {
       0,
       this.width,
       this.height,
-      this.player.x * scaleX -
-        ((this.width - this.player.paddingLeft - this.player.paddingRight) / 2 + this.player.paddingLeft) *
-          (scaleX * -1 + 1) -
-        this.player.game.camera.x * scaleX,
+      (this.player.getPlayerCenter() - this.player.game.camera.x) * scaleX -
+        (this.player.getPlayerCenter() - this.player.x),
       this.player.y - this.player.game.camera.y,
       this.width,
       this.height

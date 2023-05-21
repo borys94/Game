@@ -8,6 +8,9 @@ class RatEnemy extends Enemy {
   maxSpeed = 1
   speed = this.maxSpeed
 
+  paddingLeft: number = 0
+  paddingRight: number = 4
+
   stateManager: CalmEnemyStateManager = new CalmEnemyStateManager(this)
   spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'rat')
 

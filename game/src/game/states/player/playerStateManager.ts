@@ -15,6 +15,9 @@ import {
 import StateManager from '../stateManager'
 
 class PlayerStateManager extends StateManager {
+  // TODO
+  // states!: Record<string, State>
+
   constructor(public player: Player) {
     const states = {
       standing: new Standing(player),

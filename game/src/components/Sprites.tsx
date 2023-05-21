@@ -20,9 +20,7 @@ const Sprites = () => {
   useEffect(() => {
     const ctx = canvasRef.current?.getContext('2d')
     if (ctx && image.current) {
-      console.log('-------')
       ctx.clearRect(0, 0, 48, 48)
-      console.log(frame * 48)
       ctx.drawImage(image.current, frame * 48 * -1, 0)
     }
   }, [frame])

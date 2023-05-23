@@ -1,28 +1,44 @@
-import { DeathSprite, HurtSprite, RunningSprite, StandingSprite, AttackSprite } from './enemySprites'
 import SpriteManager from '../spriteManager'
 import Enemy from '../../characters/enemy'
-
-const frames = {
-  dog: {
-    walking: 6
-  },
-  rat: {
-    walking: 4
-  }
-}
+import Sprite from '../sprite'
 
 class EnemySpriteManager extends SpriteManager {
-  constructor(public player: Enemy, type: string) {
-    const sprites = {
-      standing: new StandingSprite(player, `assets/enemies/${type}`),
-      walking: new RunningSprite(player, `assets/enemies/${type}`, (frames as any)[type].walking), // TODO
-      attack: new AttackSprite(player, `assets/enemies/${type}`),
-      hurt: new HurtSprite(player, `assets/enemies/${type}`),
-      death: new DeathSprite(player, `assets/enemies/${type}`)
-    }
-    super(player, sprites)
+  defaultSprites: Record<string, Sprite> = {}
+  state: string
 
-    this.currentSprite = sprites.standing
+  constructor(public player: Enemy, type: string) {
+    super()
+
+    this.defaultSprites = {
+      standing: new Sprite(player, 'enemies', `${type}-idle`, 200),
+      walking: new Sprite(player, 'enemies', `${type}-walk`, 150),
+      attack: new Sprite(player, 'enemies', `${type}-attack`, undefined, true),
+      hurt: new Sprite(player, 'enemies', `${type}-hurt`, undefined, true),
+      death: new Sprite(player, 'enemies', `${type}-death`, 150, true)
+    }
+
+    this.state = player.stateManager.currentState.state
+  }
+
+  getCurrentFrame(): number {
+    const state = this.player.stateManager.currentState.state
+    return this.defaultSprites[state].frameX
+  }
+
+  getCurrentSprite() {
+    const state = this.player.stateManager.currentState.state
+    return this.defaultSprites[state]
+  }
+
+  onSetState(state: string) {
+    this.defaultSprites[state].enter()
+  }
+
+  setSprite(state: string) {}
+
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
+    const state = this.player.stateManager.currentState.state
+    this.defaultSprites[state].draw(ctx, deltaTime)
   }
 }
 

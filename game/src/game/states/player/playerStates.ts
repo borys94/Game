@@ -21,10 +21,9 @@ export class Standing extends State {
     else if (inputs.includes('Digit1')) this.character.setState('hit')
     else if (inputs.includes('Digit2')) this.character.setState('doubleHit')
     else if (inputs.includes('Digit3')) this.character.setState('strongAttack')
-    else if (inputs.includes('Space')) {
-      this.character.shot()
-      // this.character.setState('use')
-    } else if (inputs.includes('Digit4')) this.character.setState('hurt')
+    else if (inputs.includes('Enter')) this.character.setState('use')
+    else if (inputs.includes('Space')) this.character.shot()
+    else if (inputs.includes('Digit4')) this.character.setState('hurt')
   }
 }
 
@@ -34,11 +33,16 @@ export class Running extends State {
   }
 
   enter(): void {
+    sounds.footSound()
     if (this.character.direction === 'right') {
       this.character.speed = this.character.maxSpeed
     } else {
       this.character.speed = -this.character.maxSpeed
     }
+  }
+
+  leave() {
+    sounds.stopFootSound()
   }
 
   handle(inputs: InputType[]): void {
@@ -148,7 +152,7 @@ abstract class BaseHit extends State {
       enemy.y + enemy.height > character.y + character.height / 2 &&
       enemy.x > character.x - 32 &&
       enemy.x < character.x + 32 &&
-      character.spriteManager.currentSprite.frameX === this.hitFrame &&
+      character.spriteManager.getCurrentFrame() === this.hitFrame &&
       !this.hit.includes(enemy)
     ) {
       this.hit.push(enemy)
@@ -157,13 +161,15 @@ abstract class BaseHit extends State {
   }
 
   handle(): void {
-    if (this.performed) {
-      this.character.spriteManager.currentSprite.frameX = 0
+    if (this.character.spriteManager.getCurrentSprite().performed) {
       this.character.setState('standing')
     }
-    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
-      this.performed = true
-    }
+    // if (this.performed) {
+    //   this.character.setState('standing')
+    // }
+    // if (this.character.spriteManager.getCurrentFrame() === this.character.spriteManager.getCurrentSprite().getFrames() - 1) {
+    //   this.performed = true
+    // }
 
     for (const enemy of this.character.game.map.enemies) {
       this.checkEnemy(enemy)
@@ -208,22 +214,14 @@ export class Hit extends BaseHit {
 }
 
 export class Use extends State {
-  performed = false
   constructor(public character: Player) {
     super('use')
   }
 
-  enter(): void {
-    this.performed = false
-  }
+  enter(): void {}
 
   handle(): void {
-    if (this.performed) {
-      this.character.spriteManager.currentSprite.frameX = 0
-      this.character.setState('standing')
-    }
-    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
-      this.performed = true
+    if (this.character.spriteManager.getCurrentSprite().performed) {
       this.character.setState('standing')
     }
   }
@@ -296,7 +294,7 @@ export class DoubleJump extends State {
   }
 
   handle(): void {
-    if (this.character.spriteManager.currentSprite.frameX < 5 && !this.performed) {
+    if (this.character.spriteManager.getCurrentFrame() < 5 && !this.performed) {
       this.character.vy = 2
       this.character.speed = this.character.maxSpeed * 2
       if (this.character.direction === 'left') {
@@ -304,7 +302,10 @@ export class DoubleJump extends State {
       }
     }
 
-    if (this.character.spriteManager.currentSprite.frameX === this.character.spriteManager.currentSprite.frames - 1) {
+    if (
+      this.character.spriteManager.getCurrentFrame() ===
+      this.character.spriteManager.getCurrentSprite().getFrames() - 1
+    ) {
       this.character.setState('standing')
     }
 
@@ -321,13 +322,13 @@ export class DoubleJump extends State {
       enemy.y + enemy.height > character.y + character.height / 2 &&
       enemy.x > character.x - 32 &&
       enemy.x < character.x + 32 &&
-      character.spriteManager.currentSprite.frameX < 5 &&
+      character.spriteManager.getCurrentFrame() < 5 &&
       !this.hit.includes(enemy)
     ) {
       this.hit.push(enemy)
       this.performed = true
       enemy.hurt(2)
-      enemy.speed = 2
+      enemy.speed = 2 * this.character.getScaleX()
       this.character.speed = 0
       // enemy
     }

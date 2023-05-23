@@ -80,8 +80,7 @@ class Map {
   draw = (deltaTime: number): void => {
     this.drawTiles(this.game.ctx, this.bgImages)
     this.drawTiles(this.game.ctx, this.images)
-    this.drawDecorations(this.game.ctx, deltaTime)
-    this.drawInteractiveElement(this.game.ctx, deltaTime)
+    this.drawElements(this.game.ctx, deltaTime)
 
     for (const enemy of this.enemies) {
       enemy.draw(deltaTime)
@@ -94,15 +93,14 @@ class Map {
     }
   }
 
-  drawInteractiveElement(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    for (const row of this.elements) {
-      for (const element of row) element.draw(ctx, deltaTime)
-    }
-  }
+  drawElements(ctx: CanvasRenderingContext2D, deltaTime: number): void {
+    let [x, y, width, height] = this.game.camera.getVisibleArea()
 
-  drawDecorations(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    for (const row of this.decorationElements) {
-      for (const element of row) element.draw(ctx, deltaTime)
+    for (let i = Math.max(y - 3, 0); i < Math.min(y + height, this.decorationElements.length); i++) {
+      for (let j = Math.max(x - 3, 0); j < Math.min(x + width, this.decorationElements[0].length); j++) {
+        this.decorationElements[i][j].draw(ctx, deltaTime)
+        this.elements[i][j].draw(ctx, deltaTime)
+      }
     }
   }
 
@@ -110,8 +108,10 @@ class Map {
     if (!this.game.assets.isLoaded()) {
       return
     }
-    for (let i = 0; i < tiles.length; i++) {
-      for (let j = 0; j < tiles[0].length; j++) {
+    let [x, y, width, height] = this.game.camera.getVisibleArea()
+
+    for (let i = y; i < Math.min(y + height, tiles.length); i++) {
+      for (let j = x; j < Math.min(x + width, tiles[0].length); j++) {
         const asset = this.game.assets.getById(tiles[i][j])
         this.drawAsset(ctx, asset, i, j)
       }

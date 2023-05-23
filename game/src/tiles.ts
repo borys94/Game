@@ -1,13 +1,14 @@
 import { type Sprite } from './game/types'
 
 export type TileType = 'interactive' | 'decoration' | 'obstacle' | 'backgroundTile'
-export type InteractiveType = 'chest' | 'money' | 'trap' | 'card'
+export type InteractiveType = 'chest' | 'money' | 'trap' | 'card' | 'gun'
 export type MapSet = 'powerStation' | 'greenZone' | 'industrialZone' | 'none'
 export type Tile = Sprite & {
   id: number
   type: TileType
   set: MapSet
   interactiveType?: InteractiveType
+  gunLevel?: number
 }
 
 const tiles: Array<Tile | null> = [
@@ -3834,6 +3835,116 @@ const tiles: Array<Tile | null> = [
     asset: 'assets/map/interactive/transporter/Transporter3.png',
     set: 'none',
     type: 'interactive'
+  },
+  {
+    width: 6,
+    height: 5,
+    frames: 1,
+    id: 425,
+    asset: 'assets/heroes/guns/1_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 1
+  },
+  {
+    width: 8,
+    height: 7,
+    frames: 1,
+    id: 426,
+    asset: 'assets/heroes/guns/2_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 2
+  },
+  {
+    width: 9,
+    height: 6,
+    frames: 1,
+    id: 427,
+    asset: 'assets/heroes/guns/3_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 3
+  },
+  {
+    width: 11,
+    height: 7,
+    frames: 1,
+    id: 428,
+    asset: 'assets/heroes/guns/4_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 4
+  },
+  {
+    width: 11,
+    height: 9,
+    frames: 1,
+    id: 429,
+    asset: 'assets/heroes/guns/5_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 5
+  },
+  {
+    width: 11,
+    height: 9,
+    frames: 1,
+    id: 430,
+    asset: 'assets/heroes/guns/6_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 6
+  },
+  {
+    width: 13,
+    height: 9,
+    frames: 1,
+    id: 431,
+    asset: 'assets/heroes/guns/7_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 7
+  },
+  {
+    width: 18,
+    height: 8,
+    frames: 1,
+    id: 432,
+    asset: 'assets/heroes/guns/8_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 8
+  },
+  {
+    width: 11,
+    height: 10,
+    frames: 1,
+    id: 433,
+    asset: 'assets/heroes/guns/9_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 9
+  },
+  {
+    width: 14,
+    height: 10,
+    frames: 1,
+    id: 434,
+    asset: 'assets/heroes/guns/10_1.png',
+    set: 'none',
+    type: 'interactive',
+    interactiveType: 'gun',
+    gunLevel: 10
   }
 ]
 

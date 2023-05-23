@@ -1,3 +1,5 @@
+import EnemySpriteManager from '../sprites/enemy/enemySpriteManager'
+import SpriteManager from '../sprites/spriteManager'
 import Character, { type Direction } from './character'
 
 export type EnemyType = 'dog' | 'rat'
@@ -10,6 +12,7 @@ export interface EnemyObject {
 
 abstract class Enemy extends Character {
   abstract type: EnemyType
+  abstract spriteManager: EnemySpriteManager
   maxSpeed = 2
   direction: Direction = 'right'
   lastAttackTimestamp = 0

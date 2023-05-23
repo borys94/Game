@@ -51,12 +51,14 @@ class Background {
     }
 
     let index = 0
+    const canvasWidth = this.width * 2
+    const canvasHeight = this.height * 2
 
     for (const asset of this.assets) {
       const img = asset.img
       const moved = Math.floor((index++ * this.speed * this.game.camera.x) % this.width)
       if (img != null) {
-        ctx.drawImage(img, moved, 0, this.width, this.height, 0, 0, config.CANVAS_WIDTH, config.CANVAS_HEIGHT)
+        ctx.drawImage(img, moved, 0, this.width, this.height, 0, 0, canvasWidth, canvasHeight)
 
         ctx.drawImage(
           img,
@@ -64,10 +66,10 @@ class Background {
           0,
           this.width,
           this.height,
-          (this.width - moved) * config.SCALE,
+          (this.width - moved) * this.game.scale * 2,
           0,
-          config.CANVAS_WIDTH,
-          config.CANVAS_HEIGHT
+          canvasWidth,
+          canvasHeight
         )
       }
     }

@@ -1,87 +1,72 @@
 import type Character from '../characters/character'
 
-class SpriteClass {
-  asset: string
-  frames: number
+export default class Sprite {
   frameX = 0
   frameTimer = 0
-  frameInterval = 100 // TODO: in Sprite class
-  player: Character
+  performed = false
 
-  img?: HTMLImageElement
-  loaded = false
+  constructor(
+    public player: Character,
+    public assetPack: string,
+    public id: string,
+    public frameInterval: number = 100,
+    public oneTimeAction: boolean = false
+  ) {}
 
-  width: number = 0
-  height: number = 0
-
-  oneTimeAction: boolean
-  performed?: boolean
-
-  constructor(player: Character, asset: string, frames: number, oneTimeAction = false) {
-    this.player = player
-    this.asset = asset
-    this.frames = frames
-    this.oneTimeAction = oneTimeAction
-
-    this.loadAllAsset()
+  enter() {
+    this.frameX = 0
+    this.performed = false
   }
 
-  animate(deltaTime: number): void {
-    if (this.oneTimeAction && this.frameX === this.frames - 1) {
+  getFrames(): number {
+    return this.player.game.assetLoader?.getById(this.id)?.frames ?? 0
+  }
+
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
+    const img = this.player.game.assetLoader?.getImage(this.assetPack)
+    const asset = this.player.game.assetLoader?.getById(this.id)
+
+    if (!asset || !img) {
       return
     }
 
+    this.animate(deltaTime)
+    const scaleX = this.player.getScaleX()
+    const width = asset.frame.w / asset.frames
+
+    ctx.save()
+    ctx.scale(scaleX, 1)
+    ctx.drawImage(
+      img,
+      asset.frame.x + width * this.frameX,
+      asset.frame.y,
+      width,
+      asset.frame.h,
+      (this.player.getPlayerCenter() - this.player.game.camera.x) * scaleX -
+        (this.player.getPlayerCenter() - this.player.x),
+      this.player.y - this.player.game.camera.y,
+      width,
+      asset.frame.h
+    )
+    ctx.restore()
+  }
+
+  animate(deltaTime: number): void {
+    const asset = this.player.game.assetLoader?.getById(this.id)!
+
     if (this.frameTimer > this.frameInterval) {
-      if (this.frameX < this.frames - 1) {
+      if (this.frameX < asset.frames - 1) {
         this.frameX++
-      } else this.frameX = 0
+      } else {
+        if (this.oneTimeAction) {
+          this.performed = true
+          return
+        }
+        this.frameX = 0
+      }
       this.frameTimer = 0
     } else {
       this.frameTimer += deltaTime
     }
   }
-
-  enter(): void {
-    this.frameX = 0
-  }
-
-  leave(): void {}
-
-  loadAllAsset(): void {
-    const img = new Image()
-    this.img = img
-    img.src = this.asset
-    img.onload = () => {
-      this.width = img.width / this.frames
-      this.height = img.height
-      this.loaded = true
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    if (this.img == null || !this.loaded) {
-      return
-    }
-
-    this.animate(deltaTime)
-
-    const scaleX = this.player.getScaleX()
-    ctx.save()
-    ctx.scale(scaleX, 1)
-    ctx.drawImage(
-      this.img,
-      this.width * this.frameX,
-      0,
-      this.width,
-      this.height,
-      (this.player.getPlayerCenter() - this.player.game.camera.x) * scaleX -
-        (this.player.getPlayerCenter() - this.player.x),
-      this.player.y - this.player.game.camera.y,
-      this.width,
-      this.height
-    )
-    ctx.restore()
-  }
 }
-
-export default SpriteClass

@@ -18,11 +18,7 @@ export class Standing extends State {
       return
     }
 
-    if (
-      Math.abs(player.x - this.character.x) < 64 &&
-      Math.abs(player.y - this.character.y) < 64 &&
-      this.character.canAttack()
-    ) {
+    if (Math.abs(player.x - this.character.x) < 64 && Math.abs(player.y - this.character.y) < 64 && player.isAlive()) {
       this.character.setState('attack')
     } else {
       this.character.setState('walking')
@@ -92,16 +88,13 @@ export class Attack extends State {
 
   handle(): void {
     const player = this.getPlayer()
+    const frameX = this.character.spriteManager.defaultSprites[this.character.stateManager.currentState.state].frameX
 
-    if (this.character.spriteManager.currentSprite.frameX === 3) {
+    if (frameX === 3) {
       this.animate = false
       this.hit = false
       this.character.setState('standing')
-    } else if (
-      this.character.spriteManager.currentSprite.frameX === 2 &&
-      !this.hit &&
-      Math.abs(player.y - this.character.y) < 32
-    ) {
+    } else if (frameX === 2 && !this.hit && Math.abs(player.y - this.character.y) < 32) {
       if (
         (this.character.direction === 'left' && this.character.x - player.x < 60 && this.character.x - player.x > 0) ||
         (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)

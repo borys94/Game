@@ -1,4 +1,3 @@
-import RatEnemy from '../../characters/enemies/rat'
 import type Enemy from '../../characters/enemy'
 import { shouldChangeDirection } from '../helpers'
 import { State } from '../state'
@@ -22,9 +21,6 @@ export class Standing extends CowardlyEnemyState {
   handle(): void {
     const { player } = this.character.game
     this.character.setState('walking')
-    // if (Math.abs(player.x - this.character.x) < 150 && Math.abs(player.x - this.character.x) > 32) {
-    //   this.character.setState('walking')
-    // }
   }
 }
 
@@ -40,10 +36,6 @@ export class Walking extends CowardlyEnemyState {
   handle(): void {
     if (shouldChangeDirection(this.character)) {
       this.character.speed *= -1
-      // this.character.x += this.character.speed
-      if (this.character instanceof RatEnemy) {
-        console.log('change')
-      }
       this.character.direction = this.character.direction === 'right' ? 'left' : 'right'
     }
   }

@@ -5,6 +5,8 @@ class Sounds {
   collect: HTMLAudioElement
   jump: HTMLAudioElement
   unlock: HTMLAudioElement
+  foot: HTMLAudioElement
+  guns: Record<string, HTMLAudioElement>
 
   constructor(public active = false) {
     this.background = new Audio('assets/sounds/background.mp3')
@@ -13,6 +15,14 @@ class Sounds {
     this.collect = new Audio('assets/sounds/collect.wav')
     this.jump = new Audio('assets/sounds/jump.wav')
     this.unlock = new Audio('assets/sounds/unlock.wav')
+    this.foot = new Audio('assets/sounds/foot.ogg')
+
+    this.guns = {
+      pistol: new Audio('assets/sounds/guns/pistol.wav'),
+      laserGun: new Audio('assets/sounds/guns/laserGun.wav'),
+      laserGunShort: new Audio('assets/sounds/guns/laserGunShort.wav'),
+      rifle: new Audio('assets/sounds/guns/rifle.wav')
+    }
   }
 
   toogle(): void {
@@ -40,6 +50,18 @@ class Sounds {
     this.background.loop = true
   }
 
+  pistolSound() {
+    this.playSound(this.guns.pistol)
+  }
+
+  rifleSound() {
+    this.playSound(this.guns.pistol)
+  }
+
+  laserGunSound() {
+    this.playSound(this.guns.laserGunShort)
+  }
+
   coinSound(): void {
     this.playSound(this.coin)
   }
@@ -54,6 +76,17 @@ class Sounds {
 
   unlockSound(): void {
     this.playSound(this.unlock)
+  }
+
+  footSound(): void {
+    this.foot.loop = true
+    this.foot.playbackRate = 0.5
+    this.playSound(this.foot)
+  }
+
+  stopFootSound() {
+    this.foot.pause()
+    this.foot.currentTime = 0
   }
 
   hurtSound(): void {

@@ -8,6 +8,7 @@ import Camera from './camera'
 import { drawDebugInfo } from './debug'
 import store from '../store'
 import { pause, unpause } from '../store/game'
+import AssetLoader from './assetLoader'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT
@@ -22,21 +23,24 @@ class Game {
   inputHandler: InputHandler
   camera: Camera
   assets: Assets
+  assetLoader: AssetLoader
 
   lastTime = 0
   active = true
   paused = false
 
-  scale: number = CANVAS_WIDTH
+  scale: number = 1
 
   constructor() {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.canvas.width = CANVAS_WIDTH
     this.canvas.height = CANVAS_HEIGHT
-    this.ctx.imageSmoothingEnabled = false
 
     this.assets = new Assets()
+    this.assetLoader = new AssetLoader()
+    this.assetLoader.load()
+
     this.map = new Map(this)
     this.background = new Background(this)
     this.player = new Player(this)
@@ -69,9 +73,10 @@ class Game {
   }
 
   onResize = () => {
-    this.scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
-    this.canvas.width = CANVAS_WIDTH * this.scale
-    this.canvas.height = CANVAS_HEIGHT * this.scale
+    const scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
+    this.scale = Math.max(Math.floor(scale), 1)
+    this.canvas.width = CANVAS_WIDTH * scale
+    this.canvas.height = CANVAS_HEIGHT * scale
   }
 
   animate(timestamp: number): void {
@@ -102,8 +107,8 @@ class Game {
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
 
-    this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.ctx.imageSmoothingEnabled = false
     this.update()
 
     this.ctx.save()

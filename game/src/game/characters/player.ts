@@ -2,17 +2,16 @@ import { type InputType } from '../inputHandler'
 import Character from './character'
 import type Game from '..'
 import PlayerStateManager from '../states/player/playerStateManager'
-import SpriteManager from '../sprites/spriteManager'
 import PlayerSpriteManager from '../sprites/player/playerSpritesManager'
 import GunManager from '../guns/gun'
 
 class Player extends Character {
   stateManager: PlayerStateManager = new PlayerStateManager(this)
-  spriteManager: SpriteManager = new PlayerSpriteManager(this)
+  spriteManager: PlayerSpriteManager = new PlayerSpriteManager(this)
   gunManager: GunManager = new GunManager(this)
 
   paddingLeft = 4
-  paddingRight = 25
+  paddingRight = 24
 
   cards = 0
 
@@ -26,7 +25,11 @@ class Player extends Character {
       maxHealth: 20
     })
 
-    this.gunManager.setGun(9)
+    // this.gunManager.setGun(9)
+  }
+
+  hasWeapon() {
+    return !!this.gunManager.currentGun
   }
 
   update = (): void => {
@@ -62,8 +65,9 @@ class Player extends Character {
   }
 
   draw(deltaTime: number): void {
-    this.gunManager.draw(deltaTime)
+    this.gunManager.drawBullets(deltaTime)
     super.draw(deltaTime)
+
     this.drawHealthBar()
     this.drawEnduranceBar()
     this.drawWeapon()
@@ -89,11 +93,14 @@ class Player extends Character {
     ctx.fillStyle = '#5DADE2'
     ctx.lineWidth = 2
     ctx.strokeRect(20, 35, 100, 10)
-    ctx.fillRect(20, 35, 100 * (this.health / this.maxHealth), 10)
+    ctx.fillRect(20, 35, 100, 10)
     ctx.restore()
   }
 
   drawWeapon() {
+    if (!this.gunManager.currentGun) {
+      return
+    }
     const ctx = this.game.ctx
 
     ctx.save()
@@ -102,6 +109,22 @@ class Player extends Character {
     ctx.lineWidth = 2
     ctx.strokeRect(20, 50, 30, 30)
     ctx.fillRect(20, 50, 30, 30)
+
+    // if (this.gunManager.currentGun?.img) {
+    //   const img = this.gunManager.currentGun.img
+    //   ctx.drawImage(
+    //     img,
+    //     0,
+    //     0,
+    //     img.width,
+    //     img.height,
+    //     20 + 15 - img.width/2,
+    //     50 + 15 - img.height/2,
+    //     img.width,
+    //     img.height
+    //   )
+    // }
+
     ctx.restore()
   }
 }

@@ -3,6 +3,7 @@ import { type InputType } from './inputHandler'
 import type Player from './characters/player'
 import type Game from '.'
 import sounds from './sounds'
+import { TILE_SIZE } from './config'
 
 export default class Element {
   asset: AssetType | null
@@ -88,6 +89,8 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
       return new TrapElement(game, assetId, y, x)
     } else if (asset.interactiveType === 'money' || asset.interactiveType === 'card') {
       return new CollectableElement(game, assetId, y, x)
+    } else if (asset.interactiveType === 'gun') {
+      return new GunElement(game, assetId, y, x, asset.gunLevel!)
     }
   }
 
@@ -101,7 +104,7 @@ export class ChestElement extends Element {
   enter(player: Player): void {}
 
   handle(player: Player, inputs: InputType[]): void {
-    if (inputs.includes('Space')) {
+    if (inputs.includes('Enter')) {
       this.animate = true
       this.opened = true
     }
@@ -167,4 +170,67 @@ export class CollectableElement extends Element {
   }
 
   handle(player: Player, inputs: InputType[]): void {}
+}
+
+export class GunElement extends Element {
+  constructor(game: Game, assetId: number, y: number, x: number, public gunLevel: number) {
+    super(game, assetId, y, x)
+  }
+
+  enter(player: Player): void {
+    if (!player.gunManager.gunLevel || player.gunManager.gunLevel < this.gunLevel) {
+      this.active = false
+      player.gunManager.setGun(this.gunLevel - 1)
+      sounds.unlockSound()
+    }
+  }
+
+  handle(player: Player, inputs: InputType[]): void {}
+
+  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
+    if (this.asset == null || !this.active) {
+      return
+    }
+
+    const { img, width, height } = this.asset
+    const shiftY = Math.sin((1.1 * Date.now()) / 300) * 5
+    if (img) {
+      this.ligthenGradient(
+        ctx,
+        this.x * 32 - this.game.camera.x + TILE_SIZE / 2,
+        this.y * 32 - this.game.camera.y + TILE_SIZE / 2 + height / 2,
+        8
+      )
+      ctx.drawImage(
+        img,
+        width * this.frameX,
+        0,
+        width,
+        height,
+        this.x * 32 - this.game.camera.x + TILE_SIZE / 2 - width / 2,
+        this.y * 32 - this.game.camera.y + TILE_SIZE / 2 + shiftY,
+        width,
+        height
+      )
+    }
+  }
+
+  ligthenGradient(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+    ctx.save()
+    ctx.globalCompositeOperation = 'lighter'
+    var rnd = 0.1 * Math.sin((1.1 * Date.now()) / 300)
+    const shiftY = Math.sin((1.1 * Date.now()) / 300) * 5
+    radius = radius * (1 + rnd)
+    var radialGradient = ctx.createRadialGradient(x, y + shiftY, 0, x, y + shiftY, radius)
+    radialGradient.addColorStop(0.0, '#BB9')
+    radialGradient.addColorStop(0.2 + rnd, '#AA8')
+    radialGradient.addColorStop(0.7 + rnd, '#330')
+    radialGradient.addColorStop(0.9, '#110')
+    radialGradient.addColorStop(1, '#000')
+    ctx.fillStyle = radialGradient
+    ctx.beginPath()
+    ctx.arc(x, y + shiftY, radius, 0, 2 * Math.PI)
+    ctx.fill()
+    ctx.restore()
+  }
 }

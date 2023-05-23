@@ -87,7 +87,7 @@ abstract class Character {
       )
     }
 
-    this.spriteManager.currentSprite.draw(ctx, deltaTime)
+    this.spriteManager.draw(ctx, deltaTime)
   }
 
   update(): void {
@@ -103,7 +103,10 @@ abstract class Character {
     }
 
     this.spriteManager.setSprite(state)
+
+    this.stateManager.currentState.leave()
     this.stateManager.setState(state)
+    this.spriteManager.onSetState(state)
   }
 
   onGround = (x: number = this.x): boolean => {

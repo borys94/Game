@@ -11,6 +11,7 @@ export abstract class State {
   }
 
   abstract enter(): void
+  leave() {}
   abstract handle(inputs: InputType[]): void
 
   getPlayer() {

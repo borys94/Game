@@ -1,142 +1,108 @@
-import type Player from '../../characters/player'
-import SpriteClass from '../sprite'
+import Sprite from '../sprite'
 
 const ARM_WIDTH = 11
 
-abstract class PlayerSprite extends SpriteClass {
-  arm: SpriteClass
+abstract class PlayeSpite extends Sprite {
+  getSwayShiftX(): number {
+    const { state } = this.player.stateManager.currentState
+    const frameX = this.player.game.player.spriteManager.getCurrentFrame()
+    if (state === 'standing') {
+      return +(Math.abs(1.5 - frameX) === 0.5) * this.player.getScaleX()
+    } else if (state === 'running') {
+      return this.player.getScaleX() * -1
+    } else if (state === 'jumping') {
+      return -2 * this.player.getScaleX()
+    }
 
-  constructor(player: Player, asset: string, frames: number) {
-    super(player, asset, frames)
-    this.arm = new SpriteClass(player, 'assets/heroes/punk/arms/arm.png', 1)
+    return 0
   }
 
-  abstract getSwayShiftX(): number
-  abstract getSwayShiftY(): number
+  getSwayShiftY(): number {
+    const { state } = this.player.stateManager.currentState
+    const frameX = this.player.game.player.spriteManager.getCurrentFrame()
+    if (state === 'standing') {
+      return 0
+    } else if (state === 'running') {
+      return +(Math.abs(2.5 - frameX) === 1.5) + 1
+    } else if (state === 'jumping') {
+      if (frameX === 0) {
+        return -1
+      } else if (frameX === 1) {
+        return -4
+      } else if (frameX === 2) {
+        return -6
+      }
+      return -1
+    }
+
+    return 0
+  }
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    if (!this.arm.img) {
+    const img = this.player.game.assetLoader?.getImage(this.assetPack)
+    const asset = this.player.game.assetLoader?.getById(this.id)
+
+    if (!asset || !img) {
       return
     }
 
     const scaleX = this.player.getScaleX()
-    const swayShiftX = this.getSwayShiftX()
-    const swayShiftY = this.getSwayShiftY()
 
     ctx.save()
     ctx.scale(scaleX, 1)
 
     ctx.drawImage(
-      this.arm.img,
-      0,
-      0,
-      this.arm.width,
-      this.arm.height,
-      (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH,
-      this.player.y - this.player.game.camera.y + 11 + swayShiftY,
-      this.arm.width,
-      this.arm.height
+      img,
+      asset.frame.x,
+      asset.frame.y,
+      asset.frame.w,
+      asset.frame.h,
+      this.getPositionX(),
+      this.getPositionY(),
+      asset.frame.w,
+      asset.frame.h
     )
 
     ctx.restore()
-    super.draw(ctx, deltaTime)
+  }
+
+  abstract getPositionX(): number
+  abstract getPositionY(): number
+}
+
+export class ArmSprite extends PlayeSpite {
+  getPositionX() {
+    const scaleX = this.player.getScaleX()
+    const swayShiftX = this.getSwayShiftX()
+    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH
+  }
+
+  getPositionY() {
+    const swayShiftY = this.getSwayShiftY()
+    return this.player.y - this.player.game.camera.y + 11 + swayShiftY
   }
 }
 
-export class StandingSprite extends PlayerSprite {
-  frameInterval = 200
-
-  getSwayShiftX(): number {
-    return +(Math.abs(1.5 - this.frameX) === 0.5) * this.player.getScaleX()
+export class GunSprite extends PlayeSpite {
+  getPositionX() {
+    const scaleX = this.player.getScaleX()
+    const swayShiftX = this.getSwayShiftX()
+    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX + ARM_WIDTH
   }
 
-  getSwayShiftY(): number {
-    return 0
-  }
-
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/withoutArm/idle.png', 4)
+  getPositionY() {
+    const swayShiftY = this.getSwayShiftY()
+    const asset = this.player.game.assetLoader?.getById(this.id)!
+    return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 1
   }
 }
 
-export class RunningSprite extends PlayerSprite {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/withoutArm/run.png', 6)
+export class PistolGunSprite extends GunSprite {
+  getPositionY() {
+    return super.getPositionY() - 1
   }
 
-  getSwayShiftX(): number {
-    return this.player.getScaleX() * -1
-  }
-
-  getSwayShiftY(): number {
-    return +(Math.abs(2.5 - this.frameX) === 1.5) + 1
+  getPositionX() {
+    return super.getPositionX() + 1
   }
 }
-
-export class JumpingSprite extends PlayerSprite {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/withoutArm/jump.png', 4)
-  }
-
-  getSwayShiftX(): number {
-    return -2 * this.player.getScaleX()
-  }
-
-  getSwayShiftY(): number {
-    if (this.frameX === 0) {
-      return -1
-    } else if (this.frameX === 1) {
-      return -4
-    } else if (this.frameX === 2) {
-      return -6
-    }
-    return -1
-  }
-}
-
-export class FallingSprite extends JumpingSprite {}
-
-export class HitSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/attack1.png', 6, true)
-  }
-}
-
-export class DoubleHitSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/attack2.png', 8, true)
-  }
-}
-
-export class StrongHitSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/attack3.png', 8, true)
-  }
-}
-
-export class UseSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/use.png', 6, true)
-  }
-}
-
-export class HurtSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/hurt.png', 2)
-  }
-}
-
-export class DeathSprite extends SpriteClass {
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/death.png', 6, true)
-  }
-}
-
-export class DoubleJump extends SpriteClass {
-  frameInterval = 50
-  constructor(player: Player) {
-    super(player, 'assets/heroes/punk/doublejump.png', 6, true)
-  }
-}
-
-export default SpriteClass

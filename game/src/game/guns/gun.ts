@@ -1,36 +1,25 @@
 import Player from '../characters/player'
-
-enum GunType {
-  Gun1 = '1',
-  Gun2 = '2',
-  Gun3 = '3',
-  Gun4 = '4',
-  Gun5 = '5',
-  Gun6 = '6',
-  Gun7 = '7',
-  Gun8 = '8',
-  Gun9 = '9',
-  Gun10 = '10'
-}
+import sounds from '../sounds'
 
 class GunManager {
   player: Player
   currentGun: Gun | null = null
   guns: Gun[]
+  gunLevel: number | null = null
 
   constructor(player: Player) {
     this.player = player
     this.guns = [
-      new Gun(player, GunType.Gun1, 1000),
-      new Gun(player, GunType.Gun2, 1000),
-      new Gun(player, GunType.Gun3, 750),
-      new Gun(player, GunType.Gun4, 500),
-      new Gun(player, GunType.Gun5, 500),
-      new Gun(player, GunType.Gun6, 500),
-      new Gun(player, GunType.Gun7, 400),
-      new Gun(player, GunType.Gun8, 300),
-      new Gun(player, GunType.Gun9, 200),
-      new Gun(player, GunType.Gun10, 150)
+      new Gun(player, 1, 1000, 2),
+      new Gun(player, 2, 900, 3),
+      new Gun(player, 3, 750, 4),
+      new Gun(player, 4, 600, 4),
+      new Gun(player, 5, 500, 4),
+      new Gun(player, 6, 500, 5),
+      new Gun(player, 7, 400, 5),
+      new Gun(player, 8, 300, 5),
+      new Gun(player, 9, 200, 6),
+      new Gun(player, 10, 150, 8)
     ]
   }
 
@@ -43,34 +32,30 @@ class GunManager {
   }
 
   setGun(level: number) {
+    this.gunLevel = level
     this.currentGun = this.guns[level]
   }
 
-  draw(deltaTime: number) {
+  drawBullets(deltaTime: number) {
     if (!this.currentGun || ['hurt', 'death'].includes(this.player.stateManager.currentState.state)) {
       return
     }
 
-    this.currentGun.draw(this.player.game.ctx, deltaTime)
+    this.currentGun.drawBullets(this.player.game.ctx, deltaTime)
   }
 }
 
 class Gun {
   player: Player
-  asset: string
-  img!: HTMLImageElement
-  loaded = false
-  bulletAsset: BulletAsset
+  bulletId: string
+  gunId: string
   bullets: Bullet[] = []
-
   lastShotTimestamp = 0
 
-  constructor(player: Player, type: GunType, public shotInterval: number) {
+  constructor(player: Player, public level: number, public shotInterval: number, public hurtValue: number) {
     this.player = player
-    this.asset = `assets/heroes/guns/${type}_1.png`
-    this.bulletAsset = new BulletAsset(type)
-
-    this.loadAsset()
+    this.bulletId = `bullet-${level}`
+    this.gunId = `gun-${level}`
   }
 
   update() {
@@ -88,78 +73,19 @@ class Gun {
     }
   }
 
+  // TODO
   getSwayShiftX(): number {
-    if (this.player.stateManager.currentState.state === 'standing') {
-      return +(Math.abs(1.5 - this.player.spriteManager.currentSprite.frameX) === 0.5) * this.player.getScaleX()
-    } else if (this.player.stateManager.currentState.state === 'running') {
-      return this.player.getScaleX() * -1
-    } else if (
-      this.player.stateManager.currentState.state === 'jumping' ||
-      this.player.stateManager.currentState.state === 'falling'
-    ) {
-      return -2 * this.player.getScaleX()
-    }
-
-    return 0
+    return this.player.spriteManager.arms.arm1.getSwayShiftX()
   }
 
+  // TODO
   getSwayShiftY(): number {
-    if (this.player.stateManager.currentState.state === 'standing') {
-      return 0
-    } else if (this.player.stateManager.currentState.state === 'running') {
-      return +(Math.abs(2.5 - this.player.spriteManager.currentSprite.frameX) === 1.5) + 1
-    } else if (
-      this.player.stateManager.currentState.state === 'jumping' ||
-      this.player.stateManager.currentState.state === 'falling'
-    ) {
-      return [-1, -4, -6, -1][this.player.spriteManager.currentSprite.frameX]
-    }
-
-    return 0
-  }
-
-  draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
-    this.drawGun(ctx, deltaTime)
-    this.drawBullets(ctx, deltaTime)
-  }
-
-  drawGun(ctx: CanvasRenderingContext2D, deltaTime: number) {
-    if (!this.img) {
-      return
-    }
-
-    const scaleX = this.player.getScaleX()
-    ctx.save()
-    ctx.scale(scaleX, 1)
-
-    ctx.drawImage(
-      this.img,
-      0,
-      0,
-      this.img.width,
-      this.img.height,
-      (this.player.getPlayerCenter() - this.getSwayShiftX() - this.player.game.camera.x) * scaleX + 11,
-      this.player.y - this.player.game.camera.y + this.getSwayShiftY() - this.img.height + 16 + 11 + 1,
-      this.img.width,
-      this.img.height
-    )
-    ctx.restore()
-
-    this.drawBullets(ctx, deltaTime)
+    return this.player.spriteManager.arms.arm1.getSwayShiftY()
   }
 
   drawBullets(ctx: CanvasRenderingContext2D, deltaTime: number) {
     for (let bullet of this.bullets) {
       bullet.draw(ctx, deltaTime)
-    }
-  }
-
-  loadAsset(): void {
-    const img = new Image()
-    this.img = img
-    img.src = this.asset
-    img.onload = () => {
-      this.loaded = true
     }
   }
 
@@ -170,7 +96,14 @@ class Gun {
     this.lastShotTimestamp = Date.now()
 
     const [x, y] = this.calculateStartBulletPoint()
-    this.bullets.push(new Bullet(this.bulletAsset, this.player, this.getBulletSpeed(), x, y))
+    this.bullets.push(new Bullet(this.player, this.getBulletSpeed(), x, y, this.hurtValue, this.bulletId))
+    if (this.level <= 5) {
+      sounds.pistolSound()
+    } else if (this.level === 8) {
+      sounds.rifleSound()
+    } else {
+      sounds.laserGunSound()
+    }
   }
 
   getBulletSpeed() {
@@ -178,31 +111,44 @@ class Gun {
   }
 
   calculateStartBulletPoint() {
+    const bulletAsset = this.player.game.assetLoader?.getById(this.bulletId)
+    const gunAsset = this.player.game.assetLoader?.getById(this.gunId)
+    if (!bulletAsset || !gunAsset) {
+      throw new Error(`Cannot find asset for gun or bullet! id=${this.bulletId}`)
+    }
     const scaleX = this.player.getScaleX()
-    const halBulletSize = this.bulletAsset.img.width / 2
+    const halfBulletSize = bulletAsset.frame.w / 2
     const x =
       this.player.getPlayerCenter() -
       this.getSwayShiftX() -
-      halBulletSize +
-      scaleX * (this.img.width + 11 + halBulletSize)
+      halfBulletSize +
+      scaleX * (gunAsset.frame.w + 11 + halfBulletSize)
+
     // TODO: tak samo jak bron
-    const y = this.player.y + this.getSwayShiftY() - this.img.height + 16 + 11 + 1
+    const y = this.player.y + this.getSwayShiftY() - gunAsset.frame.h + 16 + 11 + 1
     return [x, y]
   }
 }
 
-class Bullet {
+export class Bullet {
   active = true
 
   constructor(
-    public asset: BulletAsset,
     public player: Player,
     public speed: number,
     public x: number,
-    public y: number
+    public y: number,
+    public hurtValue: number,
+    public bulletId: string
   ) {}
 
   update() {
+    const img = this.player.game.assetLoader?.getImage('gunPack')
+    const asset = this.player.game.assetLoader?.getById(this.bulletId)
+    if (!img || !asset || !this.active) {
+      return
+    }
+
     this.x += this.speed
     const map = this.player.game.map
 
@@ -210,13 +156,9 @@ class Bullet {
       this.x < 0 ||
       this.x > map.width ||
       map.hasObstacle(this.x, this.y) ||
-      map.hasObstacle(this.x, this.y + this.asset.img.height)
+      map.hasObstacle(this.x, this.y + asset.frame.h)
     ) {
       this.active = false
-    }
-
-    if (!this.active) {
-      return
     }
 
     for (let enemy of map.enemies) {
@@ -227,49 +169,30 @@ class Bullet {
         enemy.y + enemy.height > this.y &&
         enemy.y < this.y
       ) {
-        enemy.hurt(1)
+        enemy.hurt(this.hurtValue)
         this.active = false
       }
     }
   }
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
-    if (!this.asset) {
+    const img = this.player.game.assetLoader?.getImage('gunPack')
+    const asset = this.player.game.assetLoader?.getById(this.bulletId)
+    if (!img || !asset) {
       return
     }
 
     ctx.drawImage(
-      this.asset.img,
-      0,
-      0,
-      this.asset.img.width,
-      this.asset.img.height,
+      img,
+      asset.frame.x,
+      asset.frame.y,
+      asset.frame.w,
+      asset.frame.h,
       this.x - this.player.game.camera.x,
       this.y - this.player.game.camera.y,
-      this.asset.img.width,
-      this.asset.img.height
+      asset.frame.w,
+      asset.frame.h
     )
-  }
-}
-
-class BulletAsset {
-  asset: string
-  img!: HTMLImageElement
-  loaded = false
-
-  constructor(level: string) {
-    this.asset = `assets/heroes/bullets/${level}.png`
-
-    this.loadAsset()
-  }
-
-  loadAsset(): void {
-    const img = new Image()
-    this.img = img
-    img.src = this.asset
-    img.onload = () => {
-      this.loaded = true
-    }
   }
 }
 

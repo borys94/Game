@@ -7,7 +7,7 @@ class DogEnemy extends Enemy {
   type = 'dog' as const
 
   stateManager: EnemyStateManager = new EnemyStateManager(this)
-  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'dog')
+  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'dog1')
 
   paddingLeft = 4
   paddingRight = 12

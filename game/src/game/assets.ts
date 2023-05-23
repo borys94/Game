@@ -10,6 +10,7 @@ export interface AssetType {
   type?: TileType
   interactiveType?: InteractiveType
   id: number
+  gunLevel?: number
 }
 
 class Assets {
@@ -40,7 +41,8 @@ class Assets {
         height: tile.height,
         frames: tile.frames,
         type: tile.type,
-        interactiveType: tile.interactiveType
+        interactiveType: tile.interactiveType,
+        gunLevel: tile.gunLevel
       }
       img.onload = () => {
         this.loadedAssets++
@@ -50,7 +52,7 @@ class Assets {
         }
       }
       img.onerror = () => {
-        console.error('error during loading')
+        console.error(img.src, 'error during loading')
       }
     })
   }

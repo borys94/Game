@@ -1,0 +1,18 @@
+.input {
+  outline: none;
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  box-shadow: none;  
+
+  background-color: #aaa;
+  padding: 10px;
+  width: 100px;
+  border-radius: 5px;
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}

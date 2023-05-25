@@ -2,13 +2,13 @@ import Player from './characters/player'
 import Assets from './assets'
 import InputHandler from './inputHandler'
 import config from './config'
-import Map from './map'
-import Background from './background'
+import Map from './map/map'
 import Camera from './camera'
 import { drawDebugInfo } from './debug'
 import store from '../store'
 import { pause, unpause } from '../store/game'
 import AssetLoader from './assetLoader'
+import map from '../maps/level1'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT
@@ -19,10 +19,9 @@ class Game {
 
   player: Player
   map: Map
-  background: Background
   inputHandler: InputHandler
   camera: Camera
-  assets: Assets
+  // assets: Assets
   assetLoader: AssetLoader
 
   lastTime = 0
@@ -37,12 +36,12 @@ class Game {
     this.canvas.width = CANVAS_WIDTH
     this.canvas.height = CANVAS_HEIGHT
 
-    this.assets = new Assets()
+    // this.assets = new Assets()
     this.assetLoader = new AssetLoader()
     this.assetLoader.load()
 
-    this.map = new Map(this)
-    this.background = new Background(this)
+    this.map = new Map(this, map)
+
     this.player = new Player(this)
 
     this.inputHandler = new InputHandler()
@@ -74,7 +73,7 @@ class Game {
 
   onResize = () => {
     const scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
-    this.scale = Math.max(Math.floor(scale), 1)
+    this.scale = scale // Math.max(Math.floor(scale), 1)
     this.canvas.width = CANVAS_WIDTH * scale
     this.canvas.height = CANVAS_HEIGHT * scale
   }
@@ -100,7 +99,7 @@ class Game {
   }
 
   draw(timestamp: number): void {
-    if (this.paused || !this.assets.loaded) {
+    if (this.paused || !this.assetLoader.isLoaded()) {
       return
     }
 
@@ -114,14 +113,13 @@ class Game {
     this.ctx.save()
     this.ctx.scale(this.scale, this.scale)
 
-    this.background.draw(this.ctx)
     this.map.draw(deltaTime)
     this.player.draw(deltaTime)
 
     this.ctx.restore()
 
-    if ((window as any).debug || true) {
-      // drawDebugInfo(this.ctx, this.player, this.inputHandler)
+    if ((window as any).debug) {
+      drawDebugInfo(this.ctx, this.player, this.inputHandler)
     }
   }
 }

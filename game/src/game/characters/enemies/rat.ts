@@ -21,7 +21,7 @@ class RatEnemy extends Enemy {
       width: 32,
       height: 32,
       maxVy: 10,
-      maxHealth: 5
+      maxHealth: 4
     })
   }
 }

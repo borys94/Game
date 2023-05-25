@@ -5,21 +5,21 @@ class GunManager {
   player: Player
   currentGun: Gun | null = null
   guns: Gun[]
-  gunLevel: number | null = null
+  gunInBackpack: Gun | null = null
 
   constructor(player: Player) {
     this.player = player
     this.guns = [
-      new Gun(player, 1, 1000, 2),
-      new Gun(player, 2, 900, 3),
-      new Gun(player, 3, 750, 4),
-      new Gun(player, 4, 600, 4),
-      new Gun(player, 5, 500, 4),
-      new Gun(player, 6, 500, 5),
-      new Gun(player, 7, 400, 5),
-      new Gun(player, 8, 300, 5),
-      new Gun(player, 9, 200, 6),
-      new Gun(player, 10, 150, 8)
+      new Gun(player, 1, 1000, 4),
+      new Gun(player, 2, 900, 5),
+      new Gun(player, 3, 750, 6),
+      new Gun(player, 4, 600, 7),
+      new Gun(player, 5, 500, 8),
+      new Gun(player, 6, 500, 9),
+      new Gun(player, 7, 400, 11),
+      new Gun(player, 8, 300, 13),
+      new Gun(player, 9, 200, 16),
+      new Gun(player, 10, 150, 20)
     ]
   }
 
@@ -31,9 +31,17 @@ class GunManager {
     this.currentGun?.shot()
   }
 
+  hideGun() {
+    this.currentGun = null
+  }
+
+  showGun() {
+    this.currentGun = this.gunInBackpack
+  }
+
   setGun(level: number) {
-    this.gunLevel = level
-    this.currentGun = this.guns[level]
+    this.gunInBackpack = this.guns[level]
+    this.currentGun = this.gunInBackpack
   }
 
   drawBullets(deltaTime: number) {
@@ -111,8 +119,8 @@ class Gun {
   }
 
   calculateStartBulletPoint() {
-    const bulletAsset = this.player.game.assetLoader?.getById(this.bulletId)
-    const gunAsset = this.player.game.assetLoader?.getById(this.gunId)
+    const bulletAsset = this.player.game.assetLoader?.getByName(this.bulletId)
+    const gunAsset = this.player.game.assetLoader?.getByName(this.gunId)
     if (!bulletAsset || !gunAsset) {
       throw new Error(`Cannot find asset for gun or bullet! id=${this.bulletId}`)
     }
@@ -144,7 +152,7 @@ export class Bullet {
 
   update() {
     const img = this.player.game.assetLoader?.getImage('gunPack')
-    const asset = this.player.game.assetLoader?.getById(this.bulletId)
+    const asset = this.player.game.assetLoader?.getByName(this.bulletId)
     if (!img || !asset || !this.active) {
       return
     }
@@ -177,7 +185,7 @@ export class Bullet {
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
     const img = this.player.game.assetLoader?.getImage('gunPack')
-    const asset = this.player.game.assetLoader?.getById(this.bulletId)
+    const asset = this.player.game.assetLoader?.getByName(this.bulletId)
     if (!img || !asset) {
       return
     }

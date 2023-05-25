@@ -1,7 +1,12 @@
 import type Enemy from '../characters/enemy'
 
 export const shouldChangeDirection = (enemy: Enemy) => {
-  return isHoleUnderEnemy(enemy) || isObstacleNextToEnemy(enemy) || enemy.x <= 0
+  return (
+    isHoleUnderEnemy(enemy) ||
+    isObstacleNextToEnemy(enemy) ||
+    enemy.x <= 0 ||
+    enemy.x + enemy.width >= enemy.game.map.width
+  )
 }
 
 const isHoleUnderEnemy = (enemy: Enemy) => {

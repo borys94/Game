@@ -40,8 +40,8 @@ abstract class PlayeSpite extends Sprite {
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     const img = this.player.game.assetLoader?.getImage(this.assetPack)
-    const asset = this.player.game.assetLoader?.getById(this.id)
-
+    const asset = this.player.game.assetLoader?.getByName(this.id)
+    // console.log('------')
     if (!asset || !img) {
       return
     }
@@ -92,7 +92,7 @@ export class GunSprite extends PlayeSpite {
 
   getPositionY() {
     const swayShiftY = this.getSwayShiftY()
-    const asset = this.player.game.assetLoader?.getById(this.id)!
+    const asset = this.player.game.assetLoader?.getByName(this.id)!
     return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 1
   }
 }

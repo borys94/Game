@@ -155,12 +155,11 @@ abstract class Character {
       this.game.map.hasObstacle(this.x + this.width - this.paddingRight - 0.01, this.y + this.height) ||
       this.game.map.hasObstacle(this.x + this.width - this.paddingRight - 0.01, this.y + this.height / 2)
     ) {
-      // console.log('0000', Math.floor(this.x / 32) * 32 + 8)
       this.x = Math.floor(this.x / 32) * 32 + 8
     } else if (
-      this.game.map.hasObstacle(this.x, this.y) ||
-      this.game.map.hasObstacle(this.x, this.y + this.height) ||
-      this.game.map.hasObstacle(this.x, this.y + this.height / 2)
+      this.game.map.hasObstacle(this.x + this.paddingLeft + 0.01, this.y) ||
+      this.game.map.hasObstacle(this.x + this.paddingLeft + 0.01, this.y + this.height) ||
+      this.game.map.hasObstacle(this.x + this.paddingLeft + 0.01, this.y + this.height / 2)
     ) {
       this.x = Math.floor(this.x / 32 + 0.5) * 32
     }

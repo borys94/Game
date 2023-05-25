@@ -2,7 +2,7 @@ import EnemySpriteManager from '../sprites/enemy/enemySpriteManager'
 import SpriteManager from '../sprites/spriteManager'
 import Character, { type Direction } from './character'
 
-export type EnemyType = 'dog' | 'rat'
+export type EnemyType = 'dog' | 'rat' | 'cat'
 
 export interface EnemyObject {
   type: EnemyType

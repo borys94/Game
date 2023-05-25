@@ -4,13 +4,14 @@ import { type EnemyObject } from '../../game/characters/enemy'
 import { buildEnemy } from '../../game/characters/buildEnemy'
 import config from '../../game/config'
 import { drawDebugInfo } from '../../game/debug'
-import { buildElement } from '../../game/Element'
+import { buildElement } from '../../game/map/Element'
 import { clamp } from '../../game/utils'
 import easyMap from '../../maps/easy'
 import mediumMap from '../../maps/medium'
+import { AssetFrameDetail } from '../../game/assetLoader'
 
-const CANVAS_WIDTH = config.CANVAS_WIDTH * config.SCALE
-const CANVAS_HEIGHT = config.CANVAS_HEIGHT * config.SCALE
+const CANVAS_WIDTH = config.CANVAS_WIDTH
+const CANVAS_HEIGHT = config.CANVAS_HEIGHT
 
 type Layer = 'tiles' | 'bgTiles' | 'interactive' | 'decorations'
 
@@ -21,8 +22,8 @@ interface MapType {
 }
 
 class Editor extends Game {
-  currentAsset: AssetType | null = null
-  currentAssetId = 0
+  currentAsset: AssetFrameDetail | null = null
+  assetPack: 'map' | 'guns' = 'map'
 
   layer: Layer = 'tiles'
   activeEnemyType: EnemyObject['type'] | null = null
@@ -30,30 +31,42 @@ class Editor extends Game {
   hoverX = 0
   hoverY = 0
 
+  rect: DOMRect
+
   constructor() {
     super()
 
     this.camera.update = () => {}
-    // this.map.enemies = []
-    const rect = this.canvas.getBoundingClientRect()
+    this.rect = this.canvas.getBoundingClientRect()
 
     this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-      this.hoverX = e.clientX - rect.left
-      this.hoverY = e.clientY - rect.top
+      this.hoverX = (e.clientX - this.rect.left) / this.scale
+      this.hoverY = (e.clientY - this.rect.top) / this.scale
     })
 
-    // this.onMouseDown.bind(this)
     this.canvas.addEventListener('mousedown', this.onMouseDown)
 
     this.canvas.addEventListener(
       'wheel',
       (e: WheelEvent) => {
         e.preventDefault()
-        this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width)
-        this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height)
+        this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width / this.scale)
+        this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height / this.scale)
       },
       { passive: false }
     )
+
+    window.addEventListener('resize', this.onResize)
+    this.onResize()
+  }
+
+  onResize = () => {
+    this.rect = this.canvas.getBoundingClientRect()
+
+    const scale = Math.min((window.innerWidth - 400) / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
+    this.scale = scale // Math.max(Math.floor(scale), 1)
+    this.canvas.width = CANVAS_WIDTH * scale
+    this.canvas.height = CANVAS_HEIGHT * scale
   }
 
   onMouseDown = (): void => {
@@ -62,6 +75,7 @@ class Editor extends Game {
       return
     }
 
+    console.log(this.layer)
     if (this.layer === 'tiles') this.fillFgTile()
     if (this.layer === 'bgTiles') this.fillBgTile()
     if (this.layer === 'interactive') this.fillInteractiveTile()
@@ -80,12 +94,12 @@ class Editor extends Game {
   update() {}
 
   draw(timestamp: number): void {
-    // super.draw(timestamp)
-
     const deltaTime = timestamp - this.lastTime
     this.lastTime = timestamp
     this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-    this.background.draw(this.ctx)
+    this.ctx.imageSmoothingEnabled = false
+    this.ctx.save()
+    this.ctx.scale(this.scale, this.scale)
     this.map.draw(deltaTime)
 
     if (!!this.currentAsset || !!this.activeEnemyType) {
@@ -95,8 +109,6 @@ class Editor extends Game {
         Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y,
         32,
         32
-        // Math.ceil(this.currentAsset.width / 32) * 32,
-        // Math.ceil(this.currentAsset.height / 32) * 32
       )
       this.ctx.strokeStyle = 'rgb(0, 255, 0)'
       this.ctx.fillStyle = 'rgba(0,255,0,0.5)'
@@ -105,23 +117,27 @@ class Editor extends Game {
     }
 
     if (this.currentAsset != null) {
+      const img = this.assetPack === 'map' ? this.assetLoader.getImage('map') : this.assetLoader.getImage('gunPack')
+
       this.ctx.drawImage(
-        this.currentAsset.img,
-        0,
-        0,
-        this.currentAsset.width,
-        this.currentAsset.height,
+        img!,
+        this.currentAsset.frame.x,
+        this.currentAsset.frame.y,
+        this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
+        this.currentAsset.frame.h,
         Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.height,
-        this.currentAsset.width,
-        this.currentAsset.height
+        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.frame.h,
+        this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
+        this.currentAsset.frame.h
       )
     }
 
-    drawDebugInfo(this.ctx, this.player, this.inputHandler)
+    this.ctx.restore()
+
+    // drawDebugInfo(this.ctx, this.player, this.inputHandler)
   }
 
-  setCurrentAsset = (asset: AssetType | null): void => {
+  setCurrentAsset = (asset: AssetFrameDetail | null): void => {
     console.log(asset)
     this.currentAsset = asset
   }
@@ -130,9 +146,9 @@ class Editor extends Game {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
     if (this.currentAsset != null) {
-      this.map.images[b][a] = this.currentAsset.id
+      this.map.elements.tiles[b][a] = this.currentAsset.id ?? 0
     } else {
-      this.map.images[b][a] = 0
+      this.map.elements.tiles[b][a] = 0
     }
   }
 
@@ -140,22 +156,23 @@ class Editor extends Game {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
     if (this.currentAsset != null) {
-      this.map.bgImages[b][a] = this.currentAsset.id
+      console.log(a, b, this.currentAsset.id)
+      this.map.elements.bgTiles[b][a] = this.currentAsset.id ?? 0
     } else {
-      this.map.bgImages[b][a] = 0
+      this.map.elements.bgTiles[b][a] = 0
     }
   }
 
-  fillDecorationTile = (): void => {
+  fillDecorationTile = async () => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    this.map.decorationElements[b][a] = buildElement(this, this.currentAsset?.id ?? 0, b, a)
+    this.map.elements.decorationElements[b][a] = await buildElement(this, this.currentAsset?.id ?? 0, b, a)
   }
 
-  fillInteractiveTile = (): void => {
+  fillInteractiveTile = async () => {
     const a = Math.floor((this.hoverX + this.camera.x) / 32)
     const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    this.map.elements[b][a] = buildElement(this, this.currentAsset?.id ?? 0, b, a)
+    this.map.elements.elements[b][a] = await buildElement(this, this.currentAsset?.id ?? 0, b, a)
   }
 
   addEnemy = (type: EnemyObject['type']): void => {
@@ -168,7 +185,6 @@ class Editor extends Game {
     }
     const enemy = buildEnemy(this, enemyObj)
     enemy.y -= enemy.height - 32
-    // enemy.setState(enemy.states.standing)
     this.map.enemies.push(enemy)
   }
 
@@ -182,66 +198,72 @@ class Editor extends Game {
     this.layer = layer
   }
 
-  clearMap(): void {
-    for (let i = 0; i < this.map.interactive.length; i++) {
-      for (let j = 0; j < this.map.interactive[0].length; j++) {
-        this.map.elements[i][j] = buildElement(this, 0, i, j)
-        this.map.bgImages[i][j] = 0
-        this.map.interactive[i][j] = 0
-        this.map.images[i][j] = 0
-        this.map.decorations[i][j] = 0
+  async clearMap() {
+    for (let i = 0; i < this.map.elements.interactive.length; i++) {
+      for (let j = 0; j < this.map.elements.interactive[0].length; j++) {
+        this.map.elements.elements[i][j] = buildElement(this, 0, i, j)
+        this.map.elements.decorationElements[i][j] = buildElement(this, 0, i, j)
+        this.map.elements.bgTiles[i][j] = 0
+        this.map.elements.interactive[i][j] = 0
+        this.map.elements.tiles[i][j] = 0
+        this.map.elements.decorations[i][j] = 0
       }
     }
+    this.map.enemies = []
   }
 
-  setColumns(columns: number): void {
-    const diff = columns - this.map.interactive[0].length
-    // console.log(columns, this.map.interactive.length)
+  async setColumns(columns: number) {
+    const diff = columns - this.map.elements.interactive[0].length
 
     if (diff < 0) {
-      for (let i = 0; i < this.map.interactive.length; i++) {
-        this.map.elements[i] = this.map.elements[i].slice(0, diff)
-        this.map.bgImages[i] = this.map.bgImages[i].slice(0, diff)
-        this.map.interactive[i] = this.map.interactive[i].slice(0, diff)
-        this.map.images[i] = this.map.images[i].slice(0, diff)
-        this.map.decorations[i] = this.map.decorations[i].slice(0, diff)
+      for (let i = 0; i < this.map.elements.interactive.length; i++) {
+        this.map.elements.elements[i] = this.map.elements.elements[i].slice(0, diff)
+        this.map.elements.decorationElements[i] = this.map.elements.decorationElements[i].slice(0, diff)
+        this.map.elements.bgTiles[i] = this.map.elements.bgTiles[i].slice(0, diff)
+        this.map.elements.interactive[i] = this.map.elements.interactive[i].slice(0, diff)
+        this.map.elements.tiles[i] = this.map.elements.tiles[i].slice(0, diff)
+        this.map.elements.decorations[i] = this.map.elements.decorations[i].slice(0, diff)
       }
     }
 
-    for (let i = 0; i < this.map.interactive.length; i++) {
+    for (let i = 0; i < this.map.elements.interactive.length; i++) {
       for (let j = 0; j < diff; j++) {
-        const x = this.map.interactive[0].length + j - 1
-        this.map.elements[i].push(buildElement(this, 0, i, x))
-        this.map.bgImages[i].push(0)
-        this.map.interactive[i].push(0)
-        this.map.images[i].push(0)
-        this.map.decorations[i].push(0)
+        const x = this.map.elements.interactive[0].length + j - 1
+        this.map.elements.elements[i].push(buildElement(this, 0, i, x))
+        this.map.elements.decorationElements[i].push(await buildElement(this, 0, i, x))
+        this.map.elements.bgTiles[i].push(0)
+        this.map.elements.interactive[i].push(0)
+        this.map.elements.tiles[i].push(0)
+        this.map.elements.decorations[i].push(0)
       }
     }
   }
 
-  setRows(rows: number): void {
-    const diff = rows - this.map.interactive.length
+  async setRows(rows: number) {
+    const diff = rows - this.map.elements.interactive.length
 
     if (diff < 0) {
-      this.map.elements = this.map.elements.slice(0, diff)
-      this.map.bgImages = this.map.bgImages.slice(0, diff)
-      this.map.interactive = this.map.interactive.slice(0, diff)
-      this.map.images = this.map.images.slice(0, diff)
-      this.map.decorations = this.map.decorations.slice(0, diff)
+      this.map.elements.elements = this.map.elements.elements.slice(0, diff)
+      this.map.elements.decorationElements = this.map.elements.decorationElements.slice(0, diff)
+      this.map.elements.bgTiles = this.map.elements.bgTiles.slice(0, diff)
+      this.map.elements.interactive = this.map.elements.interactive.slice(0, diff)
+      this.map.elements.tiles = this.map.elements.tiles.slice(0, diff)
+      this.map.elements.decorations = this.map.elements.decorations.slice(0, diff)
     }
 
     for (let i = 0; i < diff; i++) {
-      const size = this.map.interactive.length
-      const row = i + this.map.interactive.length
-      this.map.elements[row] = []
-      this.map.bgImages[row] = new Array(size).fill(0)
-      this.map.interactive[row] = new Array(size).fill(0)
-      this.map.images[row] = new Array(size).fill(0)
-      this.map.decorations[row] = new Array(size).fill(0)
+      const size = this.map.elements.interactive.length
+      const row = i + this.map.elements.interactive.length
+      this.map.elements.elements[row] = []
+      this.map.elements.decorationElements[row] = []
+      this.map.elements.bgTiles[row] = new Array(size).fill(0)
+      this.map.elements.interactive[row] = new Array(size).fill(0)
+      this.map.elements.tiles[row] = new Array(size).fill(0)
+      this.map.elements.decorations[row] = new Array(size).fill(0)
 
-      for (let j = 0; j < this.map.interactive[0].length; j++) {
-        this.map.elements[row][j] = buildElement(this, 0, i, j)
+      for (let j = 0; j < this.map.elements.interactive[0].length; j++) {
+        this.map.elements.elements[row][j] = buildElement(this, 0, i, j)
+        this.map.elements.decorationElements[row][j] = await buildElement(this, 0, i, j)
       }
     }
   }

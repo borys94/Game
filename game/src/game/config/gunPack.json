@@ -1,0 +1,288 @@
+{
+  "frames": [
+    {
+      "name": "guns1/1 Characters/1 Biker/Idle1",
+      "frame": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "id": 425,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Idle2",
+      "frame": { "x": 192, "y": 0, "w": 192, "h": 48 },
+      "id": 426,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Jump1",
+      "frame": { "x": 384, "y": 0, "w": 192, "h": 48 },
+      "id": 427,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Jump2",
+      "frame": { "x": 576, "y": 0, "w": 192, "h": 48 },
+      "id": 428,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Run1",
+      "frame": { "x": 0, "y": 48, "w": 288, "h": 48 },
+      "id": 429,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Run2",
+      "frame": { "x": 288, "y": 48, "w": 288, "h": 48 },
+      "id": 430,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Sitdown1",
+      "frame": { "x": 576, "y": 48, "w": 192, "h": 48 },
+      "id": 431,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Sitdown2",
+      "frame": { "x": 768, "y": 48, "w": 192, "h": 48 },
+      "id": 432,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Walk1",
+      "frame": { "x": 0, "y": 96, "w": 288, "h": 48 },
+      "id": 433,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/1 Biker/Walk2",
+      "frame": { "x": 288, "y": 96, "w": 288, "h": 48 },
+      "id": 434,
+      "frames": 1
+    },
+    { "name": "punk-idle1", "frame": { "x": 576, "y": 96, "w": 192, "h": 48 }, "id": 435, "frames": 4 },
+    { "name": "punk-idle2", "frame": { "x": 768, "y": 96, "w": 192, "h": 48 }, "id": 436, "frames": 4 },
+    { "name": "punk-jump1", "frame": { "x": 0, "y": 144, "w": 192, "h": 48 }, "id": 437, "frames": 4 },
+    { "name": "punk-jump2", "frame": { "x": 192, "y": 144, "w": 192, "h": 48 }, "id": 438, "frames": 4 },
+    { "name": "punk-run1", "frame": { "x": 384, "y": 144, "w": 288, "h": 48 }, "id": 439, "frames": 6 },
+    { "name": "punk-run2", "frame": { "x": 672, "y": 144, "w": 288, "h": 48 }, "id": 440, "frames": 6 },
+    { "name": "punk-sitdown1", "frame": { "x": 0, "y": 192, "w": 192, "h": 48 }, "id": 441, "frames": 4 },
+    { "name": "punk-sitdown2", "frame": { "x": 192, "y": 192, "w": 192, "h": 48 }, "id": 442, "frames": 4 },
+    { "name": "punk-walk1", "frame": { "x": 384, "y": 192, "w": 288, "h": 48 }, "id": 443, "frames": 6 },
+    { "name": "punk-walk2", "frame": { "x": 672, "y": 192, "w": 288, "h": 48 }, "id": 444, "frames": 6 },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Idle1",
+      "frame": { "x": 0, "y": 240, "w": 192, "h": 48 },
+      "id": 445,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Idle2",
+      "frame": { "x": 192, "y": 240, "w": 192, "h": 48 },
+      "id": 446,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Jump1",
+      "frame": { "x": 384, "y": 240, "w": 192, "h": 48 },
+      "id": 447,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Jump2",
+      "frame": { "x": 576, "y": 240, "w": 192, "h": 48 },
+      "id": 448,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Run1",
+      "frame": { "x": 0, "y": 288, "w": 288, "h": 48 },
+      "id": 449,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Run2",
+      "frame": { "x": 288, "y": 288, "w": 288, "h": 48 },
+      "id": 450,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Sitdown1",
+      "frame": { "x": 576, "y": 288, "w": 192, "h": 48 },
+      "id": 451,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Sitdown2",
+      "frame": { "x": 768, "y": 288, "w": 192, "h": 48 },
+      "id": 452,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Walk1",
+      "frame": { "x": 0, "y": 336, "w": 288, "h": 48 },
+      "id": 453,
+      "frames": 1
+    },
+    {
+      "name": "guns1/1 Characters/3 Cyborg/Walk2",
+      "frame": { "x": 288, "y": 336, "w": 288, "h": 48 },
+      "id": 454,
+      "frames": 1
+    },
+    {
+      "name": "gun-1",
+      "frame": { "x": 576, "y": 336, "w": 6, "h": 5 },
+      "id": 455,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 1 }
+    },
+    {
+      "name": "gun-2",
+      "frame": { "x": 582, "y": 336, "w": 8, "h": 7 },
+      "id": 456,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 2 }
+    },
+    {
+      "name": "gun-3",
+      "frame": { "x": 590, "y": 336, "w": 9, "h": 6 },
+      "id": 457,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 3 }
+    },
+    {
+      "name": "gun-4",
+      "frame": { "x": 599, "y": 336, "w": 11, "h": 7 },
+      "id": 458,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 4 }
+    },
+    {
+      "name": "gun-5",
+      "frame": { "x": 610, "y": 336, "w": 11, "h": 9 },
+      "id": 459,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 5 }
+    },
+    {
+      "name": "gun-6",
+      "frame": { "x": 621, "y": 336, "w": 11, "h": 9 },
+      "id": 460,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 6 }
+    },
+    {
+      "name": "gun-7",
+      "frame": { "x": 632, "y": 336, "w": 13, "h": 9 },
+      "id": 461,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 7 }
+    },
+    {
+      "name": "gun-8",
+      "frame": { "x": 645, "y": 336, "w": 18, "h": 8 },
+      "id": 462,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 8 }
+    },
+    {
+      "name": "gun-9",
+      "frame": { "x": 663, "y": 336, "w": 11, "h": 10 },
+      "id": 463,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 9 }
+    },
+    {
+      "name": "gun-10",
+      "frame": { "x": 674, "y": 336, "w": 14, "h": 10 },
+      "id": 464,
+      "frames": 1,
+      "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 10 }
+    },
+    { "name": "guns1/3 Hands/1 Biker/1", "frame": { "x": 688, "y": 336, "w": 32, "h": 32 }, "id": 465, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/2", "frame": { "x": 720, "y": 336, "w": 32, "h": 32 }, "id": 466, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/3", "frame": { "x": 752, "y": 336, "w": 32, "h": 32 }, "id": 467, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/4", "frame": { "x": 784, "y": 336, "w": 32, "h": 32 }, "id": 468, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/5", "frame": { "x": 816, "y": 336, "w": 32, "h": 32 }, "id": 469, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/6", "frame": { "x": 848, "y": 336, "w": 32, "h": 32 }, "id": 470, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/7", "frame": { "x": 880, "y": 336, "w": 32, "h": 32 }, "id": 471, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/8", "frame": { "x": 912, "y": 336, "w": 32, "h": 32 }, "id": 472, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/9", "frame": { "x": 0, "y": 384, "w": 32, "h": 32 }, "id": 473, "frames": 1 },
+    { "name": "guns1/3 Hands/1 Biker/10", "frame": { "x": 32, "y": 384, "w": 32, "h": 32 }, "id": 474, "frames": 1 },
+    { "name": "punk-arm1", "frame": { "x": 64, "y": 384, "w": 32, "h": 32 }, "id": 475, "frames": 1 },
+    { "name": "punk-arm2", "frame": { "x": 96, "y": 384, "w": 32, "h": 32 }, "id": 476, "frames": 1 },
+    { "name": "punk-arm3", "frame": { "x": 128, "y": 384, "w": 32, "h": 32 }, "id": 477, "frames": 1 },
+    { "name": "punk-arm4", "frame": { "x": 160, "y": 384, "w": 32, "h": 32 }, "id": 478, "frames": 1 },
+    { "name": "punk-arm5", "frame": { "x": 192, "y": 384, "w": 32, "h": 32 }, "id": 479, "frames": 1 },
+    { "name": "punk-arm6", "frame": { "x": 224, "y": 384, "w": 32, "h": 32 }, "id": 480, "frames": 1 },
+    { "name": "punk-arm7", "frame": { "x": 256, "y": 384, "w": 32, "h": 32 }, "id": 481, "frames": 1 },
+    { "name": "punk-arm8", "frame": { "x": 288, "y": 384, "w": 32, "h": 32 }, "id": 482, "frames": 1 },
+    { "name": "punk-arm9", "frame": { "x": 320, "y": 384, "w": 32, "h": 32 }, "id": 483, "frames": 1 },
+    { "name": "punk-arm10", "frame": { "x": 352, "y": 384, "w": 32, "h": 32 }, "id": 484, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/1", "frame": { "x": 384, "y": 384, "w": 32, "h": 32 }, "id": 485, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/2", "frame": { "x": 416, "y": 384, "w": 32, "h": 32 }, "id": 486, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/3", "frame": { "x": 448, "y": 384, "w": 32, "h": 32 }, "id": 487, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/4", "frame": { "x": 480, "y": 384, "w": 32, "h": 32 }, "id": 488, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/5", "frame": { "x": 512, "y": 384, "w": 32, "h": 32 }, "id": 489, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/6", "frame": { "x": 544, "y": 384, "w": 32, "h": 32 }, "id": 490, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/7", "frame": { "x": 576, "y": 384, "w": 32, "h": 32 }, "id": 491, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/8", "frame": { "x": 608, "y": 384, "w": 32, "h": 32 }, "id": 492, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/9", "frame": { "x": 640, "y": 384, "w": 32, "h": 32 }, "id": 493, "frames": 1 },
+    { "name": "guns1/3 Hands/3 Cyborg/10", "frame": { "x": 672, "y": 384, "w": 32, "h": 32 }, "id": 494, "frames": 1 },
+    { "name": "guns1/4 Shoot_effects/1_1", "frame": { "x": 0, "y": 416, "w": 288, "h": 48 }, "id": 495, "frames": 1 },
+    { "name": "guns1/4 Shoot_effects/2_1", "frame": { "x": 288, "y": 416, "w": 288, "h": 48 }, "id": 496, "frames": 1 },
+    { "name": "guns1/4 Shoot_effects/3_1", "frame": { "x": 576, "y": 416, "w": 288, "h": 48 }, "id": 497, "frames": 1 },
+    { "name": "guns1/4 Shoot_effects/4_1", "frame": { "x": 0, "y": 464, "w": 288, "h": 48 }, "id": 498, "frames": 1 },
+    { "name": "guns1/4 Shoot_effects/5_1", "frame": { "x": 288, "y": 464, "w": 288, "h": 48 }, "id": 499, "frames": 1 },
+    { "name": "bullet-1", "frame": { "x": 576, "y": 464, "w": 3, "h": 3 }, "id": 500, "frames": 1 },
+    { "name": "bullet-2", "frame": { "x": 579, "y": 464, "w": 4, "h": 4 }, "id": 501, "frames": 1 },
+    { "name": "bullet-3", "frame": { "x": 583, "y": 464, "w": 4, "h": 4 }, "id": 502, "frames": 1 },
+    { "name": "bullet-4", "frame": { "x": 587, "y": 464, "w": 6, "h": 4 }, "id": 503, "frames": 1 },
+    { "name": "bullet-5", "frame": { "x": 593, "y": 464, "w": 5, "h": 4 }, "id": 504, "frames": 1 },
+    { "name": "bullet-6", "frame": { "x": 598, "y": 464, "w": 4, "h": 4 }, "id": 505, "frames": 1 },
+    { "name": "bullet-7", "frame": { "x": 602, "y": 464, "w": 5, "h": 3 }, "id": 506, "frames": 1 },
+    { "name": "bullet-8", "frame": { "x": 607, "y": 464, "w": 3, "h": 3 }, "id": 507, "frames": 1 },
+    { "name": "bullet-9", "frame": { "x": 610, "y": 464, "w": 5, "h": 5 }, "id": 508, "frames": 1 },
+    { "name": "bullet-10", "frame": { "x": 615, "y": 464, "w": 6, "h": 6 }, "id": 509, "frames": 1 },
+    { "name": "gun-11", "frame": { "x": 621, "y": 464, "w": 26, "h": 7 }, "id": 510, "frames": 1 },
+    { "name": "gun-12", "frame": { "x": 647, "y": 464, "w": 22, "h": 8 }, "id": 511, "frames": 1 },
+    { "name": "gun-13", "frame": { "x": 669, "y": 464, "w": 27, "h": 9 }, "id": 512, "frames": 1 },
+    { "name": "gun-14", "frame": { "x": 696, "y": 464, "w": 29, "h": 11 }, "id": 513, "frames": 1 },
+    { "name": "gun-15", "frame": { "x": 725, "y": 464, "w": 28, "h": 16 }, "id": 514, "frames": 1 },
+    { "name": "gun-16", "frame": { "x": 753, "y": 464, "w": 31, "h": 15 }, "id": 515, "frames": 1 },
+    { "name": "gun-17", "frame": { "x": 784, "y": 464, "w": 27, "h": 14 }, "id": 516, "frames": 1 },
+    { "name": "gun-18", "frame": { "x": 811, "y": 464, "w": 25, "h": 14 }, "id": 517, "frames": 1 },
+    { "name": "gun-19", "frame": { "x": 836, "y": 464, "w": 27, "h": 16 }, "id": 518, "frames": 1 },
+    { "name": "gun-20", "frame": { "x": 863, "y": 464, "w": 26, "h": 12 }, "id": 519, "frames": 1 },
+    { "name": "guns2/4 Shoot_effects/6_1", "frame": { "x": 0, "y": 512, "w": 288, "h": 48 }, "id": 520, "frames": 1 },
+    { "name": "guns2/4 Shoot_effects/7_1", "frame": { "x": 288, "y": 512, "w": 288, "h": 48 }, "id": 521, "frames": 1 },
+    { "name": "guns2/4 Shoot_effects/8_1", "frame": { "x": 576, "y": 512, "w": 288, "h": 48 }, "id": 522, "frames": 1 },
+    { "name": "guns2/4 Shoot_effects/9_1", "frame": { "x": 0, "y": 560, "w": 288, "h": 48 }, "id": 523, "frames": 1 },
+    {
+      "name": "guns2/4 Shoot_effects/10_1",
+      "frame": { "x": 288, "y": 560, "w": 288, "h": 48 },
+      "id": 524,
+      "frames": 1
+    },
+    { "name": "guns2/5 Bullets/1", "frame": { "x": 576, "y": 560, "w": 6, "h": 3 }, "id": 525, "frames": 1 },
+    { "name": "guns2/5 Bullets/2", "frame": { "x": 582, "y": 560, "w": 6, "h": 2 }, "id": 526, "frames": 1 },
+    { "name": "guns2/5 Bullets/3", "frame": { "x": 588, "y": 560, "w": 7, "h": 2 }, "id": 527, "frames": 1 },
+    { "name": "guns2/5 Bullets/4", "frame": { "x": 595, "y": 560, "w": 10, "h": 1 }, "id": 528, "frames": 1 },
+    { "name": "guns2/5 Bullets/5", "frame": { "x": 605, "y": 560, "w": 15, "h": 4 }, "id": 529, "frames": 1 },
+    { "name": "guns2/5 Bullets/6", "frame": { "x": 620, "y": 560, "w": 10, "h": 3 }, "id": 530, "frames": 1 },
+    { "name": "guns2/5 Bullets/7", "frame": { "x": 630, "y": 560, "w": 4, "h": 3 }, "id": 531, "frames": 1 },
+    { "name": "guns2/5 Bullets/8", "frame": { "x": 634, "y": 560, "w": 6, "h": 6 }, "id": 532, "frames": 1 },
+    { "name": "guns2/5 Bullets/9", "frame": { "x": 640, "y": 560, "w": 13, "h": 3 }, "id": 533, "frames": 1 },
+    { "name": "guns2/5 Bullets/10", "frame": { "x": 653, "y": 560, "w": 6, "h": 3 }, "id": 534, "frames": 1 }
+  ],
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "version": "1.0",
+    "image": "gun_pack",
+    "format": "RGBA8888",
+    "size": { "w": 960, "h": 608 },
+    "scale": "1",
+    "smartupdate": "$TexturePacker:SmartUpdate:cde066759b479f555adb2cdf6cf9fa19:4224f4374238e086bd10cdc19d01ad2d:b7f386ca828a7c3118554a703ca6d622$"
+  }
+}

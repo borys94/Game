@@ -1,4 +1,4 @@
-import type Map from './map'
+import type Map from './map/map'
 import type Player from './characters/player'
 
 class Camera {

@@ -2,15 +2,21 @@
 
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   height: 100vh;
-  padding-top: 20px;
-  background-color: #ddd;
+  background-color: rgb(2, 17, 20);;
+}
+
+.content {
+  display: flex;
+  height: 100%;
 }
 
 .editor {
   margin-right: 20px;
   height: 640px;
+  flex-grow: 1;
   // transform: translate(-50%, -50%);
 }
 
@@ -55,4 +61,6 @@
 
 .edit {
   overflow: auto;
+  width: 380px;
+  height: calc(100vh - 100px);
 }

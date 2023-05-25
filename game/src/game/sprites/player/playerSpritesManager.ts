@@ -92,16 +92,18 @@ class PlayerSpriteManager extends SpriteManager {
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number) {
     const state = this.player.stateManager.currentState.state
+
     if (
       ['hit', 'doubleHit', 'strongAttack', 'use', 'hurt', 'death', 'doubleJump'].includes(state) ||
       !this.player.hasWeapon()
     ) {
+      // console.log('default', state)
       this.defaultSprites[state].draw(ctx, deltaTime)
       return
     }
 
     if (this.player.hasWeapon()) {
-      this.guns[this.player.gunManager.gunLevel!].draw(ctx, deltaTime)
+      this.guns[this.player.gunManager.currentGun?.level! - 1].draw(ctx, deltaTime)
     }
     this.arms.arm3.draw(ctx, deltaTime)
     this.withoutOneArm[state].draw(ctx, deltaTime)

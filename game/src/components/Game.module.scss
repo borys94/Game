@@ -1,24 +1,35 @@
+.gameWrapper {
+  font-family: 'Cyberpunk Is Not Dead', sans-serif;
+  // background-image: url('menuBackground.png');
+}
+
 .canvas {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Cyberpunk Is Not Dead', sans-serif;
+  
   color: #ddd;
   overflow: hidden;
+
+  canvas {
+    border: none;
+  }
 }
 
 .menu {
-  width: 400px;
-  transform: translateX(400px);
+  padding-left: 50px;
+  transform: translateX(-400px);
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
+  width: 100%;
   display: flex;
   gap: 25px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: 150ms all ease-out;
+  justify-content: center;
+  align-items: baseline;
 }
 
 .overlay {
@@ -66,19 +77,80 @@
 
 .menuWrapper {
   display: flex;
-  justify-content: flex-end;
   transition: all 100ms;
-  backdrop-filter: blur(3px);
-  background-color: rgba(0,0,0,0.4);
+  // backdrop-filter: blur(3px);
+  // background-color: rgba(0,0,0,0.4);
 
   height: 100%;
   width: 100%;
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   opacity: 1;
+  overflow: hidden;
+
+  
 
   .menu {
     transform: translateX(0);
   }
+}
+
+.menuBackground {
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.bottomBar {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  right: 50px;
+  bottom: 40px;
+}
+
+.card {
+  border-radius: 5px;
+  width: 300px;
+  padding: 10px ;
+  font-weight: bold;
+  box-shadow: 0 0px 5px #01ffff;
+  border: 1px solid white;
+  background-color: #fff1;
+  color: #01ffff;
+}
+
+.disabledLevel {
+  color: #ccc;
+  opacity: 0.5;
+}
+
+.levels {
+  position: absolute;
+  right: 50px;
+  top: 50px;
+  bottom: 50%;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.level {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  >div:first-child {
+    width: 50%
+  }
+}
+
+.levelsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }

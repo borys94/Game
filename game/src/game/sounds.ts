@@ -6,6 +6,8 @@ class Sounds {
   jump: HTMLAudioElement
   unlock: HTMLAudioElement
   foot: HTMLAudioElement
+  menu: HTMLAudioElement
+  mainMenu: HTMLAudioElement
   guns: Record<string, HTMLAudioElement>
 
   constructor(public active = false) {
@@ -16,6 +18,8 @@ class Sounds {
     this.jump = new Audio('assets/sounds/jump.wav')
     this.unlock = new Audio('assets/sounds/unlock.wav')
     this.foot = new Audio('assets/sounds/foot.ogg')
+    this.menu = new Audio('sounds/menu.wav')
+    this.mainMenu = new Audio('sounds/mainMenu.mp3')
 
     this.guns = {
       pistol: new Audio('assets/sounds/guns/pistol.wav'),
@@ -30,24 +34,43 @@ class Sounds {
 
     if (!this.active) {
       this.background.pause()
+      this.mainMenu.pause()
       this.coin.pause()
       this.hurt.pause()
     }
   }
 
-  private playSound(sound: HTMLAudioElement): void {
+  private async playSound(sound: HTMLAudioElement): Promise<void> {
     if (!this.active) {
       return
     }
-    sound.pause()
-    sound.currentTime = 0
-    // eslint-disable-next-line
-    sound.play()
+    try {
+      await sound.pause()
+      sound.currentTime = 0
+      // eslint-disable-next-line
+      await sound.play()
+    } catch (e) {
+      // TODO
+      console.error(e)
+    }
   }
 
-  play(): void {
+  playMenu(): void {
+    this.playSound(this.mainMenu)
+    this.mainMenu.loop = true
+  }
+
+  stopMenu() {
+    this.mainMenu.pause()
+  }
+
+  playBackground(): void {
     this.playSound(this.background)
     this.background.loop = true
+  }
+
+  stopBackground() {
+    this.background.pause()
   }
 
   pistolSound() {
@@ -87,6 +110,10 @@ class Sounds {
   stopFootSound() {
     this.foot.pause()
     this.foot.currentTime = 0
+  }
+
+  menuSound(): void {
+    this.playSound(this.menu)
   }
 
   hurtSound(): void {

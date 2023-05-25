@@ -19,12 +19,12 @@ export default class Sprite {
   }
 
   getFrames(): number {
-    return this.player.game.assetLoader?.getById(this.id)?.frames ?? 0
+    return this.player.game.assetLoader?.getByName(this.id)?.frames ?? 0
   }
 
   draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     const img = this.player.game.assetLoader?.getImage(this.assetPack)
-    const asset = this.player.game.assetLoader?.getById(this.id)
+    const asset = this.player.game.assetLoader?.getByName(this.id)
 
     if (!asset || !img) {
       return
@@ -32,7 +32,7 @@ export default class Sprite {
 
     this.animate(deltaTime)
     const scaleX = this.player.getScaleX()
-    const width = asset.frame.w / asset.frames
+    const width = asset.frame.w / (asset.frames ?? 1)
 
     ctx.save()
     ctx.scale(scaleX, 1)
@@ -52,10 +52,10 @@ export default class Sprite {
   }
 
   animate(deltaTime: number): void {
-    const asset = this.player.game.assetLoader?.getById(this.id)!
+    const asset = this.player.game.assetLoader?.getByName(this.id)!
 
     if (this.frameTimer > this.frameInterval) {
-      if (this.frameX < asset.frames - 1) {
+      if (this.frameX < (asset.frames ?? 1) - 1) {
         this.frameX++
       } else {
         if (this.oneTimeAction) {

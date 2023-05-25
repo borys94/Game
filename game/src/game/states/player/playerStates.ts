@@ -18,9 +18,9 @@ export class Standing extends State {
     if (inputs.includes('ArrowRight')) this.character.setState('running', 'right')
     else if (inputs.includes('ArrowLeft')) this.character.setState('running', 'left')
     else if (inputs.includes('ArrowUp')) this.character.setState('jumping')
-    else if (inputs.includes('Digit1')) this.character.setState('hit')
-    else if (inputs.includes('Digit2')) this.character.setState('doubleHit')
-    else if (inputs.includes('Digit3')) this.character.setState('strongAttack')
+    else if (inputs.includes('Digit1')) this.character.gunManager.hideGun()
+    else if (inputs.includes('Digit2')) this.character.gunManager.showGun()
+    // else if (inputs.includes('Digit3')) this.character.setState('strongAttack')
     else if (inputs.includes('Enter')) this.character.setState('use')
     else if (inputs.includes('Space')) this.character.shot()
     else if (inputs.includes('Digit4')) this.character.setState('hurt')
@@ -62,7 +62,8 @@ export class Running extends State {
       } else {
         this.character.setState('doubleJump')
       }
-    }
+    } else if (inputs.includes('Digit1')) this.character.gunManager.hideGun()
+    else if (inputs.includes('Digit2')) this.character.gunManager.showGun()
   }
 }
 
@@ -96,7 +97,8 @@ export class Jumping extends State {
       } else {
         this.character.setState('doubleJump')
       }
-    }
+    } else if (inputs.includes('Digit1')) this.character.gunManager.hideGun()
+    else if (inputs.includes('Digit2')) this.character.gunManager.showGun()
   }
 }
 
@@ -125,7 +127,8 @@ export class Falling extends State {
       } else {
         this.character.setState('doubleJump')
       }
-    }
+    } else if (inputs.includes('Digit1')) this.character.gunManager.hideGun()
+    else if (inputs.includes('Digit2')) this.character.gunManager.showGun()
   }
 }
 

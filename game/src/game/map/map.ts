@@ -1,10 +1,8 @@
 import type Element from './Element'
-import { buildElement } from './Element'
 import { TILE_SIZE } from '../config'
 import type Game from '..'
 import type Enemy from '../characters/enemy'
 import { buildEnemy } from '../characters/buildEnemy'
-import { AssetType } from '../assets'
 import { MapType } from '../mapStore'
 import Elements from './elements'
 import Background from './background'
@@ -20,6 +18,8 @@ class Map {
     this.background = new Background(game)
 
     this.update = this.update.bind(this)
+
+    this.loadEnemies()
   }
 
   get width(): number {
@@ -30,7 +30,7 @@ class Map {
     return this.elements.tiles.length * TILE_SIZE
   }
 
-  loadEnemies(): void {
+  private loadEnemies(): void {
     for (const enemy of this.map.enemies) {
       this.enemies.push(buildEnemy(this.game, enemy))
     }

@@ -1,5 +1,5 @@
 import type Map from './map/map'
-import type Player from './characters/player'
+import type Player from './characters/player/player'
 
 class Camera {
   x = 0

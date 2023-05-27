@@ -667,7 +667,7 @@
       "frames": 1
     },
     {
-      "name": "industrialZone-decoration-Flag",
+      "name": "finish-decoration-flag",
       "frame": { "x": 96, "y": 949, "w": 32, "h": 64 },
       "id": 151,
       "frames": 1

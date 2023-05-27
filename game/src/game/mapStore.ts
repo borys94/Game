@@ -6,6 +6,14 @@ export type MapType = {
   decorations: number[][]
   interactive: number[][]
   enemies: EnemyObject[]
+  finish: {
+    x: number
+    y: number
+  }
+  player: {
+    x: number
+    y: number
+  }
 }
 
 export type MapDetails = {

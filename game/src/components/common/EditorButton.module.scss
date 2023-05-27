@@ -1,17 +1,43 @@
+@import './styles.scss';
+
 .button {
-  background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+  text-transform: uppercase;
+  padding: 8px;
+  width: 100%;
+}
 
-  background-color: #aaa;
-  padding: 5px 10px;
-  border: 1px solid #888;
-  border-radius: 5px;
+.buttonWrapper {
+  position: relative;
+}
 
-  // font-size: 30px;
-  // color: #ddd;
+.small {
+  min-width: 80px;
+}
+
+.medium {
+  min-width: 120px;
+}
+
+.large {
+  min-width: 160px;
+}
+
+.primary {
+  .button {
+    color: $primary;
+  }
+  .buttonBorder {
+    filter: drop-shadow($primary 0px 0px 2px);
+    border-bottom: 2px solid $primary;
+  }
+}
+
+.danger {
+  .button {
+    color: $danger;
+  }
+  .buttonBorder {
+    filter: drop-shadow($danger 0px 0px 2px);
+    border-bottom: 2px solid $danger;
+  }
 }

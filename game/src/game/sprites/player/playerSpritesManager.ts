@@ -1,4 +1,4 @@
-import type Player from '../../characters/player'
+import type Player from '../../characters/player/player'
 
 import SpriteManager from '../spriteManager'
 import Sprite from '../sprite'
@@ -24,7 +24,8 @@ class PlayerSpriteManager extends SpriteManager {
       use: new Sprite(player, 'heroes', 'punk-use', undefined, true),
       hurt: new Sprite(player, 'heroes', 'punk-hurt', undefined, true),
       death: new Sprite(player, 'heroes', 'punk-death', undefined, true),
-      doubleJump: new Sprite(player, 'heroes', 'punk-doublejump', 50)
+      doubleJump: new Sprite(player, 'heroes', 'punk-doublejump', 50),
+      happy: new Sprite(player, 'heroes', 'punk-happy', 150, true)
     }
 
     this.withoutOneArm = {
@@ -70,7 +71,7 @@ class PlayerSpriteManager extends SpriteManager {
   getCurrentSprite() {
     const state = this.player.stateManager.currentState.state
     if (
-      ['hit', 'doubleHit', 'strongAttack', 'use', 'hurt', 'death', 'doubleJump'].includes(state) ||
+      ['hit', 'doubleHit', 'strongAttack', 'use', 'hurt', 'death', 'doubleJump', 'happy'].includes(state) ||
       !this.player.hasWeapon()
     ) {
       return this.defaultSprites[state]
@@ -94,7 +95,7 @@ class PlayerSpriteManager extends SpriteManager {
     const state = this.player.stateManager.currentState.state
 
     if (
-      ['hit', 'doubleHit', 'strongAttack', 'use', 'hurt', 'death', 'doubleJump'].includes(state) ||
+      ['hit', 'doubleHit', 'strongAttack', 'use', 'hurt', 'death', 'doubleJump', 'happy'].includes(state) ||
       !this.player.hasWeapon()
     ) {
       // console.log('default', state)

@@ -3,17 +3,22 @@ import styles from './Button.module.scss'
 import classnames from 'classnames'
 import sounds from '../../game/sounds'
 
-interface Props {
+type Props = {
   children: React.ReactNode
+  size?: 'small' | 'medium' | 'large'
+  variant?: 'primary' | 'danger'
   onClick?: () => void
-  variant: 'primary' | 'secondary'
-}
+} & Omit<React.InputHTMLAttributes<HTMLButtonElement>, 'size'>
 
-export const Button = ({ children, variant, onClick }: Props) => (
-  <div className={classnames(styles.buttonWrapper)} onMouseEnter={() => sounds.menuSound()}>
-    <button className={classnames(styles.button, variant === 'secondary' && styles.secondaryButton)} onClick={onClick}>
+export const Button = ({ children, variant = 'primary', size = 'medium', onClick }: Props) => (
+  <div
+    className={classnames(styles.buttonWrapper, styles[size], styles[variant])}
+    onMouseEnter={() => sounds.menuSound()}
+  >
+    <button className={styles.button} onClick={onClick}>
       {children}
     </button>
+    <div className={styles.buttonBorder}></div>
   </div>
 )
 

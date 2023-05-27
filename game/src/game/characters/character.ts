@@ -167,8 +167,8 @@ abstract class Character {
     if (this.x < 0) {
       this.x = 0
     }
-    if (this.x >= this.game.map.width - this.width) {
-      this.x = this.game.map.width - this.width
+    if (this.x >= this.game.map.width - this.width + this.paddingRight) {
+      this.x = this.game.map.width - this.width + this.paddingRight
     }
   }
 

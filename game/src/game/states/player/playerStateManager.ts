@@ -1,4 +1,4 @@
-import type Player from '../../characters/player'
+import type Player from '../../characters/player/player'
 import {
   Standing,
   Running,
@@ -10,14 +10,12 @@ import {
   Use,
   Hurt,
   Death,
-  DoubleJump
+  DoubleJump,
+  Happy
 } from './playerStates'
 import StateManager from '../stateManager'
 
 class PlayerStateManager extends StateManager {
-  // TODO
-  // states!: Record<string, State>
-
   constructor(public player: Player) {
     const states = {
       standing: new Standing(player),
@@ -30,7 +28,8 @@ class PlayerStateManager extends StateManager {
       use: new Use(player),
       hurt: new Hurt(player),
       death: new Death(player),
-      doubleJump: new DoubleJump(player)
+      doubleJump: new DoubleJump(player),
+      happy: new Happy(player)
     }
     super(player, states)
 

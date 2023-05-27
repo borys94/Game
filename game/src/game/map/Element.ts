@@ -1,6 +1,5 @@
-import { type AssetType } from '../assets'
 import { type InputType } from '../inputHandler'
-import type Player from '../characters/player'
+import type Player from '../characters/player/player'
 import type Game from '..'
 import sounds from '../sounds'
 import { TILE_SIZE } from '../config'
@@ -94,8 +93,10 @@ export const buildElement = (game: Game, assetId: number, y: number, x: number):
       return new ChestElement(game, assetId, y, x)
     } else if (asset.extra.interactiveType === 'trap') {
       return new TrapElement(game, assetId, y, x)
-    } else if (asset.extra.interactiveType === 'money' || asset.extra.interactiveType === 'card') {
-      return new CollectableElement(game, assetId, y, x)
+    } else if (asset.extra.interactiveType === 'card') {
+      return new CardElement(game, assetId, y, x)
+    } else if (asset.extra.interactiveType === 'money') {
+      return new MoneyElement(game, assetId, y, x)
     } else if (asset.extra.interactiveType === 'gun') {
       return new GunElement(game, assetId, y, x, asset.extra.gunLevel!)
     }
@@ -169,9 +170,19 @@ export class TrapElement extends Element {
   handle(player: Player, inputs: InputType[]): void {}
 }
 
-export class CollectableElement extends Element {
+export class CardElement extends Element {
   enter(player: Player): void {
     player.cards++
+    this.active = false
+    sounds.unlockSound()
+  }
+
+  handle(player: Player, inputs: InputType[]): void {}
+}
+
+export class MoneyElement extends Element {
+  enter(player: Player): void {
+    player.money++
     this.active = false
     sounds.unlockSound()
   }

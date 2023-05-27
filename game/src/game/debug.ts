@@ -1,5 +1,5 @@
 import type InputHandler from './inputHandler'
-import type Player from './characters/player'
+import type Player from './characters/player/player'
 
 function drawText(ctx: CanvasRenderingContext2D, message: string, x: number, y: number): void {
   ctx.font = '9px Helvetica'

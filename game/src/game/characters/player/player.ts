@@ -1,31 +1,34 @@
-import { type InputType } from '../inputHandler'
-import Character from './character'
-import type Game from '..'
-import PlayerStateManager from '../states/player/playerStateManager'
-import PlayerSpriteManager from '../sprites/player/playerSpritesManager'
-import GunManager from '../guns/gun'
+import { type InputType } from '../../inputHandler'
+import Character from '../character'
+import type Game from '../..'
+import PlayerStateManager from '../../states/player/playerStateManager'
+import PlayerSpriteManager from '../../sprites/player/playerSpritesManager'
+import GunManager from '../../guns/gun'
+import { CANVAS_WIDTH } from '../../config'
+import PlayerCollectionBar from './collectionBar'
 
 class Player extends Character {
   stateManager: PlayerStateManager = new PlayerStateManager(this)
   spriteManager: PlayerSpriteManager = new PlayerSpriteManager(this)
   gunManager: GunManager = new GunManager(this)
 
+  collectionBar: PlayerCollectionBar = new PlayerCollectionBar(this)
+
   paddingLeft = 4
   paddingRight = 24
 
   cards = 0
+  money = 0
 
   constructor(game: Game) {
     super(game, {
-      x: 20,
-      y: 316,
+      x: game.map.elements.mapDetails.player.x,
+      y: game.map.elements.mapDetails.player.y,
       width: 48,
       height: 48,
       maxVy: 15,
       maxHealth: 20
     })
-
-    // this.gunManager.setGun(9)
   }
 
   hasWeapon() {
@@ -71,6 +74,7 @@ class Player extends Character {
     this.drawHealthBar()
     this.drawEnduranceBar()
     this.drawWeapon()
+    this.collectionBar.draw()
   }
 
   drawHealthBar() {

@@ -1,12 +1,14 @@
+@import '../common/styles.scss';
 
 .header {
   padding: 10px 15px;
   display: flex;
-  gap: 25px;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid $hr-color;
   margin-bottom: 10px;
-}
+  justify-content: space-between;
 
-dialog::backdrop {
-  background-color: red;
+  > div {
+    display: flex;
+    gap: 25px;
+  }
 }

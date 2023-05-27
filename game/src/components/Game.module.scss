@@ -1,6 +1,9 @@
+@import './common/styles.scss';
 .gameWrapper {
   font-family: 'Cyberpunk Is Not Dead', sans-serif;
   // background-image: url('menuBackground.png');
+
+  color: $primary;
 }
 
 .canvas {
@@ -153,4 +156,5 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 200px;
 }

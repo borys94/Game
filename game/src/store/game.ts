@@ -22,6 +22,9 @@ export const gameStore = createSlice({
   },
   reducers: {
     initGame: (state: GameStore, action: PayloadAction<InitGameAction>) => {
+      if (state.instance) {
+        return
+      }
       state.instance = action.payload.game
       state.instance.setupListeners()
       state.paused = state.instance.paused

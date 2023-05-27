@@ -1,5 +1,5 @@
 import type Enemy from '../../characters/enemy'
-import type Player from '../../characters/player'
+import type Player from '../../characters/player/player'
 import { type InputType } from '../../inputHandler'
 import { State } from '../state'
 import Sounds from '../../sounds'
@@ -335,5 +335,27 @@ export class DoubleJump extends State {
       this.character.speed = 0
       // enemy
     }
+  }
+}
+
+export class Happy extends State {
+  constructor(public character: Player) {
+    super('happy')
+  }
+
+  enter(): void {
+    console.log('enter happy')
+    this.character.speed = 0
+  }
+
+  handle(): void {
+    console.log('handle happy')
+    console.log(this.character.spriteManager.getCurrentSprite())
+    if (this.character.spriteManager.getCurrentSprite().performed) {
+      this.character.setState('standing')
+    }
+    // if (this.character.frameX === this.sprite.frames - 1) {
+    //   this.performed = true
+    // }
   }
 }

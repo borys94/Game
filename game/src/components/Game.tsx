@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Game.module.scss'
 import { Button, IconButton } from './common/Button'
 import { useSelector, useDispatch } from 'react-redux'
@@ -6,24 +6,56 @@ import { type RootState } from '../store'
 import { initGame, toggleSound, unpause } from '../store/game'
 import Game from '../game'
 import Sounds from '../game/sounds'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
+import Card from './common/Card/Card'
+import HelpModal from './HelpModal'
+import mapStore from '../game/mapStore'
+import Map from '../game/map/map'
+import sounds from '../game/sounds'
 
 function GameCmp(): React.ReactElement {
-  const paused = useSelector((state: RootState) => state.game.paused)
-  const game = useSelector((state: RootState) => state.game.instance)
-  const loadedAssets = useSelector((state: RootState) => state.game.loadedAssets)
-  const sound = useSelector((state: RootState) => state.game.sound)
+  const [helpOpen, setHelpOpen] = useState(false)
+  const [game, setGame] = useState<Game>()
+  const [paused, setPaused] = useState(true)
+  const [sound, setSound] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  let [searchParams, setSearchParams] = useSearchParams()
+  const mapName = searchParams.get('mapName')
 
   const play = () => {
     if (!game) {
-      dispatch(initGame({ game: new Game() }))
-    } else {
-      dispatch(unpause())
+      return
     }
+    game.paused = false
+    setPaused(false)
   }
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        game.paused = !game.paused
+        setPaused(game.paused)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+
+    const game = new Game()
+    setGame(game)
+    setSound(sounds.active)
+    return () => {
+      game.destroy()
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (mapName && game) {
+      game.map = new Map(game, mapStore.getMapByName(mapName)?.map!)
+      play()
+    }
+  }, [game, mapName])
 
   useEffect(() => {
     if (paused) {
@@ -38,7 +70,7 @@ function GameCmp(): React.ReactElement {
   const handleToogleSound = () => {
     Sounds.toogle()
     Sounds.playMenu()
-    dispatch(toggleSound())
+    setSound(sounds.active)
   }
 
   const goToEditor = () => {
@@ -65,21 +97,20 @@ function GameCmp(): React.ReactElement {
           <Button variant="primary" onClick={play}>
             PLAY
           </Button>
-          <Button variant="secondary" onClick={goToEditor}>
+          <Button variant="primary" onClick={goToEditor}>
             MAP EDITOR
           </Button>
 
           {/* TODO */}
-          <Button variant="secondary">SETTINGS</Button>
-          <Button variant="secondary">HELP</Button>
+          <Button variant="primary">SETTINGS</Button>
+          <Button variant="primary" onClick={() => setHelpOpen(true)}>
+            HELP
+          </Button>
 
           <div className={styles.bottomBar}>
             <IconButton onClick={handleToogleSound}>
-              <img src={`assets/volume${sound ? '' : '-slash'}.svg`} alt="volume" />
+              <img src={`assets/volume${sounds.active ? '' : '-slash'}.svg`} alt="volume" />
             </IconButton>
-            {/* <IconButton>
-              <img src='icons/gear.svg' />
-            </IconButton> */}
 
             <a href="https://github.com/borys94/Game" target="_blank">
               <IconButton>
@@ -92,7 +123,7 @@ function GameCmp(): React.ReactElement {
           </div>
 
           <div className={styles.levels}>
-            <div className={styles.card}>
+            <Card>
               <div className={styles.levelsWrapper}>
                 <div className={styles.level}>
                   <div>LEVEL 1</div>
@@ -116,10 +147,12 @@ function GameCmp(): React.ReactElement {
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
+
+      <HelpModal open={helpOpen} handleClose={() => setHelpOpen(false)} />
     </div>
   )
 }

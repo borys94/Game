@@ -1,6 +1,5 @@
 import Game from '..'
 import Element, { buildElement } from './Element'
-import { AssetType } from '../assets'
 import { TILE_SIZE } from '../config'
 import { MapType } from '../mapStore'
 import { AssetFrameDetail } from '../assetLoader'
@@ -50,6 +49,7 @@ class Elements {
     this.drawTiles(this.game.ctx, this.bgTiles)
     this.drawTiles(this.game.ctx, this.tiles)
     this.drawElements(this.game.ctx, deltaTime)
+    this.drawFinish(this.game.ctx)
   }
 
   drawTiles(ctx: CanvasRenderingContext2D, tiles: number[][]): void {
@@ -78,6 +78,15 @@ class Elements {
     }
   }
 
+  drawFinish(ctx: CanvasRenderingContext2D) {
+    const asset = this.game.assetLoader.getByName('finish-decoration-flag') || null
+
+    if (asset && this.mapDetails.finish) {
+      // console.log(this.mapDetails.finish)
+      this.drawAsset(ctx, asset, this.mapDetails.finish.y, this.mapDetails.finish.x)
+    }
+  }
+
   drawAsset(ctx: CanvasRenderingContext2D, asset: AssetFrameDetail | null, i: number, j: number) {
     if (!asset) {
       return
@@ -94,8 +103,8 @@ class Elements {
         h,
         j * TILE_SIZE - this.game.camera.x,
         i * TILE_SIZE - this.game.camera.y + TILE_SIZE - h,
-        TILE_SIZE,
-        TILE_SIZE
+        w,
+        h
       )
     }
   }

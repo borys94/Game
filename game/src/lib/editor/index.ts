@@ -1,5 +1,4 @@
 import Game from '../../game'
-import { type AssetType } from '../../game/assets'
 import { type EnemyObject } from '../../game/characters/enemy'
 import { buildEnemy } from '../../game/characters/buildEnemy'
 import config from '../../game/config'
@@ -39,28 +38,28 @@ class Editor extends Game {
     this.camera.update = () => {}
     this.rect = this.canvas.getBoundingClientRect()
 
-    this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-      this.hoverX = (e.clientX - this.rect.left) / this.scale
-      this.hoverY = (e.clientY - this.rect.top) / this.scale
-    })
+    this.onResize = this.onResize.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onWheel = this.onWheel.bind(this)
 
+    this.canvas.addEventListener('mousemove', this.onMouseMove)
     this.canvas.addEventListener('mousedown', this.onMouseDown)
-
-    this.canvas.addEventListener(
-      'wheel',
-      (e: WheelEvent) => {
-        e.preventDefault()
-        this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width / this.scale)
-        this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height / this.scale)
-      },
-      { passive: false }
-    )
-
+    this.canvas.addEventListener('wheel', this.onWheel, { passive: false })
     window.addEventListener('resize', this.onResize)
+
     this.onResize()
   }
 
-  onResize = () => {
+  destroy(): void {
+    super.destroy()
+    this.canvas.removeEventListener('mousemove', this.onMouseMove)
+    this.canvas.removeEventListener('mousedown', this.onMouseDown)
+    this.canvas.removeEventListener('wheel', this.onWheel)
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize() {
     this.rect = this.canvas.getBoundingClientRect()
 
     const scale = Math.min((window.innerWidth - 400) / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
@@ -69,7 +68,13 @@ class Editor extends Game {
     this.canvas.height = CANVAS_HEIGHT * scale
   }
 
-  onMouseDown = (): void => {
+  onWheel(e: WheelEvent) {
+    e.preventDefault()
+    this.camera.x = clamp(this.camera.x + e.deltaX, 0, this.map.width - this.canvas.width / this.scale)
+    this.camera.y = clamp(this.camera.y + e.deltaY, 0, this.map.height - this.canvas.height / this.scale)
+  }
+
+  onMouseDown() {
     if (this.activeEnemyType) {
       this.addEnemy(this.activeEnemyType)
       return
@@ -82,13 +87,9 @@ class Editor extends Game {
     if (this.layer === 'decorations') this.fillDecorationTile()
   }
 
-  loadMap = (value: string): MapType => {
-    if (value === 'easy') {
-      return easyMap
-    } else if (value === 'medium') {
-      return mediumMap
-    }
-    return easyMap
+  onMouseMove(e: MouseEvent) {
+    this.hoverX = (e.clientX - this.rect.left) / this.scale
+    this.hoverY = (e.clientY - this.rect.top) / this.scale
   }
 
   update() {}

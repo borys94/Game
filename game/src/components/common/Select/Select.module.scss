@@ -1,3 +1,5 @@
+@import '../styles.scss';
+
 
 .select {
   background: none;
@@ -8,9 +10,8 @@
 	cursor: pointer;
 	outline: inherit;
 
-  background-color: #aaa;
+  background-color: $inputBg;
   padding: 5px 10px;
-  border: 1px solid #888;
-  border-radius: 5px;
+  // border: 1px solid $primary;
   min-width: 100px;
 }

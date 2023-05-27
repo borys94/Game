@@ -3,6 +3,14 @@
 import { MapType } from '../game/mapStore'
 
 const map: MapType = {
+  finish: {
+    x: 50,
+    y: 18
+  },
+  player: {
+    x: 20,
+    y: 316
+  },
   tiles: [
     [
       225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

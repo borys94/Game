@@ -9,6 +9,7 @@
   // background-color: rgba(0,0,0, 0.5);
   display: flex;
   align-items: center;
+  z-index: 1;
   
 }
 
@@ -23,10 +24,10 @@
 
 .modal {
   position: absolute;
-  padding: 10px;
-  border-radius: 5px;
-  width: 300px;
-  background-color: #ddd;
+  padding: 16px;
+  border: 1px solid $primary;
+  width: 460px;
+  background-color: $blackGlass;
   margin: auto;
   // top: 0;
   // bottom: 0;
@@ -38,7 +39,7 @@
 
 .modalTitle {
   font-size: 22px;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $hr-color;
   padding-bottom: 10px;
 }
 
@@ -51,8 +52,18 @@
 
 .modalButtonBar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid $hr-color;
   padding-top: 10px;
+}
+
+.modalCloseButton {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  transform: rotate(45deg);
+  font-size: 36px;
+  color: $secondary;
+  font-weight: 200;
 }

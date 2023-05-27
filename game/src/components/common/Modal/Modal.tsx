@@ -16,6 +16,9 @@ const Modal = ({ open, onClose, title, children }: Props) => {
     <div className={styles.modalWrapper}>
       <div className={styles.overlay} onClick={onClose} />
       <div className={styles.modal}>
+        <button className={styles.modalCloseButton} onClick={onClose}>
+          +
+        </button>
         <div className={styles.modalTitle}>{title}</div>
         {children}
       </div>
@@ -23,20 +26,12 @@ const Modal = ({ open, onClose, title, children }: Props) => {
   )
 }
 
-export const ModalContent = ({ children }: {children: React.ReactNode}) => {
-  return (
-    <div className={styles.modalContent}>
-      {children}
-    </div>
-  )
+export const ModalContent = ({ children }: { children: React.ReactNode }) => {
+  return <div className={styles.modalContent}>{children}</div>
 }
 
-export const ModalButtonBar = ({ children }: {children: React.ReactNode}) => {
-  return (
-    <div className={styles.modalButtonBar}>
-      {children}
-    </div>
-  )
+export const ModalButtonBar = ({ children }: { children: React.ReactNode }) => {
+  return <div className={styles.modalButtonBar}>{children}</div>
 }
 
 export default Modal

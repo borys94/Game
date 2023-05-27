@@ -1,17 +1,27 @@
 import type Character from '../characters/character'
+import Player from '../characters/player/player'
 
+type Options = {
+  frameInterval?: number
+  oneTimeAction?: boolean
+  shiftX?: number
+  shiftY?: number
+}
 export default class Sprite {
   frameX = 0
   frameTimer = 0
   performed = false
+  frameInterval = 100
+  oneTimeAction = false
+  shiftY = 0
+  shiftX = 0
 
-  constructor(
-    public player: Character,
-    public assetPack: string,
-    public id: string,
-    public frameInterval: number = 100,
-    public oneTimeAction: boolean = false
-  ) {}
+  constructor(public player: Character, public assetPack: string, public id: string, public options?: Options) {
+    this.frameInterval = options?.frameInterval ?? this.frameInterval
+    this.oneTimeAction = options?.oneTimeAction ?? this.oneTimeAction
+    this.shiftX = options?.shiftX ?? this.shiftX
+    this.shiftY = options?.shiftY ?? this.shiftY
+  }
 
   enter() {
     this.frameX = 0
@@ -32,10 +42,25 @@ export default class Sprite {
 
     this.animate(deltaTime)
     const scaleX = this.player.getScaleX()
-    const width = asset.frame.w / (asset.frames ?? 1)
 
     ctx.save()
     ctx.scale(scaleX, 1)
+
+    this.drawImage(ctx)
+
+    ctx.restore()
+  }
+
+  drawImage(ctx: CanvasRenderingContext2D) {
+    const img = this.player.game.assetLoader?.getImage(this.assetPack)
+    const asset = this.player.game.assetLoader?.getByName(this.id)
+    const scaleX = this.player.getScaleX()
+
+    if (!asset || !img) {
+      throw new Error()
+    }
+
+    const width = asset.frame.w / (asset.frames ?? 1)
     ctx.drawImage(
       img,
       asset.frame.x + width * this.frameX,
@@ -48,7 +73,6 @@ export default class Sprite {
       width,
       asset.frame.h
     )
-    ctx.restore()
   }
 
   animate(deltaTime: number): void {

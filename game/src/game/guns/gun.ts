@@ -19,7 +19,17 @@ class GunManager {
       new Gun(player, 7, 400, 11),
       new Gun(player, 8, 300, 13),
       new Gun(player, 9, 200, 16),
-      new Gun(player, 10, 150, 20)
+      new Gun(player, 10, 150, 20),
+      new Gun(player, 11, 150, 24),
+      new Gun(player, 12, 150, 30),
+      new Gun(player, 13, 150, 38),
+      new Gun(player, 14, 150, 48),
+      new Gun(player, 15, 150, 60),
+      new Gun(player, 16, 150, 74),
+      new Gun(player, 17, 150, 90),
+      new Gun(player, 18, 150, 108),
+      new Gun(player, 19, 150, 130),
+      new Gun(player, 20, 150, 154)
     ]
   }
 
@@ -124,16 +134,17 @@ class Gun {
     if (!bulletAsset || !gunAsset) {
       throw new Error(`Cannot find asset for gun or bullet! id=${this.bulletId}`)
     }
+    const twoHandedGun = this.level >= 10
     const scaleX = this.player.getScaleX()
     const halfBulletSize = bulletAsset.frame.w / 2
     const x =
       this.player.getPlayerCenter() -
       this.getSwayShiftX() -
       halfBulletSize +
-      scaleX * (gunAsset.frame.w + 11 + halfBulletSize)
+      scaleX * (gunAsset.frame.w + (twoHandedGun ? 0 : 11) + halfBulletSize)
 
     // TODO: tak samo jak bron
-    const y = this.player.y + this.getSwayShiftY() - gunAsset.frame.h + 16 + 11 + 1
+    const y = this.player.y + this.getSwayShiftY() - gunAsset.frame.h + 16 + (twoHandedGun ? 20 : 11) + 1
     return [x, y]
   }
 }

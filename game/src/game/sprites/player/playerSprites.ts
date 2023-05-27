@@ -1,8 +1,22 @@
+import Player from '../../characters/player/player'
 import Sprite from '../sprite'
 
 const ARM_WIDTH = 11
 
-abstract class PlayeSpite extends Sprite {
+export class PlayerSprite extends Sprite {
+  drawImage(ctx: CanvasRenderingContext2D): void {
+    this.drawInvisibleIfNeeded(ctx)
+    super.drawImage(ctx)
+  }
+
+  drawInvisibleIfNeeded(ctx: CanvasRenderingContext2D) {
+    if (this.player instanceof Player && this.player.invisible && this.frameX % 2) {
+      ctx.globalAlpha = 0.5
+    }
+  }
+}
+
+abstract class PlayeExtendedBodySpite extends PlayerSprite {
   getSwayShiftX(): number {
     const { state } = this.player.stateManager.currentState
     const frameX = this.player.game.player.spriteManager.getCurrentFrame()
@@ -38,19 +52,15 @@ abstract class PlayeSpite extends Sprite {
     return 0
   }
 
-  draw(ctx: CanvasRenderingContext2D, deltaTime: number): void {
+  drawImage(ctx: CanvasRenderingContext2D): void {
     const img = this.player.game.assetLoader?.getImage(this.assetPack)
     const asset = this.player.game.assetLoader?.getByName(this.id)
-    // console.log('------')
+
     if (!asset || !img) {
-      return
+      throw new Error()
     }
 
-    const scaleX = this.player.getScaleX()
-
-    ctx.save()
-    ctx.scale(scaleX, 1)
-
+    this.drawInvisibleIfNeeded(ctx)
     ctx.drawImage(
       img,
       asset.frame.x,
@@ -62,15 +72,13 @@ abstract class PlayeSpite extends Sprite {
       asset.frame.w,
       asset.frame.h
     )
-
-    ctx.restore()
   }
 
   abstract getPositionX(): number
   abstract getPositionY(): number
 }
 
-export class ArmSprite extends PlayeSpite {
+export class ArmSprite extends PlayeExtendedBodySpite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
@@ -83,7 +91,20 @@ export class ArmSprite extends PlayeSpite {
   }
 }
 
-export class GunSprite extends PlayeSpite {
+export class TwoArmSprite extends PlayeExtendedBodySpite {
+  getPositionX() {
+    const scaleX = this.player.getScaleX()
+    const swayShiftX = this.getSwayShiftX()
+    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH + 2
+  }
+
+  getPositionY() {
+    const swayShiftY = this.getSwayShiftY()
+    return this.player.y - this.player.game.camera.y + 15 + swayShiftY
+  }
+}
+
+export class GunSprite extends PlayeExtendedBodySpite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
@@ -104,5 +125,23 @@ export class PistolGunSprite extends GunSprite {
 
   getPositionX() {
     return super.getPositionX() + 1
+  }
+}
+
+export class TwoHandedGunSprite extends GunSprite {
+  // constructor(...args: any[]) {
+  //   super(...args as any)
+  // }
+
+  getPositionX() {
+    const scaleX = this.player.getScaleX()
+    const swayShiftX = this.getSwayShiftX()
+    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - 6 + this.shiftX
+  }
+
+  getPositionY() {
+    const swayShiftY = this.getSwayShiftY()
+    const asset = this.player.game.assetLoader?.getByName(this.id)!
+    return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 7 + this.shiftY
   }
 }

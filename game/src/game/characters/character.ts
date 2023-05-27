@@ -3,6 +3,7 @@ import { TILE_SIZE } from '../config'
 import SpriteManager from '../sprites/spriteManager'
 import StateManager from '../states/stateManager'
 import { clamp } from '../utils'
+import Enemy from './enemy'
 
 interface CharacterOptions {
   x: number
@@ -62,6 +63,13 @@ abstract class Character {
 
     this.x = options.x
     this.y = options.y
+  }
+
+  get realX() {
+    return this.x + this.paddingLeft
+  }
+  get realWidth() {
+    return this.width - this.paddingLeft - this.paddingRight
   }
 
   getPlayerCenter() {
@@ -176,7 +184,7 @@ abstract class Character {
     return this.health > 0
   }
 
-  hurt = (hurtValue: number): void => {
+  hurt(hurtValue: number) {
     if (this.health > 0) {
       this.setState('hurt')
     }

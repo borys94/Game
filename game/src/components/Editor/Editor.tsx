@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Editor from '../../lib/editor'
-import { type TileType, type MapSet } from '../../tiles'
 import styles from './Editor.module.scss'
 // import { NativeSelect, InputNumber, Typography, Button } from 'tiny-ui'
 import EnemyTiles from './EnemyTiles'
@@ -166,7 +165,7 @@ const AllTiles = ({ frames, editor }: { editor: Editor; frames: AssetFrameDetail
 type SingleTileProps = {
   img?: HTMLImageElement
   frame?: AssetFrameDetail
-  tileType: TileType
+  tileType: 'interactive' | 'decoration' | 'tile' | 'backgroundTile' | 'obstacle'
   editor: Editor
   type?: 'guns'
 }

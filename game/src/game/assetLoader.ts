@@ -37,12 +37,6 @@ class AssetLoader {
   }
 
   isLoaded() {
-    // console.log(
-    //   this.assets.heroes.loaded,
-    //   this.assets.gunPack.loaded,
-    //   this.assets.enemies.loaded,
-    //   this.assets.map.loaded,
-    // )
     return (
       this.assets.heroes.loaded && this.assets.gunPack.loaded && this.assets.enemies.loaded && this.assets.map.loaded
     )
@@ -80,23 +74,16 @@ class Assets {
   public loaded = false
 
   private promiseResolve: (v?: unknown) => void = () => {}
-  private promiseReject: (v?: unknown) => void = () => {}
-  private loadingPromise = new Promise((res, rej) => {
-    this.promiseResolve = res
-    this.promiseReject = rej
-  })
 
   constructor(private name: string, public details: AssetFrameDetail[]) {
     this.load()
   }
 
   getByName(id: string): AssetFrameDetail | undefined {
-    // await this.loadingPromise
     return this.map[id]
   }
 
   getById(id: number): AssetFrameDetail | undefined {
-    // await this.loadingPromise
     return this.sortedById[id]
   }
 
@@ -106,16 +93,11 @@ class Assets {
     this.img.src = `newAssets/${this.name}.png`
 
     if (this.img.complete) {
-      console.log('od razu')
-      this.promiseResolve()
       this.loaded = true
     }
 
     this.img.onload = () => {
       this.loaded = true
-      console.log('laod')
-      // TODO
-      // store.dispatch(setLoadedAssets())
     }
 
     this.img.onerror = () => {

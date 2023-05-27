@@ -10,11 +10,11 @@ class EnemySpriteManager extends SpriteManager {
     super()
 
     this.defaultSprites = {
-      standing: new Sprite(player, 'enemies', `${type}-idle`, 200),
-      walking: new Sprite(player, 'enemies', `${type}-walk`, 150),
-      attack: new Sprite(player, 'enemies', `${type}-attack`, undefined, true),
-      hurt: new Sprite(player, 'enemies', `${type}-hurt`, undefined, true),
-      death: new Sprite(player, 'enemies', `${type}-death`, 150, true)
+      standing: new Sprite(player, 'enemies', `${type}-idle`, { frameInterval: 200 }),
+      walking: new Sprite(player, 'enemies', `${type}-walk`, { frameInterval: 150 }),
+      attack: new Sprite(player, 'enemies', `${type}-attack`, { oneTimeAction: true }),
+      hurt: new Sprite(player, 'enemies', `${type}-hurt`, { oneTimeAction: true }),
+      death: new Sprite(player, 'enemies', `${type}-death`, { frameInterval: 150, oneTimeAction: true })
     }
 
     this.state = player.stateManager.currentState.state

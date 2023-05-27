@@ -4,8 +4,6 @@ import config from './config'
 import Map from './map/map'
 import Camera from './camera'
 import { drawDebugInfo } from './debug'
-import store from '../store'
-import { pause, unpause } from '../store/game'
 import AssetLoader from './assetLoader'
 import level1 from '../maps/level1'
 import level2 from '../maps/medium'
@@ -63,18 +61,7 @@ class Game {
 
   setupListeners() {
     window.addEventListener('resize', this.onResize)
-    // window.addEventListener('keydown', this.onKeyPress)
     this.onResize()
-  }
-
-  onKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (this.paused) {
-        store.dispatch(unpause())
-      } else {
-        store.dispatch(pause())
-      }
-    }
   }
 
   onResize() {
@@ -119,10 +106,8 @@ class Game {
     requestAnimationFrame(this.animate)
   }
 
-  // TODO: ogarnac to
   destroy(): void {
     this.active = false
-    window.removeEventListener('keydown', this.onKeyPress)
     window.removeEventListener('resize', this.onResize)
   }
 

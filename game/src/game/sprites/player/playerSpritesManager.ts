@@ -1,45 +1,45 @@
 import type Player from '../../characters/player/player'
 
 import SpriteManager from '../spriteManager'
-import Sprite from '../sprite'
-import { ArmSprite, GunSprite, PistolGunSprite } from './playerSprites'
+import { PlayerSprite, ArmSprite, GunSprite, PistolGunSprite, TwoHandedGunSprite, TwoArmSprite } from './playerSprites'
 
 class PlayerSpriteManager extends SpriteManager {
-  defaultSprites: Record<string, Sprite> = {}
-  withoutOneArm: Record<string, Sprite> = {}
-  withoutTwoArms: Record<string, Sprite> = {}
+  defaultSprites: Record<string, PlayerSprite> = {}
+  withoutOneArm: Record<string, PlayerSprite> = {}
+  withoutTwoArms: Record<string, PlayerSprite> = {}
   arms: Record<string, ArmSprite> = {}
+  twoArms: Record<string, ArmSprite> = {}
   guns: GunSprite[] = []
 
   constructor(public player: Player) {
     super()
     this.defaultSprites = {
-      standing: new Sprite(player, 'heroes', 'punk-idle', 200),
-      running: new Sprite(player, 'heroes', 'punk-run'),
-      jumping: new Sprite(player, 'heroes', 'punk-jump'),
-      falling: new Sprite(player, 'heroes', 'punk-jump'),
-      hit: new Sprite(player, 'heroes', 'punk-attack1', undefined, true),
-      doubleHit: new Sprite(player, 'heroes', 'punk-attack2', undefined, true),
-      strongAttack: new Sprite(player, 'heroes', 'punk-attack3', undefined, true),
-      use: new Sprite(player, 'heroes', 'punk-use', undefined, true),
-      hurt: new Sprite(player, 'heroes', 'punk-hurt', undefined, true),
-      death: new Sprite(player, 'heroes', 'punk-death', undefined, true),
-      doubleJump: new Sprite(player, 'heroes', 'punk-doublejump', 50),
-      happy: new Sprite(player, 'heroes', 'punk-happy', 150, true)
+      standing: new PlayerSprite(player, 'heroes', 'punk-idle', { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'heroes', 'punk-run'),
+      jumping: new PlayerSprite(player, 'heroes', 'punk-jump'),
+      falling: new PlayerSprite(player, 'heroes', 'punk-jump'),
+      hit: new PlayerSprite(player, 'heroes', 'punk-attack1', { oneTimeAction: true }),
+      doubleHit: new PlayerSprite(player, 'heroes', 'punk-attack2', { oneTimeAction: true }),
+      strongAttack: new PlayerSprite(player, 'heroes', 'punk-attack3', { oneTimeAction: true }),
+      use: new PlayerSprite(player, 'heroes', 'punk-use', { oneTimeAction: true }),
+      hurt: new PlayerSprite(player, 'heroes', 'punk-hurt', { oneTimeAction: true }),
+      death: new PlayerSprite(player, 'heroes', 'punk-death', { oneTimeAction: true }),
+      doubleJump: new PlayerSprite(player, 'heroes', 'punk-doublejump', { frameInterval: 50 }),
+      happy: new PlayerSprite(player, 'heroes', 'punk-happy', { frameInterval: 150, oneTimeAction: true })
     }
 
     this.withoutOneArm = {
-      standing: new Sprite(player, 'gunPack', 'punk-idle1', 200),
-      running: new Sprite(player, 'gunPack', 'punk-run1'),
-      jumping: new Sprite(player, 'gunPack', 'punk-jump1'),
-      falling: new Sprite(player, 'gunPack', 'punk-jump1')
+      standing: new PlayerSprite(player, 'gunPack', 'punk-idle1', { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'gunPack', 'punk-run1'),
+      jumping: new PlayerSprite(player, 'gunPack', 'punk-jump1'),
+      falling: new PlayerSprite(player, 'gunPack', 'punk-jump1')
     }
 
     this.withoutTwoArms = {
-      standing: new Sprite(player, 'gunPack', 'punk-idle2', 200),
-      running: new Sprite(player, 'gunPack', 'punk-run2'),
-      jumping: new Sprite(player, 'gunPack', 'punk-jump2'),
-      falling: new Sprite(player, 'gunPack', 'punk-jump2')
+      standing: new PlayerSprite(player, 'gunPack', 'punk-idle2', { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'gunPack', 'punk-run2'),
+      jumping: new PlayerSprite(player, 'gunPack', 'punk-jump2'),
+      falling: new PlayerSprite(player, 'gunPack', 'punk-jump2')
     }
 
     this.arms = {
@@ -48,6 +48,14 @@ class PlayerSpriteManager extends SpriteManager {
       arm3: new ArmSprite(player, 'gunPack', 'punk-arm3'),
       arm4: new ArmSprite(player, 'gunPack', 'punk-arm4'),
       arm5: new ArmSprite(player, 'gunPack', 'punk-arm5')
+    }
+
+    this.twoArms = {
+      arm1: new TwoArmSprite(player, 'gunPack', 'punk-arm6'),
+      arm2: new TwoArmSprite(player, 'gunPack', 'punk-arm7'),
+      arm3: new TwoArmSprite(player, 'gunPack', 'punk-arm8'),
+      arm4: new TwoArmSprite(player, 'gunPack', 'punk-arm9'),
+      arm5: new TwoArmSprite(player, 'gunPack', 'punk-arm10')
     }
 
     this.guns = [
@@ -60,7 +68,17 @@ class PlayerSpriteManager extends SpriteManager {
       new GunSprite(player, 'gunPack', 'gun-7'),
       new GunSprite(player, 'gunPack', 'gun-8'),
       new GunSprite(player, 'gunPack', 'gun-9'),
-      new GunSprite(player, 'gunPack', 'gun-10')
+      new GunSprite(player, 'gunPack', 'gun-10'),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-11'),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-12', { shiftX: -1 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-13'),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-14', { shiftY: 1 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-15', { shiftY: 2 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-16', { shiftY: 3 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-17', { shiftY: 3 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-18', { shiftX: 2, shiftY: 2 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-19', { shiftY: 4 }),
+      new TwoHandedGunSprite(player, 'gunPack', 'gun-20', { shiftX: 2, shiftY: 2 })
     ]
   }
 
@@ -76,7 +94,11 @@ class PlayerSpriteManager extends SpriteManager {
     ) {
       return this.defaultSprites[state]
     }
-    return this.withoutOneArm[state]
+    if (this.player.gunManager.currentGun?.level! <= 10) {
+      return this.withoutOneArm[state]
+    } else {
+      return this.withoutTwoArms[state]
+    }
   }
 
   setSprite(state: string) {
@@ -104,10 +126,16 @@ class PlayerSpriteManager extends SpriteManager {
     }
 
     if (this.player.hasWeapon()) {
-      this.guns[this.player.gunManager.currentGun?.level! - 1].draw(ctx, deltaTime)
+      if (this.player.gunManager.currentGun?.level! <= 10) {
+        this.guns[this.player.gunManager.currentGun?.level! - 1].draw(ctx, deltaTime)
+        this.arms.arm3.draw(ctx, deltaTime)
+        this.withoutOneArm[state].draw(ctx, deltaTime)
+      } else {
+        this.withoutTwoArms[state].draw(ctx, deltaTime)
+        this.guns[this.player.gunManager.currentGun?.level! - 1].draw(ctx, deltaTime)
+        this.twoArms.arm3.draw(ctx, deltaTime)
+      }
     }
-    this.arms.arm3.draw(ctx, deltaTime)
-    this.withoutOneArm[state].draw(ctx, deltaTime)
   }
 }
 

@@ -4,8 +4,9 @@ import type Game from '../..'
 import PlayerStateManager from '../../states/player/playerStateManager'
 import PlayerSpriteManager from '../../sprites/player/playerSpritesManager'
 import GunManager from '../../guns/gun'
-import { CANVAS_WIDTH } from '../../config'
 import PlayerCollectionBar from './collectionBar'
+import Enemy from '../enemy'
+import PlayerBar from './playerBar'
 
 class Player extends Character {
   stateManager: PlayerStateManager = new PlayerStateManager(this)
@@ -13,12 +14,17 @@ class Player extends Character {
   gunManager: GunManager = new GunManager(this)
 
   collectionBar: PlayerCollectionBar = new PlayerCollectionBar(this)
+  playerBar: PlayerBar = new PlayerBar(this)
 
   paddingLeft = 4
   paddingRight = 24
 
   cards = 0
   money = 0
+
+  invisible = false
+  invisibleStartDate = 0
+  invisibleTimeout = 3000
 
   constructor(game: Game) {
     super(game, {
@@ -29,6 +35,8 @@ class Player extends Character {
       maxVy: 15,
       maxHealth: 20
     })
+
+    // this.gunManager.setGun(19)
   }
 
   hasWeapon() {
@@ -42,6 +50,12 @@ class Player extends Character {
     this.interactObjects(this.game.inputHandler.activeKeys)
 
     this.gunManager.update()
+
+    this.checkCollisionWithEnemies()
+
+    if (this.invisible && this.invisibleStartDate + this.invisibleTimeout < Date.now()) {
+      this.invisible = false
+    }
   }
 
   interactObjects = (inputs: InputType[]): void => {
@@ -67,69 +81,40 @@ class Player extends Character {
     this.gunManager.shot()
   }
 
+  checkCollisionWithEnemies() {
+    for (const enemy of this.game.map.enemies) {
+      this.checkCollisionWithEnemy(enemy)
+    }
+  }
+
+  checkCollisionWithEnemy(enemy: Enemy) {
+    if (
+      enemy.isAlive() &&
+      this.isAlive() &&
+      !this.invisible &&
+      this.stateManager.currentState.state !== 'doublejump' &&
+      this.realX < enemy.realX + enemy.realWidth &&
+      this.realX + this.realWidth > enemy.realX &&
+      this.y < enemy.y + enemy.height &&
+      this.y + this.height > enemy.y
+    ) {
+      this.hurt(2)
+    }
+  }
+
+  hurt(value: number) {
+    if (this.invisible) {
+      return
+    }
+    super.hurt(value)
+  }
+
   draw(deltaTime: number): void {
     this.gunManager.drawBullets(deltaTime)
     super.draw(deltaTime)
 
-    this.drawHealthBar()
-    this.drawEnduranceBar()
-    this.drawWeapon()
+    this.playerBar.draw()
     this.collectionBar.draw()
-  }
-
-  drawHealthBar() {
-    const ctx = this.game.ctx
-
-    ctx.save()
-    ctx.strokeStyle = '#000000'
-    ctx.fillStyle = '#1E8449'
-    ctx.lineWidth = 2
-    ctx.strokeRect(20, 20, 100, 10)
-    ctx.fillRect(20, 20, 100 * (this.health / this.maxHealth), 10)
-    ctx.restore()
-  }
-
-  drawEnduranceBar() {
-    const ctx = this.game.ctx
-
-    ctx.save()
-    ctx.strokeStyle = '#000000'
-    ctx.fillStyle = '#5DADE2'
-    ctx.lineWidth = 2
-    ctx.strokeRect(20, 35, 100, 10)
-    ctx.fillRect(20, 35, 100, 10)
-    ctx.restore()
-  }
-
-  drawWeapon() {
-    if (!this.gunManager.currentGun) {
-      return
-    }
-    const ctx = this.game.ctx
-
-    ctx.save()
-    ctx.strokeStyle = '#000000'
-    ctx.fillStyle = '#1E8449'
-    ctx.lineWidth = 2
-    ctx.strokeRect(20, 50, 30, 30)
-    ctx.fillRect(20, 50, 30, 30)
-
-    // if (this.gunManager.currentGun?.img) {
-    //   const img = this.gunManager.currentGun.img
-    //   ctx.drawImage(
-    //     img,
-    //     0,
-    //     0,
-    //     img.width,
-    //     img.height,
-    //     20 + 15 - img.width/2,
-    //     50 + 15 - img.height/2,
-    //     img.width,
-    //     img.height
-    //   )
-    // }
-
-    ctx.restore()
   }
 }
 

@@ -1,4 +1,3 @@
-import Game from '../..'
 import { AssetFrameDetail } from '../../assetLoader'
 import { CANVAS_WIDTH } from '../../config'
 import Player from './player'
@@ -18,8 +17,6 @@ class PlayerCollectionBar {
       console.log('no card')
       return
     }
-    const { x, y, w, h } = cardAsset.frame
-    const frames = cardAsset.frames ?? 1
     ctx.fillStyle = 'white'
     drawText(ctx, `Level: ${this.player.game.level}`, CANVAS_WIDTH - 120, 10 + 18)
 

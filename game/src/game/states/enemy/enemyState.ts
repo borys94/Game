@@ -100,6 +100,7 @@ export class Attack extends State {
         (this.character.direction === 'right' && player.x - this.character.x < 60 && player.x - this.character.x > 0)
       ) {
         this.hit = true
+        console.log('enemy state hurt player')
         player.hurt(2)
       }
     }

@@ -42,6 +42,7 @@ function GameCmp(): React.ReactElement {
     window.addEventListener('keydown', onKeyDown)
 
     const game = new Game()
+    ;(window as any).game = game
     setGame(game)
     setSound(sounds.active)
     return () => {

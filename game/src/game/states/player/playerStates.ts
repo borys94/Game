@@ -245,6 +245,8 @@ export class Hurt extends State {
     this.time = Date.now()
     this.performed = false
     this.character.speed = 0
+    this.character.invisible = true
+    this.character.invisibleStartDate = Date.now()
 
     Sounds.hurtSound()
   }

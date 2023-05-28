@@ -1,5 +1,4 @@
 import type Character from '../characters/character'
-import Player from '../characters/player/player'
 
 type Options = {
   frameInterval?: number

@@ -22,15 +22,13 @@ export const Button = ({ children, variant = 'primary', size = 'medium', onClick
   </div>
 )
 
-type IconButton = {
+type IconButtonProps = {
   children: React.ReactNode
   onClick?: () => void
 }
 
-export const IconButton = ({ children, onClick }: IconButton) => (
-  // <div className={classnames(styles.buttonWrapper)} onMouseEnter={() => sounds.menuSound()}>
+export const IconButton = ({ children, onClick }: IconButtonProps) => (
   <button className={classnames(styles.iconButton)} onClick={onClick} onMouseEnter={() => sounds.menuSound()}>
     {children}
   </button>
-  // </div>
 )

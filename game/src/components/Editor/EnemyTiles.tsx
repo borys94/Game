@@ -52,7 +52,7 @@ const Tile = ({ enemy, onClick }: TileProps): React.ReactElement => {
         ctx.drawImage(img, 0, 0)
       }
     }
-  }, [])
+  }, []) // eslint-disable-line
 
   return (
     <canvas onClick={onClick} className={styles.canvas} ref={canvasRef} width={enemy.width} height={enemy.height} />

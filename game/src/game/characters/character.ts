@@ -3,7 +3,6 @@ import { TILE_SIZE } from '../config'
 import SpriteManager from '../sprites/spriteManager'
 import StateManager from '../states/stateManager'
 import { clamp } from '../utils'
-import Enemy from './enemy'
 
 interface CharacterOptions {
   x: number
@@ -43,9 +42,6 @@ abstract class Character {
   vy = 0
   maxVy: number
   weight = 1.5
-
-  loadedAssets = 0
-  loaded = false
 
   constructor(game: Game, options: CharacterOptions) {
     if (options.maxVy > TILE_SIZE) {

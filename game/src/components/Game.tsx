@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Game.module.scss'
 import { Button, IconButton } from './common/Button'
-import { useSelector, useDispatch } from 'react-redux'
-import { type RootState } from '../store'
-import { initGame, toggleSound, unpause } from '../store/game'
 import Game from '../game'
 import Sounds from '../game/sounds'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
 import Card from './common/Card/Card'
 import HelpModal from './HelpModal'
 import mapStore from '../game/mapStore'
 import Map from '../game/map/map'
-import sounds from '../game/sounds'
 
 function GameCmp(): React.ReactElement {
   const [helpOpen, setHelpOpen] = useState(false)
@@ -20,8 +16,7 @@ function GameCmp(): React.ReactElement {
   const [paused, setPaused] = useState(true)
   const [sound, setSound] = useState(false)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  let [searchParams, setSearchParams] = useSearchParams()
+  let [searchParams] = useSearchParams()
   const mapName = searchParams.get('mapName')
 
   const play = () => {
@@ -44,7 +39,7 @@ function GameCmp(): React.ReactElement {
     const game = new Game()
     ;(window as any).game = game
     setGame(game)
-    setSound(sounds.active)
+    setSound(Sounds.active)
     return () => {
       game.destroy()
       window.removeEventListener('keydown', onKeyDown)
@@ -56,7 +51,7 @@ function GameCmp(): React.ReactElement {
       game.map = new Map(game, mapStore.getMapByName(mapName)?.map!)
       play()
     }
-  }, [game, mapName])
+  }, [game, mapName]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (paused) {
@@ -71,7 +66,7 @@ function GameCmp(): React.ReactElement {
   const handleToogleSound = () => {
     Sounds.toogle()
     Sounds.playMenu()
-    setSound(sounds.active)
+    setSound(Sounds.active)
   }
 
   const goToEditor = () => {
@@ -86,13 +81,10 @@ function GameCmp(): React.ReactElement {
     <div className={styles.gameWrapper}>
       <div className={styles.canvas}>
         <canvas id="canvas" width="400" height="400" />
-        {/* {game && !loadedAssets && <span className={styles.loadingLabel}>Loading</span>} */}
       </div>
       {/* TODO: usuwanie menu  */}
       <div className={paused ? styles.menuWrapper : styles.hiddenMenu}>
         <div className={styles.menuBackground} style={{ backgroundImage: 'url("menuBackground.png")' }} />
-        {/* {paused && <div className={styles.backgroundContent} />} */}
-        {/* </div> */}
         <div className={styles.overlay} />
         <div className={styles.menu}>
           <Button variant="primary" onClick={play}>
@@ -110,16 +102,16 @@ function GameCmp(): React.ReactElement {
 
           <div className={styles.bottomBar}>
             <IconButton onClick={handleToogleSound}>
-              <img src={`assets/volume${sounds.active ? '' : '-slash'}.svg`} alt="volume" />
+              <img src={`assets/volume${sound ? '' : '-slash'}.svg`} alt="volume" />
             </IconButton>
 
-            <a href="https://github.com/borys94/Game" target="_blank">
+            <a href="https://github.com/borys94/Game" target="_blank" rel="noreferrer">
               <IconButton>
-                <img src="icons/github.svg" />
+                <img src="icons/github.svg" alt="github icon" />
               </IconButton>
             </a>
             <IconButton onClick={openFullscreen}>
-              <img src="assets/fullscreen.svg" />
+              <img src="assets/fullscreen.svg" alt="fullscreen icon" />
             </IconButton>
           </div>
 

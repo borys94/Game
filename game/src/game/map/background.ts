@@ -1,5 +1,4 @@
 import type Game from '..'
-import config from '../config'
 
 interface Asset {
   path: string
@@ -7,9 +6,6 @@ interface Asset {
 }
 
 class Background {
-  // width = 576
-  // height = 324
-
   assets: Asset[] = [
     { path: 'assets/backgrounds/night/1.png' },
     { path: 'assets/backgrounds/night/2.png' },

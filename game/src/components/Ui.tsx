@@ -1,5 +1,3 @@
-import React, { useEffect, useRef, useState } from 'react'
-
 import Card from './common/Card/Card'
 import { EditorButton } from './common/EditorButton'
 

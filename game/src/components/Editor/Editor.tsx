@@ -1,20 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Editor from '../../lib/editor'
 import styles from './Editor.module.scss'
-// import { NativeSelect, InputNumber, Typography, Button } from 'tiny-ui'
 import EnemyTiles from './EnemyTiles'
 import { type EnemyObject } from '../../game/characters/enemy'
-import { EditorButton } from '../common/EditorButton'
-import mapStore, { MapDetails, MapType } from '../../game/mapStore'
+import mapStore, { MapDetails } from '../../game/mapStore'
 import Map from '../../game/map/map'
 import Header from './Header'
-import useFetch from '../../hooks/useFetch'
 import { AssetFrameDetail } from '../../game/assetLoader'
 import mapConfig from '../../game/config/map.json'
 import gunsConfig from '../../game/config/gunPack.json'
 import Card from '../common/Card/Card'
-
-// let ed: Editor | undefined
 
 function EditorComponent() {
   const [editor, setEditor] = useState<Editor>()
@@ -54,7 +49,6 @@ function EditorComponent() {
 
   return (
     <div className={styles.container}>
-      {/* <canvas id="canvas" /> */}
       <Header editor={editor} />
       <div className={styles.content}>
         <div className={styles.editor}>
@@ -108,7 +102,7 @@ const AllTiles = ({ frames, editor }: { editor: Editor; frames: AssetFrameDetail
   useEffect(() => {
     // TODO
     setTimeout(getData, 500)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -196,7 +190,7 @@ const SingleTile = ({ img, frame, tileType, editor, type }: SingleTileProps) => 
     )
 
     return () => ctx.clearRect(0, 0, frame.frame.w / (frame.frames ?? 1), frame.frame.h)
-  }, [img])
+  }, [img]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onClick = () => {
     if (tileType === 'backgroundTile') {
@@ -234,10 +228,6 @@ const SingleTile = ({ img, frame, tileType, editor, type }: SingleTileProps) => 
       height={frame.frame.h}
     />
   )
-}
-
-const Guns = ({ editor }: { editor: Editor }) => {
-  return <div>Guns</div>
 }
 
 export default EditorComponent

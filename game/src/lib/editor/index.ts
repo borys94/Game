@@ -2,23 +2,14 @@ import Game from '../../game'
 import { type EnemyObject } from '../../game/characters/enemy'
 import { buildEnemy } from '../../game/characters/buildEnemy'
 import config from '../../game/config'
-import { drawDebugInfo } from '../../game/debug'
 import { buildElement } from '../../game/map/Element'
 import { clamp } from '../../game/utils'
-import easyMap from '../../maps/easy'
-import mediumMap from '../../maps/medium'
 import { AssetFrameDetail } from '../../game/assetLoader'
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT
 
 type Layer = 'tiles' | 'bgTiles' | 'interactive' | 'decorations'
-
-interface MapType {
-  tiles: number[][]
-  bgTiles: number[][]
-  interactive: number[][]
-}
 
 class Editor extends Game {
   currentAsset: AssetFrameDetail | null = null

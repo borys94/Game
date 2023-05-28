@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react'
 import { EditorButton } from '../common/EditorButton'
-import { IconButton } from '../common/IconButton/IconButton'
-import { Input } from '../common/Input'
 import { Select } from '../common/Select/Select'
 import styles from './Header.module.scss'
 import mapStore, { MapDetails } from '../../game/mapStore'
 import Editor from '../../lib/editor'
 import Map from '../../game/map/map'
-import Modal, { ModalButtonBar, ModalContent } from '../common/Modal/Modal'
 import EditMapModal from './EditMapModal/EditMapModal'
-import { initGame } from '../../store/game'
-import Game from '../../game'
-import { useDispatch } from 'react-redux'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 
 type Props = {

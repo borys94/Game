@@ -1,5 +1,5 @@
-import Player from '../characters/player/player'
-import sounds from '../sounds'
+import Player from './player'
+import sounds from '../../sounds'
 
 class GunManager {
   player: Player

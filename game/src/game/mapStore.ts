@@ -52,4 +52,5 @@ class MapStore {
   }
 }
 
-export default new MapStore()
+const mapStore = new MapStore()
+export default mapStore

@@ -42,7 +42,7 @@ const EditMapModal = ({ open, width, height, name, handleClose, handleSave }: Pr
       setWidth(width)
       setName(name)
     }
-  }, [open])
+  }, [open]) // eslint-disable-line
 
   return (
     <Modal open={open} onClose={handleClose} title="Edit">

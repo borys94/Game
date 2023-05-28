@@ -19,7 +19,6 @@ export class Standing extends CowardlyEnemyState {
   }
 
   handle(): void {
-    const { player } = this.character.game
     this.character.setState('walking')
   }
 }

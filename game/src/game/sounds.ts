@@ -124,4 +124,5 @@ class Sounds {
   }
 }
 
-export default new Sounds()
+const sounds = new Sounds()
+export default sounds

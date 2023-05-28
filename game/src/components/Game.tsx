@@ -48,7 +48,11 @@ function GameCmp(): React.ReactElement {
 
   useEffect(() => {
     if (mapName && game) {
-      game.map = new Map(game, mapStore.getMapByName(mapName)?.map!)
+      const map = mapStore.getMapByName(mapName)?.map
+      if (!map) {
+        throw new Error('Cannot find map!')
+      }
+      game.map = new Map(game, map)
       play()
     }
   }, [game, mapName]) // eslint-disable-line react-hooks/exhaustive-deps

@@ -113,7 +113,10 @@ export class GunSprite extends PlayeExtendedBodySpite {
 
   getPositionY() {
     const swayShiftY = this.getSwayShiftY()
-    const asset = this.player.game.assetLoader?.getByName(this.id)!
+    const asset = this.player.game.assetLoader?.getByName(this.id)
+    if (!asset) {
+      throw new Error('Cannot find asset in GunSprite')
+    }
     return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 1
   }
 }
@@ -129,10 +132,6 @@ export class PistolGunSprite extends GunSprite {
 }
 
 export class TwoHandedGunSprite extends GunSprite {
-  // constructor(...args: any[]) {
-  //   super(...args as any)
-  // }
-
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
@@ -141,7 +140,10 @@ export class TwoHandedGunSprite extends GunSprite {
 
   getPositionY() {
     const swayShiftY = this.getSwayShiftY()
-    const asset = this.player.game.assetLoader?.getByName(this.id)!
+    const asset = this.player.game.assetLoader?.getByName(this.id)
+    if (!asset) {
+      throw new Error('Cannot find asset in TwoHandedGunSprite')
+    }
     return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 7 + this.shiftY
   }
 }

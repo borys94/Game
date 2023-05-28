@@ -26,8 +26,8 @@ export default class Element {
     this.x = x
     this.y = y
 
-    this.active = !(this.asset == null)
-    if (this.asset != null) {
+    this.active = !!this.asset
+    if (this.asset) {
       this.frames = this.asset.frames ?? 1
     }
   }

@@ -194,24 +194,23 @@ const SingleTile = ({ img, frame, tileType, editor, type }: SingleTileProps) => 
 
   const onClick = () => {
     if (tileType === 'backgroundTile') {
-      editor?.setLayer('bgTiles')
+      editor.setLayer('bgTiles')
     } else if (tileType === 'decoration') {
-      editor?.setLayer('decorations')
+      editor.setLayer('decorations')
     } else if (tileType === 'obstacle') {
-      editor?.setLayer('tiles')
+      editor.setLayer('tiles')
     } else if (tileType === 'interactive') {
-      editor?.setLayer('interactive')
+      editor.setLayer('interactive')
     } else {
       console.error('no layer!!!')
     }
 
     if (type === 'guns') {
       editor.assetPack = 'guns'
-      editor?.setCurrentAsset((frame && editor.assetLoader.getByName(frame.name)) || null)
-      // console.log(frame, frame && editor.assetLoader.getByName(frame.name) || null)
+      editor.setCurrentAsset((frame && editor.assetLoader.getByName(frame.name)) || null)
     } else {
       editor.assetPack = 'map'
-      editor?.setCurrentAsset((frame?.id && editor.assetLoader.getById(frame.id)) || null)
+      editor.setCurrentAsset((frame?.id && editor.assetLoader.getById(frame.id)) || null)
     }
   }
 

@@ -1,4 +1,5 @@
 import { EnemyObject } from '../game/characters/enemy'
+// import templateMap from '../maps/templates/powerStation'
 
 export type MapType = {
   tiles: number[][]

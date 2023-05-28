@@ -1,8 +1,6 @@
-@import './common/styles.scss';
+@import '../common/styles.scss';
 .gameWrapper {
   font-family: 'Cyberpunk Is Not Dead', sans-serif;
-  // background-image: url('menuBackground.png');
-
   color: $primary;
 }
 
@@ -114,17 +112,6 @@
   position: absolute;
   right: 50px;
   bottom: 40px;
-}
-
-.card {
-  border-radius: 5px;
-  width: 300px;
-  padding: 10px ;
-  font-weight: bold;
-  box-shadow: 0 0px 5px #01ffff;
-  border: 1px solid white;
-  background-color: #fff1;
-  color: #01ffff;
 }
 
 .disabledLevel {

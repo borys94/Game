@@ -8,9 +8,10 @@ import AssetLoader from './assetLoader'
 import level1 from '../maps/level1'
 import level2 from '../maps/medium'
 import level3 from '../maps/level2'
+import level4 from '../maps/level4'
 import { MapType } from './mapStore'
 
-const levels = [level1, level2, level3]
+const levels = [level1, level2, level3, level4]
 
 const CANVAS_WIDTH = config.CANVAS_WIDTH
 const CANVAS_HEIGHT = config.CANVAS_HEIGHT

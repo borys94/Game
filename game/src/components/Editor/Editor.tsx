@@ -3,7 +3,7 @@ import Editor from '../../lib/editor'
 import styles from './Editor.module.scss'
 import EnemyTiles from './EnemyTiles'
 import { type EnemyObject } from '../../game/characters/enemy'
-import mapStore, { MapDetails } from '../../game/mapStore'
+import mapStore from '../../game/mapStore'
 import Map from '../../game/map/map'
 import Header from './Header'
 import { AssetFrameDetail } from '../../game/assetLoader'
@@ -14,7 +14,6 @@ import Card from '../common/Card/Card'
 function EditorComponent() {
   const [editor, setEditor] = useState<Editor>()
   const [activeEnemy, setActiveEnemy] = useState<EnemyObject['type'] | null>(null)
-  const [curentMap, setCurrentMap] = useState<MapDetails>()
 
   useEffect(() => {
     const editor = new Editor()
@@ -24,8 +23,6 @@ function EditorComponent() {
     const maps = mapStore.getMaps()
 
     if (maps.length) {
-      setCurrentMap(maps[0])
-
       editor.map = new Map(editor.player.game, maps[0].map)
     }
 
@@ -39,27 +36,15 @@ function EditorComponent() {
     editor?.setEnemy(type)
   }
 
-  const deleteCurrentMap = () => {
-    if (!curentMap) {
-      return
-    }
-    const newMaps = mapStore.deleteMap(curentMap.name)
-    setCurrentMap(newMaps[0])
-  }
-
   return (
     <div className={styles.container}>
-      <Header editor={editor} />
+      {editor && <Header editor={editor} />}
       <div className={styles.content}>
         <div className={styles.editor}>
           <canvas id="canvas" />
         </div>
 
         <div className={styles.edit}>
-          <div>
-            <button onClick={deleteCurrentMap}>Delete this map</button>
-          </div>
-
           <Card>
             <span>Enemies</span>
             <EnemyTiles setEnemy={setEnemy} enemy={activeEnemy} />

@@ -1,14 +1,25 @@
 @import '../common/styles.scss';
 
 .header {
-  padding: 10px 15px;
+  padding: 20px 15px 10px;
   display: flex;
-  border-bottom: 1px solid $hr-color;
-  margin-bottom: 10px;
+  // border-bottom: 1px solid $hr-color;
+  // margin-bottom: 10px;
   justify-content: space-between;
+
+  // box-shadow: 0 0 5px currentColor;
 
   > div {
     display: flex;
     gap: 25px;
   }
+}
+
+.hr {
+  height: 2px;
+  width: 100%;
+  color: $primary;
+  background-color: $primary;
+  box-shadow: 0 0 5px currentColor;
+  margin: 5px 0;
 }

@@ -1,0 +1,62 @@
+@import '../styles.scss';
+
+.inputContol {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.primary {
+  color: $primary
+}
+
+.secondary {
+  color: $secondary
+}
+
+.danger {
+  color: $secondary
+}
+
+.success {
+  color: $secondary
+}
+
+.input {
+  appearance: none;
+
+  background-color: $inputBg;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 1px solid currentColor;
+  display: grid;
+  place-content: center;
+  transition: 100ms background-color ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $inputBgHover;
+  }
+}
+
+.input::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  transform: scale(0);
+  transition: 100ms transform ease-in-out;
+  background-color: currentColor;
+}
+
+.input:checked::before {
+  transform: scale(1);
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}

@@ -1,7 +1,7 @@
 import Game from '../../game'
 import { type EnemyObject } from '../../game/characters/enemy'
 import { buildEnemy } from '../../game/characters/buildEnemy'
-import config from '../../game/config'
+import config, { TILE_SIZE } from '../../game/config'
 import { buildElement } from '../../game/map/Element'
 import { clamp } from '../../game/utils'
 import { AssetFrameDetail } from '../../game/assetLoader'
@@ -111,22 +111,21 @@ class Editor extends Game {
     if (this.currentAsset != null) {
       const img = this.assetPack === 'map' ? this.assetLoader.getImage('map') : this.assetLoader.getImage('gunPack')
 
+      const [x, y] = this.getHoverPosition()
       this.ctx.drawImage(
         img!,
         this.currentAsset.frame.x,
         this.currentAsset.frame.y,
         this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
         this.currentAsset.frame.h,
-        Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y + 32 - this.currentAsset.frame.h,
+        x - this.camera.x,
+        y - this.camera.y + 32 - this.currentAsset.frame.h,
         this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
         this.currentAsset.frame.h
       )
     }
 
     this.ctx.restore()
-
-    // drawDebugInfo(this.ctx, this.player, this.inputHandler)
   }
 
   setCurrentAsset = (asset: AssetFrameDetail | null): void => {
@@ -135,41 +134,27 @@ class Editor extends Game {
   }
 
   fillFgTile = (): void => {
-    const a = Math.floor((this.hoverX + this.camera.x) / 32)
-    const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset != null) {
-      this.map.elements.tiles[b][a] = this.currentAsset.id ?? 0
-    } else {
-      this.map.elements.tiles[b][a] = 0
-    }
+    const [a, b] = this.getHoverTileCords()
+    this.map.elements.tiles[b][a] = this.currentAsset?.id ?? 0
   }
 
   fillBgTile = (): void => {
-    const a = Math.floor((this.hoverX + this.camera.x) / 32)
-    const b = Math.floor((this.hoverY + this.camera.y) / 32)
-    if (this.currentAsset != null) {
-      console.log(a, b, this.currentAsset.id)
-      this.map.elements.bgTiles[b][a] = this.currentAsset.id ?? 0
-    } else {
-      this.map.elements.bgTiles[b][a] = 0
-    }
+    const [a, b] = this.getHoverTileCords()
+    this.map.elements.bgTiles[b][a] = this.currentAsset?.id ?? 0
   }
 
   fillDecorationTile = async () => {
-    const a = Math.floor((this.hoverX + this.camera.x) / 32)
-    const b = Math.floor((this.hoverY + this.camera.y) / 32)
+    const [a, b] = this.getHoverTileCords()
     this.map.elements.decorationElements[b][a] = await buildElement(this, this.currentAsset?.id ?? 0, b, a)
   }
 
   fillInteractiveTile = async () => {
-    const a = Math.floor((this.hoverX + this.camera.x) / 32)
-    const b = Math.floor((this.hoverY + this.camera.y) / 32)
+    const [a, b] = this.getHoverTileCords()
     this.map.elements.elements[b][a] = await buildElement(this, this.currentAsset?.id ?? 0, b, a)
   }
 
   addEnemy = (type: EnemyObject['type']): void => {
-    const x = Math.floor((this.hoverX + this.camera.x) / 32) * 32
-    const y = Math.floor((this.hoverY + this.camera.y) / 32) * 32
+    const [x, y] = this.getHoverPosition()
     const enemyObj = {
       type,
       x,
@@ -178,6 +163,17 @@ class Editor extends Game {
     const enemy = buildEnemy(this, enemyObj)
     enemy.y -= enemy.height - 32
     this.map.enemies.push(enemy)
+  }
+
+  private getHoverPosition = () => {
+    const [a, b] = this.getHoverTileCords()
+    return [a * TILE_SIZE, b * TILE_SIZE] as const
+  }
+
+  private getHoverTileCords = () => {
+    const a = Math.floor((this.hoverX + this.camera.x) / 32)
+    const b = Math.floor((this.hoverY + this.camera.y) / 32)
+    return [a, b] as const
   }
 
   setEnemy = (type: EnemyObject['type']) => {
@@ -221,6 +217,7 @@ class Editor extends Game {
     for (let i = 0; i < this.map.elements.interactive.length; i++) {
       for (let j = 0; j < diff; j++) {
         const x = this.map.elements.interactive[0].length + j - 1
+
         this.map.elements.elements[i].push(buildElement(this, 0, i, x))
         this.map.elements.decorationElements[i].push(await buildElement(this, 0, i, x))
         this.map.elements.bgTiles[i].push(0)
@@ -244,18 +241,17 @@ class Editor extends Game {
     }
 
     for (let i = 0; i < diff; i++) {
-      const size = this.map.elements.interactive.length
-      const row = i + this.map.elements.interactive.length
+      const row = this.map.elements.interactive.length
       this.map.elements.elements[row] = []
       this.map.elements.decorationElements[row] = []
-      this.map.elements.bgTiles[row] = new Array(size).fill(0)
-      this.map.elements.interactive[row] = new Array(size).fill(0)
-      this.map.elements.tiles[row] = new Array(size).fill(0)
-      this.map.elements.decorations[row] = new Array(size).fill(0)
+      this.map.elements.bgTiles[row] = new Array(row).fill(0)
+      this.map.elements.interactive[row] = new Array(row).fill(0)
+      this.map.elements.tiles[row] = new Array(row).fill(0)
+      this.map.elements.decorations[row] = new Array(row).fill(0)
 
       for (let j = 0; j < this.map.elements.interactive[0].length; j++) {
-        this.map.elements.elements[row][j] = buildElement(this, 0, i, j)
-        this.map.elements.decorationElements[row][j] = await buildElement(this, 0, i, j)
+        this.map.elements.elements[row][j] = buildElement(this, 0, row, j)
+        this.map.elements.decorationElements[row][j] = await buildElement(this, 0, row, j)
       }
     }
   }

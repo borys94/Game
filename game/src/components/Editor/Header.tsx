@@ -7,9 +7,11 @@ import Editor from '../../lib/editor'
 import Map from '../../game/map/map'
 import EditMapModal from './EditMapModal/EditMapModal'
 import { createSearchParams, useNavigate } from 'react-router-dom'
+import useAddMessage from '../../hooks/useAddMessage'
+import CreateMapModal from './CreateMapModal'
 
 type Props = {
-  editor?: Editor
+  editor: Editor
 }
 
 const Header = ({ editor }: Props) => {
@@ -18,10 +20,11 @@ const Header = ({ editor }: Props) => {
   const [mapName, setMapName] = useState('')
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-
-  const navigate = useNavigate()
-
   const [editModalOpen, setEditModalOpen] = useState(false)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+
+  const addMessage = useAddMessage()
+  const navigate = useNavigate()
 
   const onMapChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const mapDetails = maps.find((savedMap) => savedMap.name === e.target.value)!
@@ -30,7 +33,7 @@ const Header = ({ editor }: Props) => {
     editor!.map = new Map(editor!.player.game, mapDetails.map)
   }
 
-  const onSave = (name: string, width: number, height: number) => {
+  const onSave = (name: string, width: number, height: number, clearMap: boolean) => {
     if (!editor) {
       throw new Error('Editor must be defined')
     }
@@ -40,11 +43,28 @@ const Header = ({ editor }: Props) => {
     setCurrentMap(maps.find((map) => map.name === name))
     editor.setRows(height)
     editor.setColumns(width)
+
+    if (clearMap) {
+      editor.clearMap()
+    }
+
+    addMessage('Map has been updated')
+  }
+
+  const deleteCurrentMap = () => {
+    if (!currentMap) {
+      return
+    }
+    const newMaps = mapStore.deleteMap(currentMap.name)
+    setMaps(newMaps)
+    setCurrentMap(newMaps[0])
+    addMessage('Map has been deleted')
   }
 
   const saveToLocalStorage = async (): Promise<void> => {
     const map = getMap()
     setMaps([...mapStore.addMap(mapName, map)])
+    addMessage('Map has been saved')
 
     try {
       await navigator.clipboard.writeText(JSON.stringify(map))
@@ -55,15 +75,15 @@ const Header = ({ editor }: Props) => {
 
   const getMap = () => {
     return {
-      tiles: editor?.map.elements.tiles!,
-      decorations: editor?.map.elements.decorationElements.map((el) => el.map((e) => e.asset?.id ?? 0))!,
-      bgTiles: editor?.map.elements.bgTiles!,
-      enemies: editor?.map.enemies.map((enemy) => ({
+      tiles: editor.map.elements.tiles!,
+      decorations: editor.map.elements.decorationElements.map((el) => el.map((e) => e.asset?.id ?? 0))!,
+      bgTiles: editor.map.elements.bgTiles!,
+      enemies: editor.map.enemies.map((enemy) => ({
         type: enemy.type,
         x: enemy.x,
         y: enemy.y
       }))!,
-      interactive: editor?.map.elements.elements.map((el) => el.map((e) => e.asset?.id ?? 0))!,
+      interactive: editor.map.elements.elements.map((el) => el.map((e) => e.asset?.id ?? 0))!,
       // TODO
       finish: {
         x: 50,
@@ -105,32 +125,37 @@ const Header = ({ editor }: Props) => {
   }, [editor])
 
   return (
-    <div className={styles.header}>
-      <div>
-        <Select onChange={onMapChange} value={currentMap?.name}>
-          {maps.map((map) => (
-            <option value={map.name} key={map.name}>
-              {map.name}
-            </option>
-          ))}
-        </Select>
-        <EditorButton onClick={() => setEditModalOpen(true)}>Edit</EditorButton>
-        <EditorButton onClick={() => editor?.clearMap()}>Clear</EditorButton>
-        <EditorButton onClick={play}>Play</EditorButton>
-      </div>
-      <div>
-        <EditorButton>Create a new map</EditorButton>
-        <EditorButton onClick={saveToLocalStorage}>Save</EditorButton>
-      </div>
+    <div>
+      <div className={styles.header}>
+        <div>
+          <Select onChange={onMapChange} value={currentMap?.name}>
+            {maps.map((map) => (
+              <option value={map.name} key={map.name}>
+                {map.name}
+              </option>
+            ))}
+          </Select>
+          <EditorButton onClick={() => setEditModalOpen(true)}>Edit</EditorButton>
+          <EditorButton onClick={play}>Play</EditorButton>
+        </div>
+        <div>
+          <EditorButton onClick={() => setCreateModalOpen(true)}>Create a new map</EditorButton>
+          <EditorButton onClick={saveToLocalStorage}>Save</EditorButton>
+        </div>
 
-      <EditMapModal
-        open={editModalOpen}
-        width={width}
-        height={height}
-        name={mapName}
-        handleClose={() => setEditModalOpen(false)}
-        handleSave={onSave}
-      />
+        <EditMapModal
+          open={editModalOpen}
+          width={width}
+          height={height}
+          name={mapName}
+          handleClose={() => setEditModalOpen(false)}
+          handleDelete={deleteCurrentMap}
+          handleSave={onSave}
+        />
+
+        <CreateMapModal open={createModalOpen} handleClose={() => setCreateModalOpen(false)} />
+      </div>
+      <div className={styles.hr} />
     </div>
   )
 }

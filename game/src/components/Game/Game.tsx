@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Game.module.scss'
-import { Button, IconButton } from './common/Button'
-import Game from '../game'
-import Sounds from '../game/sounds'
+import { Button, IconButton } from '../common/Button'
+import Game from '../../game'
+import Sounds from '../../game/sounds'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
-import Card from './common/Card/Card'
-import HelpModal from './HelpModal'
-import mapStore from '../game/mapStore'
-import Map from '../game/map/map'
+import Card from '../common/Card/Card'
+import HelpModal from '../HelpModal'
+import mapStore from '../../game/mapStore'
+import Map from '../../game/map/map'
 
 function GameCmp(): React.ReactElement {
   const [helpOpen, setHelpOpen] = useState(false)

@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import GameCmp from './components/Game'
+import GameCmp from './components/Game/Game'
 import EditorComponent from './components/Editor/Editor'
 
 import { createHashRouter, RouterProvider } from 'react-router-dom'

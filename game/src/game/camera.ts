@@ -30,8 +30,8 @@ class Camera {
     return [
       Math.floor(this.x / 32),
       Math.floor(this.y / 32),
-      Math.ceil(canvasWidth) + 1,
-      Math.ceil(canvasHeight) + 1
+      Math.ceil(canvasWidth / 32) + 1,
+      Math.ceil(canvasHeight / 32) + 1
     ] as const
   }
 }

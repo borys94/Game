@@ -1,4 +1,5 @@
 import type Game from '..'
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../config'
 
 interface Asset {
   path: string
@@ -19,15 +20,11 @@ class Background {
 
   speed = 0.05
 
-  trainSpeed = 0.05
-  trainFrameIndex = 3
-  trainFrame = 0
-
   constructor(private readonly game: Game) {
-    this.loadAllAssets()
+    this.loadAssets()
   }
 
-  loadAllAssets(): void {
+  loadAssets(): void {
     for (const asset of this.assets) {
       const img = new Image()
       asset.img = img
@@ -46,21 +43,26 @@ class Background {
       return
     }
 
-    const width = this.game.canvas.width / this.game.scale
-    const height = this.game.canvas.height / this.game.scale
-
     let index = 0
-
     for (const asset of this.assets) {
-      const img = asset.img
+      const { img } = asset
       const moved = Math.floor((index++ * this.speed * this.game.camera.x) % (img?.width ?? 1))
       if (img != null) {
-        ctx.drawImage(img, (moved / width) * img.width, 0, img.width, img.height, 0, 0, width, height)
+        ctx.drawImage(
+          img,
+          (moved / CANVAS_WIDTH) * img.width,
+          0,
+          img.width,
+          img.height,
+          0,
+          0,
+          CANVAS_WIDTH,
+          CANVAS_HEIGHT
+        )
 
-        ctx.drawImage(img, 0, 0, img.width, img.height, width - moved, 0, width, height)
+        ctx.drawImage(img, 0, 0, img.width, img.height, CANVAS_WIDTH - moved, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
       }
     }
-    this.trainFrame++
   }
 }
 

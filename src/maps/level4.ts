@@ -416,7 +416,7 @@ const map: MapType = {
     ]
   ],
   finish: { x: 50, y: 20 },
-  player: { x: 50, y: 20 }
+  player: { x: 50, y: 100 }
 }
 
 export default map

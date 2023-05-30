@@ -3,8 +3,8 @@ import Enemy from '../enemy'
 import CalmEnemyStateManager from '../../states/calmEnemy/calmEnemyStateManager'
 import EnemySpriteManager from '../../sprites/enemy/enemySpriteManager'
 
-class RatEnemy extends Enemy {
-  type = 'rat1' as const
+class Rat2Enemy extends Enemy {
+  type = 'rat2' as const
   maxSpeed = 1
   speed = this.maxSpeed
 
@@ -12,7 +12,7 @@ class RatEnemy extends Enemy {
   paddingRight: number = 4
 
   stateManager: CalmEnemyStateManager = new CalmEnemyStateManager(this)
-  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'rat1')
+  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'rat2')
 
   constructor(game: Game, x: number, y: number) {
     super(game, {
@@ -26,4 +26,4 @@ class RatEnemy extends Enemy {
   }
 }
 
-export default RatEnemy
+export default Rat2Enemy

@@ -3,14 +3,14 @@ import type Game from '../..'
 import EnemyStateManager from '../../states/enemy/enemyStateManager'
 import EnemySpriteManager from '../../sprites/enemy/enemySpriteManager'
 
-class CatEnemy extends Enemy {
-  type = 'cat1' as const
+class Dog2Enemy extends Enemy {
+  type = 'dog2' as const
 
   stateManager: EnemyStateManager = new EnemyStateManager(this)
-  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'cat1')
+  spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'dog2')
 
-  paddingLeft = 2
-  paddingRight = 8
+  paddingLeft = 4
+  paddingRight = 12
 
   constructor(game: Game, x: number, y: number) {
     super(game, {
@@ -19,9 +19,9 @@ class CatEnemy extends Enemy {
       width: 48,
       height: 48,
       maxVy: 10,
-      maxHealth: 7
+      maxHealth: 10
     })
   }
 }
 
-export default CatEnemy
+export default Dog2Enemy

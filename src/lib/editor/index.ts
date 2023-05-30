@@ -53,10 +53,9 @@ class Editor extends Game {
   onResize() {
     this.rect = this.canvas.getBoundingClientRect()
 
-    const scale = Math.min((window.innerWidth - 400) / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
-    this.scale = scale // Math.max(Math.floor(scale), 1)
-    this.canvas.width = CANVAS_WIDTH * scale
-    this.canvas.height = CANVAS_HEIGHT * scale
+    this.scale = Math.min((window.innerWidth - 400) / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
+    this.canvas.width = CANVAS_WIDTH * this.scale
+    this.canvas.height = CANVAS_HEIGHT * this.scale
   }
 
   onWheel(e: WheelEvent) {
@@ -71,7 +70,6 @@ class Editor extends Game {
       return
     }
 
-    console.log(this.layer)
     if (this.layer === 'tiles') this.fillFgTile()
     if (this.layer === 'bgTiles') this.fillBgTile()
     if (this.layer === 'interactive') this.fillInteractiveTile()
@@ -129,7 +127,6 @@ class Editor extends Game {
   }
 
   setCurrentAsset = (asset: AssetFrameDetail | null): void => {
-    console.log(asset)
     this.currentAsset = asset
   }
 

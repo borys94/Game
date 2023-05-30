@@ -1,7 +1,7 @@
 import EnemySpriteManager from '../sprites/enemy/enemySpriteManager'
 import Character, { type Direction } from './character'
 
-export type EnemyType = 'dog' | 'rat' | 'cat'
+export type EnemyType = 'dog1' | 'dog2' | 'rat1' | 'rat2' | 'cat1' | 'cat2' | 'bird1' | 'bird2'
 
 export interface EnemyObject {
   type: EnemyType

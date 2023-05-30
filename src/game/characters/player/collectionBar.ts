@@ -18,7 +18,7 @@ class PlayerCollectionBar {
       return
     }
     ctx.fillStyle = 'white'
-    drawText(ctx, `Level: ${this.player.game.level}`, CANVAS_WIDTH - 120, 10 + 18)
+    drawText(ctx, `Level: ${this.player.game.getLevel()}`, CANVAS_WIDTH - 120, 10 + 18)
 
     this.drawAsset(cardAsset, this.player.cards, 30)
     this.drawAsset(moneyAsset, this.player.money, 50)

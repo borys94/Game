@@ -4,7 +4,7 @@ import EnemyStateManager from '../../states/enemy/enemyStateManager'
 import EnemySpriteManager from '../../sprites/enemy/enemySpriteManager'
 
 class DogEnemy extends Enemy {
-  type = 'dog' as const
+  type = 'dog1' as const
 
   stateManager: EnemyStateManager = new EnemyStateManager(this)
   spriteManager: EnemySpriteManager = new EnemySpriteManager(this, 'dog1')

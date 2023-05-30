@@ -47,7 +47,7 @@ function EditorComponent() {
         <div className={styles.edit}>
           <Card>
             <span>Enemies</span>
-            <EnemyTiles setEnemy={setEnemy} enemy={activeEnemy} />
+            {editor && <EnemyTiles editor={editor} setEnemy={setEnemy} enemy={activeEnemy} />}
           </Card>
           {editor && <AllTiles editor={editor} frames={mapConfig.frames} />}
         </div>

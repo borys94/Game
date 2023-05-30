@@ -315,15 +315,15 @@ const map: MapType = {
     ]
   ],
   enemies: [
-    { type: 'rat', x: 1152, y: 576 },
-    { type: 'rat', x: 1248, y: 576 },
-    { type: 'dog', x: 1824, y: 336 },
-    { type: 'rat', x: 1728, y: 576 },
-    { type: 'rat', x: 1792, y: 576 },
-    { type: 'rat', x: 1408, y: 576 },
-    { type: 'dog', x: 2464, y: 400 },
-    { type: 'dog', x: 2880, y: 496 },
-    { type: 'dog', x: 1600, y: 464 }
+    { type: 'rat1', x: 1152, y: 576 },
+    { type: 'rat1', x: 1248, y: 576 },
+    { type: 'dog1', x: 1824, y: 336 },
+    { type: 'rat1', x: 1728, y: 576 },
+    { type: 'rat1', x: 1792, y: 576 },
+    { type: 'rat1', x: 1408, y: 576 },
+    { type: 'dog1', x: 2464, y: 400 },
+    { type: 'dog1', x: 2880, y: 496 },
+    { type: 'dog1', x: 1600, y: 464 }
   ],
   interactive: [
     [

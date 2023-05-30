@@ -1,61 +1,35 @@
-import React, { useEffect, useRef } from 'react'
 import styles from './EnemyTile.module.scss'
 import { type EnemyObject } from '../../game/characters/enemy'
+import Tile from './Tile'
+import Editor from '../../lib/editor'
+import { useEffect, useState } from 'react'
 
-interface TileEnemy {
-  type: EnemyObject['type']
-  width: number
-  height: number
-}
-
-const enemies: TileEnemy[] = [
-  {
-    type: 'dog',
-    width: 48,
-    height: 48
-  },
-  {
-    type: 'rat',
-    width: 32,
-    height: 32
-  }
-]
+const enemies: EnemyObject['type'][] = ['dog1', 'dog2', 'rat1', 'rat2', 'cat1', 'cat2', 'bird1', 'bird2']
 interface EnemyTilesProps {
   enemy: EnemyObject['type'] | null
   setEnemy: (enemy: EnemyObject['type']) => void
+  editor: Editor
 }
 
-const EnemyTiles = ({ setEnemy }: EnemyTilesProps): React.ReactElement => {
+const EnemyTiles = ({ setEnemy, editor }: EnemyTilesProps) => {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    // TODO: ogarnac to
+    setTimeout(() => setShow(true), 500)
+  }, [])
+
+  const img = editor.assetLoader.getImage('enemies')
+  if (!img || !show) {
+    return null
+  }
   return (
     <div className={styles.container}>
       {enemies.map((enemy) => {
-        return <Tile enemy={enemy} key={enemy.type} onClick={() => setEnemy(enemy.type)} />
+        const frame = editor.assetLoader.getByName(`${enemy}-idle`)!
+        return <Tile img={img} frame={frame} key={enemy} onSelect={() => setEnemy(enemy)} />
       })}
     </div>
-  )
-}
-
-interface TileProps {
-  enemy: TileEnemy
-  onClick: () => void
-}
-
-const Tile = ({ enemy, onClick }: TileProps): React.ReactElement => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const img = new Image()
-    img.src = `assets/enemies/${enemy.type}/idle.png`
-    img.onload = () => {
-      const ctx = canvasRef.current?.getContext('2d')
-      if (ctx) {
-        ctx.drawImage(img, 0, 0)
-      }
-    }
-  }, []) // eslint-disable-line
-
-  return (
-    <canvas onClick={onClick} className={styles.canvas} ref={canvasRef} width={enemy.width} height={enemy.height} />
   )
 }
 

@@ -30,6 +30,7 @@ const Header = ({ editor }: Props) => {
     const mapDetails = maps.find((savedMap) => savedMap.name === e.target.value)!
     setCurrentMap(mapDetails)
     setMapName(mapDetails.name)
+    // mapDetails.map.enemies = mapDetails.map.enemies.map(e => ({...e, type: 'dog1'}))
     editor!.map = new Map(editor!.player.game, mapDetails.map)
   }
 
@@ -119,6 +120,7 @@ const Header = ({ editor }: Props) => {
     if (maps.length) {
       setCurrentMap(maps[0])
       setMapName(maps[0].name)
+      // maps[0].map.enemies = maps[0].map.enemies.map(e => ({...e, type: 'dog1'}))
 
       editor.map = new Map(editor.player.game, maps[0].map)
     }

@@ -1,37 +1,33 @@
-import type Map from './map/map'
-import type Player from './characters/player/player'
+import { CANVAS_HEIGHT, CANVAS_WIDTH, TILE_SIZE } from './config'
+import Game from '.'
 
 class Camera {
   x = 0
   y = 0
 
-  constructor(private readonly player: Player, private readonly map: Map) {}
+  constructor(private readonly game: Game) {}
 
   update(): void {
-    const canvasWidth = this.player.game.canvas.width / this.player.game.scale
-    const canvasHeight = this.player.game.canvas.height / this.player.game.scale
-    this.x = this.player.x > canvasWidth / 2 ? this.player.x - canvasWidth / 2 : 0
-    this.y = this.player.y > canvasHeight / 2 ? this.player.y - canvasHeight / 2 : 0
+    const { map, player } = this.game
+    this.x = player.x > CANVAS_WIDTH / 2 ? player.x - CANVAS_WIDTH / 2 : 0
+    this.y = player.y > CANVAS_HEIGHT / 2 ? player.y - CANVAS_HEIGHT / 2 : 0
 
-    if (this.player.x > this.map.width - canvasWidth / 2) {
-      this.x = this.map.width - canvasWidth
+    if (player.x > map.width - CANVAS_WIDTH / 2) {
+      this.x = map.width - CANVAS_WIDTH
     }
-    if (this.player.y > this.map.height - canvasHeight / 2) {
-      this.y = this.map.height - canvasHeight
+    if (player.y > map.height - CANVAS_HEIGHT / 2) {
+      this.y = map.height - CANVAS_HEIGHT
     }
     this.x = Math.floor(this.x)
     this.y = Math.floor(this.y)
   }
 
   getVisibleArea() {
-    const canvasWidth = this.player.game.canvas.width / this.player.game.scale
-    const canvasHeight = this.player.game.canvas.height / this.player.game.scale
-
     return [
-      Math.floor(this.x / 32),
-      Math.floor(this.y / 32),
-      Math.ceil(canvasWidth / 32) + 1,
-      Math.ceil(canvasHeight / 32) + 1
+      Math.floor(this.x / TILE_SIZE),
+      Math.floor(this.y / TILE_SIZE),
+      Math.ceil(CANVAS_WIDTH / TILE_SIZE) + 1,
+      Math.ceil(CANVAS_HEIGHT / TILE_SIZE) + 1
     ] as const
   }
 }

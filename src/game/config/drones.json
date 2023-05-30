@@ -1,0 +1,237 @@
+{
+  "frames": [
+    {
+      "filename": "1 Drones/1/Death.png",
+      "frame": { "x": 96, "y": 0, "w": 288, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 48 },
+      "sourceSize": { "w": 288, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/1/Idle.png",
+      "frame": { "x": 384, "y": 0, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/1/Scan.png",
+      "frame": { "x": 576, "y": 0, "w": 384, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 384, "h": 48 },
+      "sourceSize": { "w": 384, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/1/Walk.png",
+      "frame": { "x": 960, "y": 0, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/1/Walk_scan.png",
+      "frame": { "x": 1152, "y": 0, "w": 384, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 384, "h": 48 },
+      "sourceSize": { "w": 384, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/2/Bomb.png",
+      "frame": { "x": 0, "y": 0, "w": 96, "h": 16 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 96, "h": 16 },
+      "sourceSize": { "w": 96, "h": 16 }
+    },
+    {
+      "filename": "1 Drones/2/Drop.png",
+      "frame": { "x": 288, "y": 216, "w": 576, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 576, "h": 96 },
+      "sourceSize": { "w": 576, "h": 96 }
+    },
+    {
+      "filename": "1 Drones/3/Back.png",
+      "frame": { "x": 1536, "y": 0, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Death.png",
+      "frame": { "x": 0, "y": 48, "w": 384, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 384, "h": 48 },
+      "sourceSize": { "w": 384, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Fire1.png",
+      "frame": { "x": 384, "y": 48, "w": 768, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 768, "h": 48 },
+      "sourceSize": { "w": 768, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Fire2.png",
+      "frame": { "x": 1152, "y": 48, "w": 768, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 768, "h": 48 },
+      "sourceSize": { "w": 768, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Fire3.png",
+      "frame": { "x": 0, "y": 96, "w": 768, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 768, "h": 48 },
+      "sourceSize": { "w": 768, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Forward.png",
+      "frame": { "x": 768, "y": 96, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/3/Idle.png",
+      "frame": { "x": 960, "y": 96, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/4/Death.png",
+      "frame": { "x": 864, "y": 216, "w": 576, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 576, "h": 96 },
+      "sourceSize": { "w": 576, "h": 96 }
+    },
+    {
+      "filename": "1 Drones/4/Idle.png",
+      "frame": { "x": 1440, "y": 216, "w": 384, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 384, "h": 96 },
+      "sourceSize": { "w": 384, "h": 96 }
+    },
+    {
+      "filename": "1 Drones/4/Landing.png",
+      "frame": { "x": 0, "y": 312, "w": 1536, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 1536, "h": 96 },
+      "sourceSize": { "w": 1536, "h": 96 }
+    },
+    {
+      "filename": "1 Drones/4/Walk.png",
+      "frame": { "x": 1536, "y": 312, "w": 384, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 384, "h": 96 },
+      "sourceSize": { "w": 384, "h": 96 }
+    },
+    {
+      "filename": "1 Drones/5/Death.png",
+      "frame": { "x": 960, "y": 144, "w": 432, "h": 72 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 432, "h": 72 },
+      "sourceSize": { "w": 432, "h": 72 }
+    },
+    {
+      "filename": "1 Drones/5/Idle.png",
+      "frame": { "x": 1392, "y": 144, "w": 288, "h": 72 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 72 },
+      "sourceSize": { "w": 288, "h": 72 }
+    },
+    {
+      "filename": "1 Drones/5/Walk.png",
+      "frame": { "x": 0, "y": 216, "w": 288, "h": 72 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 72 },
+      "sourceSize": { "w": 288, "h": 72 }
+    },
+    {
+      "filename": "1 Drones/5_2/Death.png",
+      "frame": { "x": 1152, "y": 96, "w": 288, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 48 },
+      "sourceSize": { "w": 288, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/5_2/Idle.png",
+      "frame": { "x": 1440, "y": 96, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/5_2/Walk.png",
+      "frame": { "x": 1632, "y": 96, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/6/Capsule.png",
+      "frame": { "x": 0, "y": 144, "w": 288, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 48 },
+      "sourceSize": { "w": 288, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/6/Drop.png",
+      "frame": { "x": 288, "y": 144, "w": 288, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 48 },
+      "sourceSize": { "w": 288, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/6/Walk.png",
+      "frame": { "x": 576, "y": 144, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    },
+    {
+      "filename": "1 Drones/6/Walk2.png",
+      "frame": { "x": 768, "y": 144, "w": 192, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 48 },
+      "sourceSize": { "w": 192, "h": 48 }
+    }
+  ],
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "version": "1.0",
+    "image": "drones.png",
+    "format": "RGBA8888",
+    "size": { "w": 1920, "h": 408 },
+    "scale": "1",
+    "smartupdate": "$TexturePacker:SmartUpdate:b72cca482132a068a13d8e5e3b481259:095f2d45ca71f04e1adfb5efba32b4ac:7b971c80c0b54695ff7a0c697e089304$"
+  }
+}

@@ -21,11 +21,7 @@ export type AssetFrameDetail = {
 }
 
 class AssetLoader {
-  heroes?: Assets
-  enemies?: Assets
-  gunPack?: Assets
-
-  assets: Record<string, Assets> = {}
+  private assets: Record<string, Assets> = {}
 
   async load() {
     this.assets = {
@@ -72,8 +68,6 @@ class Assets {
   public sortedById: Record<string, AssetFrameDetail> = {}
   public img?: HTMLImageElement
   public loaded = false
-
-  private promiseResolve: (v?: unknown) => void = () => {}
 
   constructor(private name: string, public details: AssetFrameDetail[]) {
     this.load()

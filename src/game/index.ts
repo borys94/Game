@@ -1,6 +1,6 @@
 import Player from './characters/player/player'
 import InputHandler from './inputHandler'
-import config from './config'
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from './config'
 import Map from './map/map'
 import Camera from './camera'
 import { drawDebugInfo } from './debug'
@@ -12,9 +12,6 @@ import level4 from '../maps/level4'
 import { MapType } from './mapStore'
 
 const levels = [level1, level2, level3, level4]
-
-const CANVAS_WIDTH = config.CANVAS_WIDTH
-const CANVAS_HEIGHT = config.CANVAS_HEIGHT
 
 class Game {
   canvas: HTMLCanvasElement
@@ -30,10 +27,10 @@ class Game {
   active = true
   paused = true
 
-  scale: number = 1
+  protected scale: number = 1
 
-  level = 1
-  state: 'PAUSED' | 'PLAYING' | 'WINNING' = 'PLAYING'
+  private level = 1
+  private state: 'PAUSED' | 'PLAYING' | 'WINNING' = 'PLAYING'
 
   constructor(map?: MapType) {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -45,11 +42,11 @@ class Game {
     this.assetLoader.load()
 
     this.map = new Map(this, map ?? levels[this.level - 1])
-
     this.player = new Player(this)
 
     this.inputHandler = new InputHandler()
-    this.camera = new Camera(this.player, this.map)
+    this.camera = new Camera(this)
+
     this.animate = this.animate.bind(this)
     this.draw = this.draw.bind(this)
     this.update = this.update.bind(this)
@@ -60,16 +57,19 @@ class Game {
     this.animate(0)
   }
 
+  getLevel() {
+    return this.level
+  }
+
   setupListeners() {
     window.addEventListener('resize', this.onResize)
     this.onResize()
   }
 
   onResize() {
-    const scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
-    this.scale = scale // Math.max(Math.floor(scale), 1)
-    this.canvas.width = CANVAS_WIDTH * scale
-    this.canvas.height = CANVAS_HEIGHT * scale
+    this.scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT)
+    this.canvas.width = CANVAS_WIDTH * this.scale
+    this.canvas.height = CANVAS_HEIGHT * this.scale
   }
 
   checkIfFinished = () => {

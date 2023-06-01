@@ -1,5 +1,6 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH, TILE_SIZE } from './config'
 import Game from '.'
+import { clamp } from './utils'
 
 class Camera {
   x = 0
@@ -9,17 +10,8 @@ class Camera {
 
   update(): void {
     const { map, player } = this.game
-    this.x = player.x > CANVAS_WIDTH / 2 ? player.x - CANVAS_WIDTH / 2 : 0
-    this.y = player.y > CANVAS_HEIGHT / 2 ? player.y - CANVAS_HEIGHT / 2 : 0
-
-    if (player.x > map.width - CANVAS_WIDTH / 2) {
-      this.x = map.width - CANVAS_WIDTH
-    }
-    if (player.y > map.height - CANVAS_HEIGHT / 2) {
-      this.y = map.height - CANVAS_HEIGHT
-    }
-    this.x = Math.floor(this.x)
-    this.y = Math.floor(this.y)
+    this.x = Math.floor(clamp(player.x - CANVAS_WIDTH / 2, 0, map.width - CANVAS_WIDTH))
+    this.y = Math.floor(clamp(player.y - CANVAS_HEIGHT / 2, 0, map.height - CANVAS_HEIGHT))
   }
 
   getVisibleArea() {

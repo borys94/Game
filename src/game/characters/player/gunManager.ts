@@ -207,8 +207,8 @@ export class Bullet {
       asset.frame.y,
       asset.frame.w,
       asset.frame.h,
-      this.x - this.player.game.camera.x,
-      this.y - this.player.game.camera.y,
+      this.x,
+      this.y,
       asset.frame.w,
       asset.frame.h
     )

@@ -82,12 +82,12 @@ export class ArmSprite extends PlayeExtendedBodySpite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
-    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH
+    return (this.player.getPlayerCenter() - swayShiftX) * scaleX - ARM_WIDTH
   }
 
   getPositionY() {
     const swayShiftY = this.getSwayShiftY()
-    return this.player.y - this.player.game.camera.y + 11 + swayShiftY
+    return this.player.y + 11 + swayShiftY
   }
 }
 
@@ -95,12 +95,12 @@ export class TwoArmSprite extends PlayeExtendedBodySpite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
-    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - ARM_WIDTH + 2
+    return (this.player.getPlayerCenter() - swayShiftX) * scaleX - ARM_WIDTH + 2
   }
 
   getPositionY() {
     const swayShiftY = this.getSwayShiftY()
-    return this.player.y - this.player.game.camera.y + 15 + swayShiftY
+    return this.player.y + 15 + swayShiftY
   }
 }
 
@@ -108,7 +108,7 @@ export class GunSprite extends PlayeExtendedBodySpite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
-    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX + ARM_WIDTH
+    return (this.player.getPlayerCenter() - swayShiftX) * scaleX + ARM_WIDTH
   }
 
   getPositionY() {
@@ -117,7 +117,7 @@ export class GunSprite extends PlayeExtendedBodySpite {
     if (!asset) {
       throw new Error('Cannot find asset in GunSprite')
     }
-    return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 1
+    return this.player.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 1
   }
 }
 
@@ -135,7 +135,7 @@ export class TwoHandedGunSprite extends GunSprite {
   getPositionX() {
     const scaleX = this.player.getScaleX()
     const swayShiftX = this.getSwayShiftX()
-    return (this.player.getPlayerCenter() - swayShiftX - this.player.game.camera.x) * scaleX - 6 + this.shiftX
+    return (this.player.getPlayerCenter() - swayShiftX) * scaleX - 6 + this.shiftX
   }
 
   getPositionY() {
@@ -144,6 +144,6 @@ export class TwoHandedGunSprite extends GunSprite {
     if (!asset) {
       throw new Error('Cannot find asset in TwoHandedGunSprite')
     }
-    return this.player.y - this.player.game.camera.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 7 + this.shiftY
+    return this.player.y + swayShiftY - asset.frame.h + 16 + ARM_WIDTH + 7 + this.shiftY
   }
 }

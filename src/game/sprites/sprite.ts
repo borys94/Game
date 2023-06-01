@@ -66,9 +66,8 @@ export default class Sprite {
       asset.frame.y,
       width,
       asset.frame.h,
-      (this.player.getPlayerCenter() - this.player.game.camera.x) * scaleX -
-        (this.player.getPlayerCenter() - this.player.x),
-      this.player.y - this.player.game.camera.y,
+      this.player.getPlayerCenter() * scaleX - (this.player.getPlayerCenter() - this.player.x),
+      this.player.y,
       width,
       asset.frame.h
     )

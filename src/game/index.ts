@@ -135,11 +135,14 @@ class Game {
     this.update()
 
     this.ctx.save()
-    // this.ctx.translate(this.camera.x, 0)
     this.ctx.scale(this.scale, this.scale)
 
+    this.map.drawBackground()
+    this.ctx.translate(-this.camera.x, -this.camera.y)
     this.map.draw(deltaTime)
     this.player.draw(deltaTime)
+    this.ctx.translate(this.camera.x, this.camera.y)
+    this.player.drawBars()
 
     this.ctx.restore()
 

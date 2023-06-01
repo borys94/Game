@@ -82,13 +82,8 @@ abstract class Character {
     const ctx = this.game.ctx
 
     if ((window as any).debug) {
-      ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, width, height)
-      ctx.strokeRect(
-        this.x + this.paddingLeft - this.game.camera.x,
-        this.y - this.game.camera.y,
-        width - this.paddingRight - this.paddingLeft,
-        height
-      )
+      ctx.strokeRect(this.x, this.y, width, height)
+      ctx.strokeRect(this.x + this.paddingLeft, this.y, width - this.paddingRight - this.paddingLeft, height)
     }
 
     this.spriteManager.draw(ctx, deltaTime)

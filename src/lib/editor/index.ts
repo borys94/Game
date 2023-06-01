@@ -90,16 +90,15 @@ class Editor extends Game {
     this.ctx.imageSmoothingEnabled = false
     this.ctx.save()
     this.ctx.scale(this.scale, this.scale)
+
+    this.map.drawBackground()
+    this.ctx.translate(-this.camera.x, -this.camera.y)
     this.map.draw(deltaTime)
 
     if (!!this.currentAsset || !!this.activeEnemyType) {
       this.ctx.beginPath()
-      this.ctx.rect(
-        Math.floor((this.hoverX + this.camera.x) / 32) * 32 - this.camera.x,
-        Math.floor((this.hoverY + this.camera.y) / 32) * 32 - this.camera.y,
-        32,
-        32
-      )
+      const [x, y] = this.getHoverPosition()
+      this.ctx.rect(x, y, 32, 32)
       this.ctx.strokeStyle = 'rgb(0, 255, 0)'
       this.ctx.fillStyle = 'rgba(0,255,0,0.5)'
       this.ctx.fill()
@@ -116,8 +115,8 @@ class Editor extends Game {
         this.currentAsset.frame.y,
         this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
         this.currentAsset.frame.h,
-        x - this.camera.x,
-        y - this.camera.y + 32 - this.currentAsset.frame.h,
+        x,
+        y + 32 - this.currentAsset.frame.h,
         this.currentAsset.frame.w / (this.currentAsset.frames ?? 1),
         this.currentAsset.frame.h
       )

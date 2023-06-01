@@ -54,9 +54,12 @@ class Map {
   }
 
   draw = (deltaTime: number): void => {
-    this.background.draw(this.game.ctx)
     this.elements.draw(deltaTime)
     for (const enemy of this.enemies) enemy.draw(deltaTime)
+  }
+
+  drawBackground() {
+    this.background.draw(this.game.ctx)
   }
 }
 

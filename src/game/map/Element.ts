@@ -55,8 +55,8 @@ export default class Element {
         y,
         w / frames,
         h,
-        this.x * 32 - this.game.camera.x,
-        this.y * 32 - this.game.camera.y + 32 - h,
+        this.x * 32,
+        this.y * 32 + 32 - h,
         w / frames,
         h
       )
@@ -128,8 +128,8 @@ export class ChestElement extends Element {
     if (!this.opened) {
       this.ligthenGradient(
         ctx,
-        this.x * 32 - this.game.camera.x + this.asset.frame.w / (this.asset.frames ?? 1) / 2,
-        this.y * 32 - this.game.camera.y + 32 - this.asset.frame.h,
+        this.x * 32 + this.asset.frame.w / (this.asset.frames ?? 1) / 2,
+        this.y * 32 + 32 - this.asset.frame.h,
         8
       )
     }
@@ -218,37 +218,18 @@ export class GunElement extends Element {
     const { w, h, x, y } = this.asset.frame
     const shiftY = Math.sin((1.1 * Date.now()) / 300) * 5
     if (img) {
-      this.ligthenGradient(
-        ctx,
-        this.x * 32 - this.game.camera.x + TILE_SIZE / 2,
-        this.y * 32 - this.game.camera.y + TILE_SIZE / 2 + h / 2,
-        8
-      )
+      this.ligthenGradient(ctx, this.x * 32 + TILE_SIZE / 2, this.y * 32 + TILE_SIZE / 2 + h / 2, 8)
       ctx.drawImage(
         img,
         x + (w / frames) * this.frameX,
         y,
         w,
         h,
-        this.x * 32 - this.game.camera.x + TILE_SIZE / 2 - w / 2,
-        this.y * 32 - this.game.camera.y + TILE_SIZE / 2 + shiftY,
+        this.x * 32 + TILE_SIZE / 2 - w / 2,
+        this.y * 32 + TILE_SIZE / 2 + shiftY,
         w,
         h
       )
-
-      // if (img) {
-      //   ctx.drawImage(
-      //     img,
-      //     x,
-      //     y,
-      //     w,
-      //     h,
-      //     j * TILE_SIZE - this.game.camera.x,
-      //     i * TILE_SIZE - this.game.camera.y + TILE_SIZE - h,
-      //     TILE_SIZE,
-      //     TILE_SIZE
-      //   )
-      // }
     }
   }
 

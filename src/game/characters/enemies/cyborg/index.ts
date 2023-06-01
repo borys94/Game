@@ -1,7 +1,3 @@
-
-
-class Cyborg {
-
-}
+class Cyborg {}
 
 export default Cyborg

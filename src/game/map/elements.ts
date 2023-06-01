@@ -95,17 +95,7 @@ class Elements {
     const img = this.game.assetLoader.getImage('map')
     const { w, h, x, y } = asset.frame
     if (img) {
-      ctx.drawImage(
-        img,
-        x,
-        y,
-        w,
-        h,
-        j * TILE_SIZE - this.game.camera.x,
-        i * TILE_SIZE - this.game.camera.y + TILE_SIZE - h,
-        w,
-        h
-      )
+      ctx.drawImage(img, x, y, w, h, j * TILE_SIZE, i * TILE_SIZE + TILE_SIZE - h, w, h)
     }
   }
 }

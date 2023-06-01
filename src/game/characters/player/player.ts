@@ -110,7 +110,9 @@ class Player extends Character {
   draw(deltaTime: number): void {
     this.gunManager.drawBullets(deltaTime)
     super.draw(deltaTime)
+  }
 
+  drawBars() {
     this.playerBar.draw()
     this.collectionBar.draw()
   }

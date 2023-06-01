@@ -14,48 +14,48 @@ class PlayerSpriteManager extends SpriteManager {
   constructor(public player: Player) {
     super()
     this.defaultSprites = {
-      standing: new PlayerSprite(player, 'heroes', 'punk-idle', { frameInterval: 200 }),
-      running: new PlayerSprite(player, 'heroes', 'punk-run'),
-      jumping: new PlayerSprite(player, 'heroes', 'punk-jump'),
-      falling: new PlayerSprite(player, 'heroes', 'punk-jump'),
-      hit: new PlayerSprite(player, 'heroes', 'punk-attack1', { oneTimeAction: true }),
-      doubleHit: new PlayerSprite(player, 'heroes', 'punk-attack2', { oneTimeAction: true }),
-      strongAttack: new PlayerSprite(player, 'heroes', 'punk-attack3', { oneTimeAction: true }),
-      use: new PlayerSprite(player, 'heroes', 'punk-use', { oneTimeAction: true }),
-      hurt: new PlayerSprite(player, 'heroes', 'punk-hurt', { oneTimeAction: true }),
-      death: new PlayerSprite(player, 'heroes', 'punk-death', { oneTimeAction: true }),
-      doubleJump: new PlayerSprite(player, 'heroes', 'punk-doublejump', { frameInterval: 50 }),
-      happy: new PlayerSprite(player, 'heroes', 'punk-happy', { frameInterval: 150, oneTimeAction: true })
+      standing: new PlayerSprite(player, 'heroes', `${player.type}-idle`, { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'heroes', `${player.type}-run`),
+      jumping: new PlayerSprite(player, 'heroes', `${player.type}-jump`),
+      falling: new PlayerSprite(player, 'heroes', `${player.type}-jump`),
+      hit: new PlayerSprite(player, 'heroes', `${player.type}-attack1`, { oneTimeAction: true }),
+      doubleHit: new PlayerSprite(player, 'heroes', `${player.type}-attack2`, { oneTimeAction: true }),
+      strongAttack: new PlayerSprite(player, 'heroes', `${player.type}-attack3`, { oneTimeAction: true }),
+      use: new PlayerSprite(player, 'heroes', `${player.type}-use`, { oneTimeAction: true }),
+      hurt: new PlayerSprite(player, 'heroes', `${player.type}-hurt`, { oneTimeAction: true }),
+      death: new PlayerSprite(player, 'heroes', `${player.type}-death`, { oneTimeAction: true }),
+      doubleJump: new PlayerSprite(player, 'heroes', `${player.type}-doublejump`, { frameInterval: 50 }),
+      happy: new PlayerSprite(player, 'heroes', `${player.type}-happy`, { frameInterval: 150, oneTimeAction: true })
     }
 
     this.withoutOneArm = {
-      standing: new PlayerSprite(player, 'gunPack', 'punk-idle1', { frameInterval: 200 }),
-      running: new PlayerSprite(player, 'gunPack', 'punk-run1'),
-      jumping: new PlayerSprite(player, 'gunPack', 'punk-jump1'),
-      falling: new PlayerSprite(player, 'gunPack', 'punk-jump1')
+      standing: new PlayerSprite(player, 'gunPack', `${player.type}-idle1`, { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'gunPack', `${player.type}-run1`),
+      jumping: new PlayerSprite(player, 'gunPack', `${player.type}-jump1`),
+      falling: new PlayerSprite(player, 'gunPack', `${player.type}-jump1`)
     }
 
     this.withoutTwoArms = {
-      standing: new PlayerSprite(player, 'gunPack', 'punk-idle2', { frameInterval: 200 }),
-      running: new PlayerSprite(player, 'gunPack', 'punk-run2'),
-      jumping: new PlayerSprite(player, 'gunPack', 'punk-jump2'),
-      falling: new PlayerSprite(player, 'gunPack', 'punk-jump2')
+      standing: new PlayerSprite(player, 'gunPack', `${player.type}-idle2`, { frameInterval: 200 }),
+      running: new PlayerSprite(player, 'gunPack', `${player.type}-run2`),
+      jumping: new PlayerSprite(player, 'gunPack', `${player.type}-jump2`),
+      falling: new PlayerSprite(player, 'gunPack', `${player.type}-jump2`)
     }
 
     this.arms = {
-      arm1: new ArmSprite(player, 'gunPack', 'punk-arm1'),
-      arm2: new ArmSprite(player, 'gunPack', 'punk-arm2'),
-      arm3: new ArmSprite(player, 'gunPack', 'punk-arm3'),
-      arm4: new ArmSprite(player, 'gunPack', 'punk-arm4'),
-      arm5: new ArmSprite(player, 'gunPack', 'punk-arm5')
+      arm1: new ArmSprite(player, 'gunPack', `${player.type}-arm1`),
+      arm2: new ArmSprite(player, 'gunPack', `${player.type}-arm2`),
+      arm3: new ArmSprite(player, 'gunPack', `${player.type}-arm3`),
+      arm4: new ArmSprite(player, 'gunPack', `${player.type}-arm4`),
+      arm5: new ArmSprite(player, 'gunPack', `${player.type}-arm5`)
     }
 
     this.twoArms = {
-      arm1: new TwoArmSprite(player, 'gunPack', 'punk-arm6'),
-      arm2: new TwoArmSprite(player, 'gunPack', 'punk-arm7'),
-      arm3: new TwoArmSprite(player, 'gunPack', 'punk-arm8'),
-      arm4: new TwoArmSprite(player, 'gunPack', 'punk-arm9'),
-      arm5: new TwoArmSprite(player, 'gunPack', 'punk-arm10')
+      arm1: new TwoArmSprite(player, 'gunPack', `${player.type}-arm6`),
+      arm2: new TwoArmSprite(player, 'gunPack', `${player.type}-arm7`),
+      arm3: new TwoArmSprite(player, 'gunPack', `${player.type}-arm8`),
+      arm4: new TwoArmSprite(player, 'gunPack', `${player.type}-arm9`),
+      arm5: new TwoArmSprite(player, 'gunPack', `${player.type}-arm10`)
     }
 
     this.guns = [

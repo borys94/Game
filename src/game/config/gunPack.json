@@ -1,64 +1,64 @@
 {
   "frames": [
     {
-      "name": "guns1/1 Characters/1 Biker/Idle1",
+      "name": "biker-idle1",
       "frame": { "x": 0, "y": 0, "w": 192, "h": 48 },
       "id": 425,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Idle2",
+      "name": "biker-idle2",
       "frame": { "x": 192, "y": 0, "w": 192, "h": 48 },
       "id": 426,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Jump1",
+      "name": "biker-jump1",
       "frame": { "x": 384, "y": 0, "w": 192, "h": 48 },
       "id": 427,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Jump2",
+      "name": "biker-jump2",
       "frame": { "x": 576, "y": 0, "w": 192, "h": 48 },
       "id": 428,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Run1",
+      "name": "biker-run1",
       "frame": { "x": 0, "y": 48, "w": 288, "h": 48 },
       "id": 429,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Run2",
+      "name": "biker-run2",
       "frame": { "x": 288, "y": 48, "w": 288, "h": 48 },
       "id": 430,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Sitdown1",
+      "name": "biker-sitdown1",
       "frame": { "x": 576, "y": 48, "w": 192, "h": 48 },
       "id": 431,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Sitdown2",
+      "name": "biker-sitdown2",
       "frame": { "x": 768, "y": 48, "w": 192, "h": 48 },
       "id": 432,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Walk1",
+      "name": "biker-walk1",
       "frame": { "x": 0, "y": 96, "w": 288, "h": 48 },
       "id": 433,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/1 Biker/Walk2",
+      "name": "biker-walk2",
       "frame": { "x": 288, "y": 96, "w": 288, "h": 48 },
       "id": 434,
-      "frames": 1
+      "frames": 6
     },
     { "name": "punk-idle1", "frame": { "x": 576, "y": 96, "w": 192, "h": 48 }, "id": 435, "frames": 4 },
     { "name": "punk-idle2", "frame": { "x": 768, "y": 96, "w": 192, "h": 48 }, "id": 436, "frames": 4 },
@@ -71,64 +71,64 @@
     { "name": "punk-walk1", "frame": { "x": 384, "y": 192, "w": 288, "h": 48 }, "id": 443, "frames": 6 },
     { "name": "punk-walk2", "frame": { "x": 672, "y": 192, "w": 288, "h": 48 }, "id": 444, "frames": 6 },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Idle1",
+      "name": "cyborg-idle1",
       "frame": { "x": 0, "y": 240, "w": 192, "h": 48 },
       "id": 445,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Idle2",
+      "name": "cyborg-idle2",
       "frame": { "x": 192, "y": 240, "w": 192, "h": 48 },
       "id": 446,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Jump1",
+      "name": "cyborg-jump1",
       "frame": { "x": 384, "y": 240, "w": 192, "h": 48 },
       "id": 447,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Jump2",
+      "name": "cyborg-jump2",
       "frame": { "x": 576, "y": 240, "w": 192, "h": 48 },
       "id": 448,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Run1",
+      "name": "cyborg-run1",
       "frame": { "x": 0, "y": 288, "w": 288, "h": 48 },
       "id": 449,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Run2",
+      "name": "cyborg-run2",
       "frame": { "x": 288, "y": 288, "w": 288, "h": 48 },
       "id": 450,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Sitdown1",
+      "name": "cyborg-sitdown1",
       "frame": { "x": 576, "y": 288, "w": 192, "h": 48 },
       "id": 451,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Sitdown2",
+      "name": "cyborg-sitdown2",
       "frame": { "x": 768, "y": 288, "w": 192, "h": 48 },
       "id": 452,
-      "frames": 1
+      "frames": 4
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Walk1",
+      "name": "cyborg-walk1",
       "frame": { "x": 0, "y": 336, "w": 288, "h": 48 },
       "id": 453,
-      "frames": 1
+      "frames": 6
     },
     {
-      "name": "guns1/1 Characters/3 Cyborg/Walk2",
+      "name": "cyborg-walk2",
       "frame": { "x": 288, "y": 336, "w": 288, "h": 48 },
       "id": 454,
-      "frames": 1
+      "frames": 6
     },
     {
       "name": "gun-1",
@@ -200,16 +200,16 @@
       "frames": 1,
       "extra": { "type": "interactive", "interactiveType": "gun", "gunLevel": 10 }
     },
-    { "name": "guns1/3 Hands/1 Biker/1", "frame": { "x": 688, "y": 336, "w": 32, "h": 32 }, "id": 465, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/2", "frame": { "x": 720, "y": 336, "w": 32, "h": 32 }, "id": 466, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/3", "frame": { "x": 752, "y": 336, "w": 32, "h": 32 }, "id": 467, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/4", "frame": { "x": 784, "y": 336, "w": 32, "h": 32 }, "id": 468, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/5", "frame": { "x": 816, "y": 336, "w": 32, "h": 32 }, "id": 469, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/6", "frame": { "x": 848, "y": 336, "w": 32, "h": 32 }, "id": 470, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/7", "frame": { "x": 880, "y": 336, "w": 32, "h": 32 }, "id": 471, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/8", "frame": { "x": 912, "y": 336, "w": 32, "h": 32 }, "id": 472, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/9", "frame": { "x": 0, "y": 384, "w": 32, "h": 32 }, "id": 473, "frames": 1 },
-    { "name": "guns1/3 Hands/1 Biker/10", "frame": { "x": 32, "y": 384, "w": 32, "h": 32 }, "id": 474, "frames": 1 },
+    { "name": "biker-arm1", "frame": { "x": 688, "y": 336, "w": 32, "h": 32 }, "id": 465, "frames": 1 },
+    { "name": "biker-arm2", "frame": { "x": 720, "y": 336, "w": 32, "h": 32 }, "id": 466, "frames": 1 },
+    { "name": "biker-arm3", "frame": { "x": 752, "y": 336, "w": 32, "h": 32 }, "id": 467, "frames": 1 },
+    { "name": "biker-arm4", "frame": { "x": 784, "y": 336, "w": 32, "h": 32 }, "id": 468, "frames": 1 },
+    { "name": "biker-arm5", "frame": { "x": 816, "y": 336, "w": 32, "h": 32 }, "id": 469, "frames": 1 },
+    { "name": "biker-arm6", "frame": { "x": 848, "y": 336, "w": 32, "h": 32 }, "id": 470, "frames": 1 },
+    { "name": "biker-arm7", "frame": { "x": 880, "y": 336, "w": 32, "h": 32 }, "id": 471, "frames": 1 },
+    { "name": "biker-arm8", "frame": { "x": 912, "y": 336, "w": 32, "h": 32 }, "id": 472, "frames": 1 },
+    { "name": "biker-arm9", "frame": { "x": 0, "y": 384, "w": 32, "h": 32 }, "id": 473, "frames": 1 },
+    { "name": "biker-arm10", "frame": { "x": 32, "y": 384, "w": 32, "h": 32 }, "id": 474, "frames": 1 },
     { "name": "punk-arm1", "frame": { "x": 64, "y": 384, "w": 32, "h": 32 }, "id": 475, "frames": 1 },
     { "name": "punk-arm2", "frame": { "x": 96, "y": 384, "w": 32, "h": 32 }, "id": 476, "frames": 1 },
     { "name": "punk-arm3", "frame": { "x": 128, "y": 384, "w": 32, "h": 32 }, "id": 477, "frames": 1 },
@@ -220,16 +220,16 @@
     { "name": "punk-arm8", "frame": { "x": 288, "y": 384, "w": 32, "h": 32 }, "id": 482, "frames": 1 },
     { "name": "punk-arm9", "frame": { "x": 320, "y": 384, "w": 32, "h": 32 }, "id": 483, "frames": 1 },
     { "name": "punk-arm10", "frame": { "x": 352, "y": 384, "w": 32, "h": 32 }, "id": 484, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/1", "frame": { "x": 384, "y": 384, "w": 32, "h": 32 }, "id": 485, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/2", "frame": { "x": 416, "y": 384, "w": 32, "h": 32 }, "id": 486, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/3", "frame": { "x": 448, "y": 384, "w": 32, "h": 32 }, "id": 487, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/4", "frame": { "x": 480, "y": 384, "w": 32, "h": 32 }, "id": 488, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/5", "frame": { "x": 512, "y": 384, "w": 32, "h": 32 }, "id": 489, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/6", "frame": { "x": 544, "y": 384, "w": 32, "h": 32 }, "id": 490, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/7", "frame": { "x": 576, "y": 384, "w": 32, "h": 32 }, "id": 491, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/8", "frame": { "x": 608, "y": 384, "w": 32, "h": 32 }, "id": 492, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/9", "frame": { "x": 640, "y": 384, "w": 32, "h": 32 }, "id": 493, "frames": 1 },
-    { "name": "guns1/3 Hands/3 Cyborg/10", "frame": { "x": 672, "y": 384, "w": 32, "h": 32 }, "id": 494, "frames": 1 },
+    { "name": "cyborg-arm1", "frame": { "x": 384, "y": 384, "w": 32, "h": 32 }, "id": 485, "frames": 1 },
+    { "name": "cyborg-arm2", "frame": { "x": 416, "y": 384, "w": 32, "h": 32 }, "id": 486, "frames": 1 },
+    { "name": "cyborg-arm3", "frame": { "x": 448, "y": 384, "w": 32, "h": 32 }, "id": 487, "frames": 1 },
+    { "name": "cyborg-arm4", "frame": { "x": 480, "y": 384, "w": 32, "h": 32 }, "id": 488, "frames": 1 },
+    { "name": "cyborg-arm5", "frame": { "x": 512, "y": 384, "w": 32, "h": 32 }, "id": 489, "frames": 1 },
+    { "name": "cyborg-arm6", "frame": { "x": 544, "y": 384, "w": 32, "h": 32 }, "id": 490, "frames": 1 },
+    { "name": "cyborg-arm7", "frame": { "x": 576, "y": 384, "w": 32, "h": 32 }, "id": 491, "frames": 1 },
+    { "name": "cyborg-arm8", "frame": { "x": 608, "y": 384, "w": 32, "h": 32 }, "id": 492, "frames": 1 },
+    { "name": "cyborg-arm9", "frame": { "x": 640, "y": 384, "w": 32, "h": 32 }, "id": 493, "frames": 1 },
+    { "name": "cyborg-arm10", "frame": { "x": 672, "y": 384, "w": 32, "h": 32 }, "id": 494, "frames": 1 },
     { "name": "guns1/4 Shoot_effects/1_1", "frame": { "x": 0, "y": 416, "w": 288, "h": 48 }, "id": 495, "frames": 1 },
     { "name": "guns1/4 Shoot_effects/2_1", "frame": { "x": 288, "y": 416, "w": 288, "h": 48 }, "id": 496, "frames": 1 },
     { "name": "guns1/4 Shoot_effects/3_1", "frame": { "x": 576, "y": 416, "w": 288, "h": 48 }, "id": 497, "frames": 1 },

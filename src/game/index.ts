@@ -135,6 +135,7 @@ class Game {
     this.update()
 
     this.ctx.save()
+    // this.ctx.translate(this.camera.x, 0)
     this.ctx.scale(this.scale, this.scale)
 
     this.map.draw(deltaTime)

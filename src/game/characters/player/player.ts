@@ -9,6 +9,7 @@ import Enemy from '../enemy'
 import PlayerBar from './playerBar'
 
 class Player extends Character {
+  type = 'punk'
   stateManager: PlayerStateManager = new PlayerStateManager(this)
   spriteManager: PlayerSpriteManager = new PlayerSpriteManager(this)
   gunManager: GunManager = new GunManager(this)
@@ -70,9 +71,6 @@ class Player extends Character {
     // TODO: srodek uzytkownika
     const element = this.game.map.getElement(this.x + this.width / 4, this.y + this.height / 2)
     if (element?.active) {
-      // if (element?.asset?.id === 65 || element?.asset?.id === 66) {
-      //   this.game.sounds.coinSound()
-      // }
       element.enter(this)
     }
   }
